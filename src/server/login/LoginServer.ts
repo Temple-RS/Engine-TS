@@ -108,6 +108,8 @@ async function updateHiscores(account: { id: number, staffmodlevel: number } | u
 export default class LoginServer {
     private server: WebSocketServer;
     private loginRequests: Set<string> = new Set();
+    private activeLogins = 0;
+    private readonly MAX_CONCURRENT_LOGINS = 1;
 
     rejectLoginForSafety(s: WebSocket, replyTo: number) {
         // Send opcode 7 ('Please try again') if something has gone wrong
@@ -167,7 +169,14 @@ export default class LoginServer {
                     } else if (type === 'player_login') {
                         const { nodeMembers, replyTo, username, password, uid, socket, remoteAddress, reconnecting, hasSave } = msg;
                         const safeName = toSafeName(username);
-                        
+                        if (this.activeLogins >= this.MAX_CONCURRENT_LOGINS) {
+                            s.send(JSON.stringify({
+                                replyTo,
+                                response: 7 // "Please try again"
+                            }));
+                            return;
+                        }
+
                         if (this.loginRequests.has(safeName)) {
                             s.send(
                                 JSON.stringify({
@@ -178,7 +187,7 @@ export default class LoginServer {
                             return;
                         }
                         this.loginRequests.add(safeName);
-
+                        this.activeLogins++;
                         try {
                             const ipBan = await db.selectFrom('ipban').selectAll().where('ip', '=', remoteAddress).executeTakeFirst();
 
@@ -200,6 +209,10 @@ export default class LoginServer {
                                 .where('username', '=', username)
                                 .selectAll()
                                 .executeTakeFirst();
+
+                            if (!account) {
+                                console.log(`[LOGIN] Account ${username} not found. WEBSITE_REGISTRATION=${Environment.WEBSITE_REGISTRATION}`);
+                            }
 
                             if (!Environment.WEBSITE_REGISTRATION && !account) {
                                 // register the user automatically
@@ -265,6 +278,11 @@ export default class LoginServer {
 
                             if (!account || !(await bcrypt.compare(password.toLowerCase(), account.password))) {
                                 // invalid username or password
+                                if (!account) {
+                                    console.log(`[LOGIN] Account not found for ${username}`);
+                                } else {
+                                    console.log(`[LOGIN] Password mismatch for ${username}`);
+                                }
                                 s.send(
                                     JSON.stringify({
                                         replyTo,
@@ -359,11 +377,11 @@ export default class LoginServer {
                                     })
                                 );
                                 return;
-                            } else if (account.staffmodlevel < 2 
-                                && account.logged_out !== null 
-                                && account.logged_out !== 0 
-                                && account.logged_out !== nodeId 
-                                && account.logout_time !== null 
+                            } else if (account.staffmodlevel < 2
+                                && account.logged_out !== null
+                                && account.logged_out !== 0
+                                && account.logged_out !== nodeId
+                                && account.logout_time !== null
                                 && new Date(account.logout_time) >= new Date(Date.now() - 45000)) {
                                 // rate limited (hop timer)
                                 s.send(
@@ -453,6 +471,7 @@ export default class LoginServer {
                             }
                         } finally {
                             this.loginRequests.delete(safeName);
+                            this.activeLogins--;
                         }
                     } else if (type === 'player_logout') {
                         const { replyTo, username, save } = msg;
@@ -476,7 +495,7 @@ export default class LoginServer {
                             .where('username', '=', username)
                             .selectAll()
                             .executeTakeFirst();
-                        
+
                         if (account?.account_id) {
                             await db
                                 .updateTable('account_login')
@@ -536,7 +555,7 @@ export default class LoginServer {
                                 .where('profile', '=', profile)
                                 .executeTakeFirst();
                         }
-                        
+
                     } else if (type === 'player_ban') {
                         const { _staff, username, until } = msg;
 
@@ -567,8 +586,8 @@ export default class LoginServer {
                 }
             });
 
-            s.on('close', () => {});
-            s.on('error', () => {});
+            s.on('close', () => { });
+            s.on('error', () => { });
         });
     }
 }

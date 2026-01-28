@@ -6,7 +6,7 @@ export default class Obj extends NonPathingEntity {
     /**
      * The number of ticks for an obj to reveal.
      */
-    static readonly REVEAL: number = 100;
+    static readonly REVEAL: number = 0;
     static readonly NO_RECEIVER: bigint = -1n;
 
     // constructor properties

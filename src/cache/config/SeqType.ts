@@ -97,6 +97,9 @@ export default class SeqType extends ConfigType {
 
             for (let i = 0; i < this.frameCount; i++) {
                 this.frames[i] = dat.g2();
+                if (this.frames[i] === 65535) {
+                    this.frames[i] = -1;
+                }
 
                 this.iframes[i] = dat.g2();
                 if (this.iframes[i] === 65535) {
@@ -104,7 +107,7 @@ export default class SeqType extends ConfigType {
                 }
 
                 this.delay[i] = dat.g2();
-                if (this.delay[i] === 0) {
+                if (this.delay[i] === 0 && this.frames[i] !== -1 && AnimFrame.instances[this.frames[i]]) {
                     this.delay[i] = AnimFrame.instances[this.frames[i]].delay;
                 }
 

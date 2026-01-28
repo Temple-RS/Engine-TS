@@ -6,7 +6,7 @@ tsconfig.tsbuildinfo
 data/pack/
 data/src/
 data/unpack/
-
+data/whitelist.txt
 data/players/
 data/sessions/
 data/symbols/

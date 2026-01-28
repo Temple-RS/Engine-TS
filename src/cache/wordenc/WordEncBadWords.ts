@@ -11,12 +11,8 @@ export default class WordEncBadWords {
         this.wordEncFragments = wordEncFragments;
     }
 
-    filter(chars: string[]): void {
-        for (let comboIndex = 0; comboIndex < 2; comboIndex++) {
-            for (let index = this.bads.length - 1; index >= 0; index--) {
-                this.filterBadCombinations(this.badCombinations[index], chars, this.bads[index]);
-            }
-        }
+    filter(_chars: string[]): void {
+        // Censorship disabled
     }
 
     filterBadCombinations(combos: number[][] | null, chars: string[], bads: Uint16Array): void {
@@ -128,7 +124,7 @@ export default class WordEncBadWords {
         let hasNumber = false;
         let hasDigit = false;
 
-        for (; index < chars.length && !(hasNumber && hasDigit); ) {
+        for (; index < chars.length && !(hasNumber && hasDigit);) {
             if (index >= chars.length || (hasNumber && hasDigit)) {
                 break;
             }
