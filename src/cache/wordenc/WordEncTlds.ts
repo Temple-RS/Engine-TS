@@ -14,8 +14,16 @@ export default class WordEncTlds {
         this.wordEncDomains = wordEncDomains;
     }
 
-    filter(_chars: string[]): void {
-        // Censorship disabled
+    filter(chars: string[]): void {
+        const period = [...chars];
+        this.wordEncBadWords.filterBadCombinations(null, period, WordEnc.PERIOD);
+
+        const slash = [...chars];
+        this.wordEncBadWords.filterBadCombinations(null, slash, WordEnc.SLASH);
+
+        for (let i = 0; i < this.tlds.length; i++) {
+            this.filterTld(slash, this.tldTypes[i], chars, this.tlds[i], period);
+        }
     }
 
     private filterTld(slash: string[], tldType: number, chars: string[], tld: Uint16Array, period: string[]): void {

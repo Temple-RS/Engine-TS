@@ -10,8 +10,16 @@ export default class WordEncDomains {
         this.wordEncBadWords = wordEncBadWords;
     }
 
-    filter(_chars: string[]): void {
-        // Censorship disabled
+    filter(chars: string[]): void {
+        const ampersat = [...chars];
+        this.wordEncBadWords.filterBadCombinations(null, ampersat, WordEnc.AMPERSAT);
+
+        const period = [...chars];
+        this.wordEncBadWords.filterBadCombinations(null, period, WordEnc.PERIOD);
+
+        for (let i = this.domains.length - 1; i >= 0; i--) {
+            this.filterDomain(period, ampersat, this.domains[i], chars);
+        }
     }
 
     getEmulatedDomainCharLen(nextChar: string, domainChar: string, currentChar: string): number {

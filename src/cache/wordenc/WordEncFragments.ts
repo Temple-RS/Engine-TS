@@ -3,8 +3,54 @@ import WordEnc from '#/cache/wordenc/WordEnc.js';
 export default class WordEncFragments {
     readonly fragments: number[] = [];
 
-    filter(_chars: string[]): void {
-        // Censorship disabled
+    filter(chars: string[]): void {
+        this.filterFragments(chars);
+    }
+
+    private filterFragments(chars: string[]): void {
+        let index = 0;
+        let count = 0;
+        let startIndex = 0;
+        while (true) {
+            let numberIndex;
+            if ((numberIndex = this.indexOfNumber(chars, index)) === -1) {
+                return;
+            }
+
+            let symbolFound = false;
+            for (let i = index; i >= 0 && i < numberIndex && !symbolFound; i++) {
+                if (!WordEnc.isSymbol(chars[i]) && !WordEnc.isLowercaseAlpha(chars[i])) {
+                    symbolFound = true;
+                }
+            }
+
+            if (symbolFound) {
+                count = 0;
+            }
+
+            if (count === 0) {
+                startIndex = numberIndex;
+            }
+
+            index = this.indexOfNonNumber(numberIndex, chars);
+            let value = 0;
+            for (let i = numberIndex; i < index; i++) {
+                value = value * 10 + (chars[i].charCodeAt(0) - 48);
+            }
+
+            if (value <= 255 && index - numberIndex <= 8) {
+                count++;
+            } else {
+                count = 0;
+            }
+
+            if (count === 4) {
+                for (let i = startIndex; i < index; i++) {
+                    chars[i] = '*';
+                }
+                count = 0;
+            }
+        }
     }
 
     isBadFragment(chars: string[]): boolean {

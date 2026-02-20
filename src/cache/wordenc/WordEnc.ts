@@ -30,7 +30,7 @@ export default class WordEnc {
     private static wordEncDomains = new WordEncDomains(this.wordEncBadWords);
     private static wordEncTlds = new WordEncTlds(this.wordEncBadWords, this.wordEncDomains);
 
-    private static whitelist = ['cook', "cook's", 'cooks', 'seeks', 'sheet'];
+    private static whitelist = ['cook', "cook's", 'cooks', 'seeks', 'sheet', 'woop', 'woops', 'faq'];
 
     static load(_dir: string): void {
         const wordenc = Jagfile.load('data/raw/wordenc');
@@ -66,6 +66,11 @@ export default class WordEnc {
 
     static filter(input: string): string {
         return input;
+    }
+
+    static isWhitelisted(chars: string[], offset: number, length: number): boolean {
+        const word = chars.slice(offset, length).join('').trim();
+        return this.whitelist.includes(word);
     }
 
     static isSymbol(char: string): boolean {

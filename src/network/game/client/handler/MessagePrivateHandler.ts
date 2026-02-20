@@ -1,3 +1,4 @@
+import WordEnc from '#/cache/wordenc/WordEnc.js';
 import Player from '#/engine/entity/Player.js';
 import World from '#/engine/World.js';
 import Packet from '#/io/Packet.js';
@@ -27,7 +28,9 @@ export default class MessagePrivateHandler extends ClientGameMessageHandler<Mess
         const buf: Packet = Packet.alloc(0);
         buf.pdata(input, 0, input.length);
         buf.pos = 0;
-        World.sendPrivateMessage(player, username, WordPack.unpack(buf, input.length));
+        const unpacked = WordPack.unpack(buf, input.length);
+        const filtered = WordEnc.filter(unpacked);
+        World.sendPrivateMessage(player, username, filtered);
         buf.release();
 
         player.socialProtect = true;

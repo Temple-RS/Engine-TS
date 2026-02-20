@@ -11,8 +11,12 @@ export default class WordEncBadWords {
         this.wordEncFragments = wordEncFragments;
     }
 
-    filter(_chars: string[]): void {
-        // Censorship disabled
+    filter(chars: string[]): void {
+        for (let pass = 0; pass < 2; pass++) {
+            for (let i = this.bads.length - 1; i >= 0; i--) {
+                this.filterBadCombinations(this.badCombinations[i] || null, chars, this.bads[i]);
+            }
+        }
     }
 
     filterBadCombinations(combos: number[][] | null, chars: string[], bads: Uint16Array): void {
@@ -101,7 +105,9 @@ export default class WordEncBadWords {
                 }
             }
             if (numeralCount <= alphaCount) {
-                WordEnc.maskChars(startIndex, currentIndex, chars);
+                if (!WordEnc.isWhitelisted(chars, startIndex, currentIndex)) {
+                    WordEnc.maskChars(startIndex, currentIndex, chars);
+                }
             }
         }
     }

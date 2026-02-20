@@ -21,6 +21,7 @@ export function generateCompilerSymbols() {
     fs.mkdirSync('data/symbols', { recursive: true });
 
     const constants: Record<string, string> = {};
+
     loadDir(`${Environment.BUILD_SRC_DIR}/scripts`, '.constant', src => {
         for (let i = 0; i < src.length; i++) {
             if (!src[i] || src[i].startsWith('//')) {
@@ -414,13 +415,15 @@ export function generateCompilerSymbols() {
         'grounddecor'
     ];
 
-    fs.writeFileSync('data/symbols/locshape.sym', locshapes.map((name, index) => `${index}\t${name}`).join('\n') + '\n');
+    const locshapeSym = locshapes.map((name, index) => `${index}\t${name}`).join('\n') + '\n';
+    fs.writeFileSync('data/symbols/locshape.sym', locshapeSym);
+    fs.writeFileSync('data/symbols/loc_shape.sym', locshapeSym);
 
     const fonts = ['p11', 'p12', 'b12', 'q8'];
     fs.writeFileSync('data/symbols/fontmetrics.sym', fonts.map((name, index) => `${index}\t${name}`).join('\n') + '\n');
 
-    const npcmodes = Array.from(NpcModeMap.entries())
+    const npcmodesSym = Array.from(NpcModeMap.entries())
         .sort((a, b) => a[1] - b[1])
         .map(([name, opcode]) => `${opcode}\t${name.toLowerCase()}`);
-    fs.writeFileSync('data/symbols/npc_mode.sym', npcmodes.join('\n') + '\n');
+    fs.writeFileSync('data/symbols/npc_mode.sym', npcmodesSym.join('\n') + '\n');
 }
