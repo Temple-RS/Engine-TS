@@ -6,7 +6,7 @@ export default {
     IS_BUN: typeof process.versions.bun !== 'undefined', // not user-configurable
 
     EASY_STARTUP: tryParseBoolean(process.env.EASY_STARTUP, false),
-    WEBSITE_REGISTRATION: tryParseBoolean(process.env.WEBSITE_REGISTRATION, true),
+    WEBSITE_REGISTRATION: tryParseBoolean(process.env.WEBSITE_REGISTRATION, false),
 
     /// web server
     WEB_PORT: tryParseInt(process.env.WEB_PORT, process.platform === 'win32' || process.platform === 'darwin' ? 80 : 8888),

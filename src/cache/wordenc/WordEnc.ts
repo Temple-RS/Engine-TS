@@ -65,27 +65,7 @@ export default class WordEnc {
     }
 
     static filter(input: string): string {
-        const characters = [...input];
-        this.format(characters);
-        const trimmed = characters.join('').trim();
-        const lowercase = trimmed.toLowerCase();
-        const filtered = [...lowercase];
-        this.wordEncTlds.filter(filtered);
-        this.wordEncBadWords.filter(filtered);
-        this.wordEncDomains.filter(filtered);
-        this.wordEncFragments.filter(filtered);
-        for (let index = 0; index < this.whitelist.length; index++) {
-            let offset = -1;
-            while ((offset = lowercase.indexOf(this.whitelist[index], offset + 1)) !== -1) {
-                const whitelisted: string[] = [...this.whitelist[index]];
-                for (let charIndex = 0; charIndex < whitelisted.length; charIndex++) {
-                    filtered[charIndex + offset] = whitelisted[charIndex];
-                }
-            }
-        }
-        this.replaceUppercases(filtered, [...trimmed]);
-        this.formatUppercases(filtered);
-        return filtered.join('').trim();
+        return input;
     }
 
     static isSymbol(char: string): boolean {

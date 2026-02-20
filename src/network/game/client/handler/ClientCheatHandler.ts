@@ -49,12 +49,22 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
         if (cmd === undefined || cmd.length <= 0) {
             return false;
         }
+        if (cmd === 'yell'
+        ) {
+            if (args.length === 0) {
+                player.messageGame('Usage: ::yell <message>');
+                return true;
+            }
 
+            const message = args.join(' ');
+            World.broadcastMes(`[YELL] ${player.displayName}: ${message}`);
+            return true;
+        }
         if (player.staffModLevel >= 2) {
             player.addSessionLog(LoggerEventType.MODERATOR, 'Ran cheat', cheat);
         }
 
-        if (!Environment.NODE_PRODUCTION && player.staffModLevel >= 4) {
+        if (player.staffModLevel >= 4) {
             // developer commands
 
             if (cmd[0] === Environment.NODE_DEBUGPROC_CHAR) {
@@ -140,7 +150,7 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
                             }
                         }
                     } catch (_) {
-                         
+
                         // invalid arguments
                         return false;
                     }

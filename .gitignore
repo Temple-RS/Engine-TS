@@ -49,3 +49,4 @@ Thumbs.db
 ### macOS ###
 .DS_Store
 ._*
+data/whitelist.txt

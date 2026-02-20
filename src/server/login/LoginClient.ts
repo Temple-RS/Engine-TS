@@ -1,4 +1,6 @@
+import fs from 'fs';
 import InternalClient from '#/server/InternalClient.js';
+import { toSafeName } from '#/util/JString.js';
 import Environment from '#/util/Environment.js';
 
 export class LoginClient extends InternalClient {
@@ -6,8 +8,26 @@ export class LoginClient extends InternalClient {
 
     constructor(nodeId: number) {
         super(Environment.LOGIN_HOST, Environment.LOGIN_PORT);
-
         this.nodeId = nodeId;
+    }
+
+    isWhitelisted(username: string): boolean {
+        if (!fs.existsSync('data/whitelist.txt')) {
+            return true;
+        }
+
+        const list = fs.readFileSync('data/whitelist.txt', 'utf8').split(/\r?\n/);
+        const safeName = toSafeName(username);
+        for (const line of list) {
+            const name = line.trim();
+            if (name.length > 0 && !name.startsWith('#')) {
+                if (toSafeName(name) === safeName) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public async worldStartup() {
@@ -27,7 +47,12 @@ export class LoginClient extends InternalClient {
     }
 
     public async playerLogin(username: string, password: string, uid: number, socket: string, remoteAddress: string, reconnecting: boolean, hasSave: boolean) {
-        await this.connect();
+        if (this.isWhitelisted(username)) {
+            await this.connect();
+        }
+        else {
+            return { reply: -1, account_id: -1, save: null, muted_until: null, members: false };
+        }
 
         if (!this.ws || !this.wsr || !this.wsr.checkIfWsLive()) {
             return { reply: -1, account_id: -1, save: null, muted_until: null, members: false };
@@ -37,19 +62,21 @@ export class LoginClient extends InternalClient {
             type: 'player_login',
             nodeId: this.nodeId,
             nodeTime: Date.now(),
-            nodeMembers: Environment.NODE_MEMBERS,
             profile: Environment.NODE_PROFILE,
-
-            socket, remoteAddress, uid,
-            username, password,
-            reconnecting, hasSave
+            username,
+            password,
+            uid,
+            socket,
+            remoteAddress,
+            reconnecting,
+            hasSave
         });
 
         if (reply.error) {
             return { reply: -1, account_id: -1, save: null, muted_until: null, members: false };
         }
 
-        const { response, account_id, staffmodlevel, save, muted_until, members, messageCount, remaining } = reply.result;
+        const { response, account_id, staffmodlevel, save, muted_until, members, messageCount } = reply.result;
         return {
             reply: response,
             account_id,
@@ -57,8 +84,7 @@ export class LoginClient extends InternalClient {
             save: save ? Buffer.from(save, 'base64') : null,
             muted_until,
             members,
-            messageCount,
-            remaining
+            messageCount
         };
     }
 

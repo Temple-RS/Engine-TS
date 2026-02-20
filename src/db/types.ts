@@ -1,8 +1,18 @@
 import type { ColumnType } from 'kysely';
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+
+export interface Login {
+    id?: number;
+    uuid: string;
+    account_id: number;
+    world: number;
+    timestamp: Date;
+    uid: number;
+    ip: string;
+}
 
 export type account = {
     id: Generated<number>;
@@ -128,4 +138,5 @@ export type DB = {
     session: session;
     session_log: session_log;
     session_wealth: session_wealth;
+    login: Login;
 };
