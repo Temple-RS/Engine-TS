@@ -203,7 +203,22 @@ export default class LoginServer {
                                     .on('profile', '=', profile)
                                 )
                                 .where('username', '=', username)
-                                .selectAll()
+                                .select([
+                                    'account.id',
+                                    'account.username',
+                                    'account.password',
+                                    'account.registration_ip',
+                                    'account.registration_date',
+                                    'account.muted_until',
+                                    'account.banned_until',
+                                    'account.staffmodlevel',
+                                    'account.members',
+                                    'account_login.account_id',
+                                    'account_login.logged_in',
+                                    'account_login.login_time',
+                                    'account_login.logged_out',
+                                    'account_login.logout_time'
+                                ])
                                 .executeTakeFirst();
                             if (!account) {
                                 console.log(`[LOGIN] Account ${username} not found. WEBSITE_REGISTRATION=${Environment.WEBSITE_REGISTRATION}`);
@@ -230,7 +245,22 @@ export default class LoginServer {
                                         .on('profile', '=', profile)
                                     )
                                     .where('username', '=', username)
-                                    .selectAll()
+                                    .select([
+                                        'account.id',
+                                        'account.username',
+                                        'account.password',
+                                        'account.registration_ip',
+                                        'account.registration_date',
+                                        'account.muted_until',
+                                        'account.banned_until',
+                                        'account.staffmodlevel',
+                                        'account.members',
+                                        'account_login.account_id',
+                                        'account_login.logged_in',
+                                        'account_login.login_time',
+                                        'account_login.logged_out',
+                                        'account_login.logout_time'
+                                    ])
                                     .executeTakeFirst();
                             }
 
@@ -445,7 +475,22 @@ export default class LoginServer {
                                 .on('profile', '=', profile)
                             )
                             .where('username', '=', username)
-                            .selectAll()
+                            .select([
+                                'account.id',
+                                'account.username',
+                                'account.password',
+                                'account.registration_ip',
+                                'account.registration_date',
+                                'account.muted_until',
+                                'account.banned_until',
+                                'account.staffmodlevel',
+                                'account.members',
+                                'account_login.account_id',
+                                'account_login.logged_in',
+                                'account_login.login_time',
+                                'account_login.logged_out',
+                                'account_login.logout_time'
+                            ])
                             .executeTakeFirst();
 
                         if (account?.account_id) {
@@ -493,7 +538,22 @@ export default class LoginServer {
                                 .on('profile', '=', profile)
                             )
                             .where('username', '=', username)
-                            .selectAll()
+                            .select([
+                                'account.id',
+                                'account.username',
+                                'account.password',
+                                'account.registration_ip',
+                                'account.registration_date',
+                                'account.muted_until',
+                                'account.banned_until',
+                                'account.staffmodlevel',
+                                'account.members',
+                                'account_login.account_id',
+                                'account_login.logged_in',
+                                'account_login.login_time',
+                                'account_login.logged_out',
+                                'account_login.logout_time'
+                            ])
                             .executeTakeFirst();
 
                         if (account?.account_id) {
