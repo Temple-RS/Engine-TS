@@ -49,15 +49,21 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
         if (cmd === undefined || cmd.length <= 0) {
             return false;
         }
-        if (cmd === 'yell'
-        ) {
-            if (args.length === 0) {
-                player.messageGame('Usage: ::yell <message>');
+        if (cheat.startsWith('/')) {
+            const now = Date.now();
+            if (now - player.lastYellTime < 5000) {
+                player.messageGame(`You must wait ${5 - Math.ceil((now - player.lastYellTime) / 1000)} seconds before shouting again.`);
                 return true;
             }
 
-            const message = args.join(' ');
-            World.broadcastMes(`[YELL] ${player.displayName}: ${message}`);
+            player.lastYellTime = now;
+            const yellMessage = cheat.substring(1).trim();
+            if (yellMessage.length === 0) {
+                player.messageGame('Usage: / [message]');
+                return true;
+            }
+
+            World.broadcastMes(`[${player.displayName}]: ${yellMessage}`);
             return true;
         }
         if (player.staffModLevel >= 2) {

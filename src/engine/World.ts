@@ -1453,13 +1453,17 @@ class World {
         // Dev note: This function is slightly messy. Perhaps this can be organized better
         // Check if we need to changeobj first
         if (ObjType.get(obj.type).stackable && obj.lifecycle === EntityLifeCycle.DESPAWN) {
-            const existing = this.getObjOfReceiver(obj.x, obj.z, obj.level, obj.type, receiver64);
+            let existing = this.getObjOfReceiver(obj.x, obj.z, obj.level, obj.type, receiver64);
+            if (!existing && receiver64 !== Obj.NO_RECEIVER) {
+                // If we didn't find a stack belonging specifically to this receiver, check for a public stack
+                existing = this.getObjOfReceiver(obj.x, obj.z, obj.level, obj.type, Obj.NO_RECEIVER);
+            }
+
             if (existing && existing.lifecycle === EntityLifeCycle.DESPAWN) {
                 const nextCount = obj.count + existing.count;
                 if (nextCount <= Inventory.STACK_LIMIT) {
-                    // If an obj of the same type exists and is stackable and have the same receiver, then we merge them.
+                    // Merge into existing stack
                     this.changeObj(existing, nextCount);
-                    // Set the lifecycle without all the extra logic surrounding it
                     existing.lifecycleTick = duration;
                     return;
                 }

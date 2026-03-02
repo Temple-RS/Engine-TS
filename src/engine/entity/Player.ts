@@ -406,6 +406,7 @@ export default class Player extends PathingEntity {
     chatColour: number | null = null;
     chatEffect: number | null = null;
     chatRights: number | null = null;
+    lastYellTime: number = 0;
 
     constructor(username: string, username37: bigint, hash64: bigint) {
         super(
