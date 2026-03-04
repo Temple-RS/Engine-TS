@@ -472,6 +472,10 @@ const ScriptOpcodePointers: {
         require: ['active_player'],
         require2: ['active_player2']
     },
+    [ScriptOpcode.STAT_RESET2]: {
+        require: ['active_player'],
+        require2: ['active_player2']
+    },
     [ScriptOpcode.STAT_RANDOM]: {
         require: ['active_player'],
         require2: ['active_player2']

@@ -178,6 +178,7 @@ export const enum ScriptOpcode {
     STAT_BASE, // official
     STAT_BOOST, // official
     STAT_DRAIN,
+    STAT_RESET2,
     STAT_HEAL, // official
     STAT_RANDOM,
     STAT_SUB,
@@ -628,6 +629,7 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['STAT_BASE', ScriptOpcode.STAT_BASE],
     ['STAT_BOOST', ScriptOpcode.STAT_BOOST],
     ['STAT_DRAIN', ScriptOpcode.STAT_DRAIN],
+    ['STAT_RESET2', ScriptOpcode.STAT_RESET2],
     ['STAT_HEAL', ScriptOpcode.STAT_HEAL],
     ['STAT_RANDOM', ScriptOpcode.STAT_RANDOM],
     ['STAT_SUB', ScriptOpcode.STAT_SUB],

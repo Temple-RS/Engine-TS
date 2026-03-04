@@ -576,7 +576,19 @@ const PlayerOps: CommandHandlers = {
             player.changeStat(stat);
         }
     }),
+    [ScriptOpcode.STAT_RESET2]: checkedHandler(ActivePlayer, state => {
 
+        const player = state.activePlayer;
+
+        for (let i = 0; i < 21; i++) {
+            if (i === PlayerStat.HITPOINTS) {
+                player.setLevel(i, 10);
+            } else {
+                player.setLevel(i, 1);
+            }
+
+        }
+    }),
     // https://x.com/JagexAsh/status/1110604592138670083
     [ScriptOpcode.STAT_RANDOM]: checkedHandler(ActivePlayer, state => {
         const [stat, low, high] = state.popInts(3);
@@ -1203,8 +1215,8 @@ const PlayerOps: CommandHandlers = {
         const objType = ObjType.getByName(name);
 
         state.activePlayer.addWealthEvent({
-            event_type: eventType, 
-            account_items: [{ id: objType?.id, name, count }], 
+            event_type: eventType,
+            account_items: [{ id: objType?.id, name, count }],
             account_value: value
         });
     }),
