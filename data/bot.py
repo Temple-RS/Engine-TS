@@ -82,8 +82,19 @@ def register_user(discord_id, username):
         return False, f"The username `{username}` is already whitelisted."
         
     try:
+        # Check if file needs a newline before appending
+        prefix = ""
+        if os.path.exists(WHITELIST_FILE) and os.path.getsize(WHITELIST_FILE) > 0:
+            with open(WHITELIST_FILE, "rb+") as f:
+                f.seek(-1, 2)
+                last_char = f.read(1)
+                if last_char != b"\n":
+                    prefix = "\n"
+
         with open(WHITELIST_FILE, "a") as f:
-            f.write(f"{discord_id},{username}\n")
+            f.write(f"{prefix}{discord_id},{username}\n")
+            f.flush()
+            os.fsync(f.fileno())
         return True, f"Username `{username}` has been successfully whitelisted!"
     except Exception as e:
         return False, f"Error writing to file: {str(e)}"
