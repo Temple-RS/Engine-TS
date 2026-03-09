@@ -16,13 +16,25 @@ class WhitelistBot(discord.Client):
         self.tree = app_commands.CommandTree(self)
 
     async def setup_hook(self):
-        # This will sync commands globally. 
-        # Note: Global sync can take up to an hour to propagate.
-        await self.tree.sync()
+        # Check if we have a developer guild ID for instant syncing
+        dev_guild_id = os.getenv("DEV_GUILD_ID")
+        
+        if dev_guild_id:
+            try:
+                guild = discord.Object(id=int(dev_guild_id))
+                self.tree.copy_global_to(guild=guild)
+                await self.tree.sync(guild=guild)
+                print(f"Fast-synced commands to developer guild: {dev_guild_id}")
+            except Exception as e:
+                print(f"Failed to fast-sync to guild {dev_guild_id}: {e}")
+        else:
+            print("Syncing commands globally... Note: This can take up to 1 hour to appear in Discord.")
+            await self.tree.sync()
+            print("Global sync request sent to Discord.")
 
     async def on_ready(self):
-        print(f"✅ Logged in as {self.user} (ID: {self.user.id})")
-        print("🔁 Synced global commands")
+        print(f"Logged in as {self.user} (ID: {self.user.id})")
+        print("Bot is ready and listening for /whitelist commands.")
 
 def get_whitelist_data():
     """
@@ -39,13 +51,15 @@ def get_whitelist_data():
     with open(WHITELIST_FILE, "r") as f:
         for line in f:
             line = line.strip()
-            if not line:
+            if not line or line.startswith("#"):
                 continue
-            if line.startswith("# id:"):
-                uid = line.replace("# id:", "").strip()
+            
+            if "," in line:
+                parts = line.split(",", 1)
+                uid = parts[0].strip()
+                name = parts[1].strip().lower()
                 user_counts[uid] = user_counts.get(uid, 0) + 1
-            elif not line.startswith("#"):
-                usernames.add(line.lower())
+                usernames.add(name)
                 
     return user_counts, usernames
 
@@ -54,6 +68,9 @@ def register_user(discord_id, username):
     username = username.strip()
     if not username:
         return False, "Username cannot be empty."
+    
+    if "," in username:
+        return False, "Username cannot contain commas."
     
     user_counts, usernames = get_whitelist_data()
     
@@ -66,15 +83,14 @@ def register_user(discord_id, username):
         
     try:
         with open(WHITELIST_FILE, "a") as f:
-            f.write(f"\n# id:{discord_id}\n")
-            f.write(f"{username}\n")
+            f.write(f"{discord_id},{username}\n")
         return True, f"Username `{username}` has been successfully whitelisted!"
     except Exception as e:
         return False, f"Error writing to file: {str(e)}"
 
 client = WhitelistBot()
 
-@client.tree.command(name="whitelist", description="Add a username to the server whitelist (1 per user)")
+@client.tree.command(name="whitelist", description="Add a username to the server whitelist")
 @app_commands.describe(username="The username you want to whitelist")
 async def whitelist(interaction: discord.Interaction, username: str):
     success, message = register_user(interaction.user.id, username)
@@ -85,6 +101,6 @@ async def whitelist(interaction: discord.Interaction, username: str):
 
 if __name__ == "__main__":
     if not TOKEN:
-        print("❌ Error: DISCORD_TOKEN not found in .env file.")
+        print("Error: DISCORD_TOKEN not found in .env file.")
     else:
         client.run(TOKEN)

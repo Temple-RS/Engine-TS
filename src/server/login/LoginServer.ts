@@ -114,6 +114,30 @@ export default class LoginServer {
     private activeLogins = 0;
     private readonly MAX_CONCURRENT_LOGINS = 1;
 
+    isWhitelisted(username: string): boolean {
+        if (!fs.existsSync('data/whitelist.txt')) {
+            return true;
+        }
+
+        const list = fs.readFileSync('data/whitelist.txt', 'utf8').split(/\r?\n/);
+        const safeName = toSafeName(username);
+        for (const line of list) {
+            const trimmed = line.trim();
+            if (trimmed.length > 0 && !trimmed.startsWith('#')) {
+                let name = trimmed;
+                if (trimmed.includes(',')) {
+                    name = trimmed.split(',')[1].trim();
+                }
+
+                if (toSafeName(name) === safeName) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     rejectLoginForSafety(s: WebSocket, replyTo: number) {
         // Send opcode 7 ('Please try again') if something has gone wrong
         // during login attempt, which may be resolved by simply retrying.
@@ -172,6 +196,17 @@ export default class LoginServer {
                     } else if (type === 'player_login') {
                         const { nodeMembers, replyTo, username, password, uid, socket, remoteAddress, reconnecting, hasSave } = msg;
                         const safeName = toSafeName(username);
+
+                        if (!this.isWhitelisted(username)) {
+                            console.log(`[Blocked] ${username} is not whitelisted`);
+                            s.send(
+                                JSON.stringify({
+                                    replyTo,
+                                    response: 6
+                                })
+                            );
+                            return;
+                        }
 
                         if (this.loginRequests.has(safeName)) {
                             s.send(

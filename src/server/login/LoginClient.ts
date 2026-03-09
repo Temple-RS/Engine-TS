@@ -19,8 +19,13 @@ export class LoginClient extends InternalClient {
         const list = fs.readFileSync('data/whitelist.txt', 'utf8').split(/\r?\n/);
         const safeName = toSafeName(username);
         for (const line of list) {
-            const name = line.trim();
-            if (name.length > 0 && !name.startsWith('#')) {
+            const trimmed = line.trim();
+            if (trimmed.length > 0 && !trimmed.startsWith('#')) {
+                let name = trimmed;
+                if (trimmed.includes(',')) {
+                    name = trimmed.split(',')[1].trim();
+                }
+
                 if (toSafeName(name) === safeName) {
                     return true;
                 }
