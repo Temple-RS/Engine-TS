@@ -22,11 +22,23 @@ class WhitelistBot(discord.Client):
         if dev_guild_id:
             try:
                 guild = discord.Object(id=int(dev_guild_id))
+                
+                # To remove the global duplicate, we clear the global tree, 
+                # sync it (to tell Discord "0 global commands"), then re-add 
+                # and sync specifically to the guild.
+                print("Cleaning up global command duplicates...")
+                global_cmds = self.tree.get_commands(guild=None)
+                self.tree.clear_commands(guild=None)
+                await self.tree.sync() # Wipe global cache
+                
+                for cmd in global_cmds:
+                    self.tree.add_command(cmd) # Re-add for guild sync
+                
                 self.tree.copy_global_to(guild=guild)
                 await self.tree.sync(guild=guild)
-                print(f"Fast-synced commands to developer guild: {dev_guild_id}")
+                print(f"Duplicates removed. Fast-synced to guild: {dev_guild_id}")
             except Exception as e:
-                print(f"Failed to fast-sync to guild {dev_guild_id}: {e}")
+                print(f"Failed to clear duplicates/sync to guild {dev_guild_id}: {e}")
         else:
             print("Syncing commands globally... Note: This can take up to 1 hour to appear in Discord.")
             await self.tree.sync()
