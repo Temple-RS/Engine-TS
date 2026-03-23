@@ -20,6 +20,7 @@ import PlayerOps from '#/engine/script/handlers/PlayerOps.js';
 import ServerOps from '#/engine/script/handlers/ServerOps.js';
 import StringOps from '#/engine/script/handlers/StringOps.js';
 import StructOps from '#/engine/script/handlers/StructOps.js';
+import ClanOps from '#/engine/script/handlers/ClanOps.js';
 import ScriptFile from '#/engine/script/ScriptFile.js';
 import { ScriptOpcode, ScriptOpcodeNameMap } from '#/engine/script/ScriptOpcode.js';
 import ScriptPointer from '#/engine/script/ScriptPointer.js';
@@ -52,7 +53,8 @@ export default class ScriptRunner {
         ...NumberOps,
         ...StructOps,
         ...DbOps,
-        ...DebugOps
+        ...DebugOps,
+        ...ClanOps
     };
 
     /**

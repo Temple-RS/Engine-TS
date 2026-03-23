@@ -46,6 +46,7 @@ import { NpcEventRequest, NpcEventType } from '#/engine/entity/NpcEventRequest.j
 import { NpcStat } from '#/engine/entity/NpcStat.js';
 import Obj from '#/engine/entity/Obj.js';
 import Player from '#/engine/entity/Player.js';
+import Clan from '#/engine/Clan.js';
 import { ChatModePublic } from '#/engine/entity/ChatModes.js';
 import { PlayerLoading } from '#/engine/entity/PlayerLoading.js';
 import { EntityQueueState, PlayerQueueType } from '#/engine/entity/PlayerQueueRequest.js';
@@ -146,6 +147,7 @@ class World {
     readonly players: Player[] = new Array(2048);
 
     readonly npcs: NpcList = new NpcList(World.NPCS);
+    readonly clans: Map<string, Clan> = new Map();
 
     // zones
     readonly zonesTracking: Set<Zone> = new Set();
@@ -1820,12 +1822,12 @@ class World {
     broadcastYell(message: string, sender: Player): void {
         for (const player of this.playerLoop.all()) {
             // Skip the sender — the client shows a local preview directly.
-            // Only skip other players if their public chat is OFF.
             if (player === sender) {
                 continue;
             }
 
-            if (player.publicChat === ChatModePublic.OFF) {
+            // Only send yells if player has World or All chat enabled.
+            if (player.publicChat !== ChatModePublic.ALL && player.publicChat !== ChatModePublic.WORLD) {
                 continue;
             }
 
@@ -1835,6 +1837,114 @@ class World {
                 player.wrappedMessageGame(message);
             }
         }
+    }
+
+    broadcastClan(clanName: string, message: string, sender: Player | null = null): void {
+        const clan = this.clans.get(clanName.toLowerCase());
+        if (!clan) {
+            return;
+        }
+
+        for (const player of clan.members) {
+            if (player === sender) {
+                continue;
+            }
+
+            // Only send clan messages if player has Clan or All chat enabled.
+            if (player.publicChat !== ChatModePublic.ALL && player.publicChat !== ChatModePublic.CLAN) {
+                continue;
+            }
+
+            player.wrappedMessageGame(message);
+        }
+    }
+
+    getClan(clanName: string): Clan | null {
+        return this.clans.get(clanName.toLowerCase()) ?? null;
+    }
+
+    createClan(player: Player, clanName: string): boolean {
+        const nameKey = clanName.toLowerCase();
+
+        if (player.totalLevel < 100) {
+            player.messageGame(`You need a total level of at least 100 to create a clan. Your current total level is ${player.totalLevel}.`);
+            return false;
+        }
+
+        if (this.clans.has(nameKey)) {
+            player.messageGame(`A clan with the name '${clanName}' already exists.`);
+            return false;
+        }
+
+        if (player.clanName) {
+            this.leaveClan(player);
+        }
+
+        const clan = new Clan(clanName, player);
+        this.clans.set(nameKey, clan);
+        player.clanName = nameKey;
+        player.messageGame(`You have successfully founded the clan: ${clanName}`);
+        player.messageGame(`Current Clan Score: ${clan.score}`);
+        return true;
+    }
+
+    joinClan(player: Player, clanName: string): void {
+        const nameKey = clanName.toLowerCase();
+
+        // Already in this clan?
+        if (player.clanName === nameKey) {
+            player.messageGame(`You are already in the '${clanName}' clan.`);
+            return;
+        }
+
+        const clan = this.clans.get(nameKey);
+        if (!clan) {
+            player.messageGame(`The clan '${clanName}' does not exist.`);
+            return;
+        }
+
+        // Leave current clan if in one
+        if (player.clanName) {
+            this.leaveClan(player);
+        }
+
+        // Try to join existing clan
+        if (!clan.canJoin(player)) {
+            if (clan.locked) {
+                player.messageGame(`The clan '${clanName}' is locked and requires an invitation.`);
+            } else if (clan.members.size >= 100) {
+                player.messageGame(`The clan '${clanName}' is currently full.`);
+            }
+            return;
+        }
+
+        // Successfully joined
+        if (clan.addMember(player)) {
+            player.clanName = nameKey;
+            this.broadcastClan(nameKey, `@red@[Clan] @bla@${player.displayName} has joined the clan.`, player);
+            player.messageGame(`You have joined the clan: ${clanName}`);
+            player.messageGame(`Total Clan Score: ${clan.score}`);
+        }
+    }
+
+    leaveClan(player: Player): void {
+        if (!player.clanName) {
+            return;
+        }
+
+        const clan = this.clans.get(player.clanName);
+        if (clan) {
+            clan.removeMember(player);
+            this.broadcastClan(player.clanName, `@red@[Clan] @bla@${player.displayName} has left the clan.`);
+            player.messageGame(`You have left the clan: ${clan.name}`);
+
+            // If clan becomes empty, delete it
+            if (clan.memberNames.size === 0) {
+                this.clans.delete(player.clanName);
+            }
+        }
+
+        player.clanName = '';
     }
 
     rebuild() {

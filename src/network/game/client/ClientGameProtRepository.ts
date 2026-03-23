@@ -36,6 +36,7 @@ import OpPlayerUDecoder from '#/network/game/client/codec/OpPlayerUDecoder.js';
 import ReportAbuseDecoder from '#/network/game/client/codec/ReportAbuseDecoder.js';
 import ResumePauseButtonDecoder from '#/network/game/client/codec/ResumePauseButtonDecoder.js';
 import ResumePCountDialogDecoder from '#/network/game/client/codec/ResumePCountDialogDecoder.js';
+import ResumePStringDialogDecoder from '#/network/game/client/codec/ResumePStringDialogDecoder.js';
 import TutClickSideDecoder from '#/network/game/client/codec/TutClickSideDecoder.js';
 import ChatSetModeHandler from '#/network/game/client/handler/ChatSetModeHandler.js';
 import ClientCheatHandler from '#/network/game/client/handler/ClientCheatHandler.js';
@@ -70,6 +71,7 @@ import OpPlayerUHandler from '#/network/game/client/handler/OpPlayerUHandler.js'
 import ReportAbuseHandler from '#/network/game/client/handler/ReportAbuseHandler.js';
 import ResumePauseButtonHandler from '#/network/game/client/handler/ResumePauseButtonHandler.js';
 import ResumePCountDialogHandler from '#/network/game/client/handler/ResumePCountDialogHandler.js';
+import ResumePStringDialogHandler from '#/network/game/client/handler/ResumePStringDialogHandler.js';
 import TutClickSideHandler from '#/network/game/client/handler/TutClickSideHandler.js';
 import EventCameraPositionDecoder from '#/network/game/client/codec/EventCameraPositionDecoder.js';
 import EventCameraPositionHandler from '#/network/game/client/handler/EventCameraPositionHandler.js';
@@ -162,6 +164,7 @@ class ClientGameProtRepository {
         this.bind(new OpPlayerUDecoder(), new OpPlayerUHandler());
         this.bind(new ResumePauseButtonDecoder(), new ResumePauseButtonHandler());
         this.bind(new ResumePCountDialogDecoder(), new ResumePCountDialogHandler());
+        this.bind(new ResumePStringDialogDecoder(), new ResumePStringDialogHandler());
         this.bind(new TutClickSideDecoder(), new TutClickSideHandler());
         this.bind(new ChatSetModeDecoder(), new ChatSetModeHandler());
         this.bind(new ReportAbuseDecoder(), new ReportAbuseHandler());

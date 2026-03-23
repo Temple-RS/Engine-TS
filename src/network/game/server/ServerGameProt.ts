@@ -64,6 +64,7 @@ export default class ServerGameProt {
     static readonly LAST_LOGIN_INFO = new ServerGameProt(146, 10); // NXT naming
     static readonly LOGOUT = new ServerGameProt(21, 0); // NXT naming
     static readonly P_COUNTDIALOG = new ServerGameProt(5, 0); // named after runescript command + client resume_p_countdialog packet
+    static readonly P_STRINGDIALOG = new ServerGameProt(80, 0);
     static readonly SET_MULTIWAY = new ServerGameProt(75, 1);
     static readonly SET_PLAYER_OP = new ServerGameProt(204, -1);
 

@@ -12,7 +12,7 @@ export default class ReportAbuseHandler extends ClientGameMessageHandler<ReportA
             return false;
         }
 
-        player.messageGame('The clan/settings menu will go here.');
+        player.messageGame('Thank you for your report.');
         return true;
     }
 }

@@ -508,7 +508,7 @@ const InvOps: CommandHandlers = {
             throw new Error(`$inv requires protected access: ${fromInvType.debugname}`);
         }
 
-        if (!state.pointerGet(ProtectedActivePlayer[state.intOperand]) && toInvType.protect && fromInvType.scope !== InvType.SCOPE_SHARED) {
+        if (!state.pointerGet(ProtectedActivePlayer[state.intOperand]) && toInvType.protect && toInvType.scope !== InvType.SCOPE_SHARED) {
             throw new Error(`$inv requires protected access: ${toInvType.debugname}`);
         }
 
@@ -518,7 +518,7 @@ const InvOps: CommandHandlers = {
             return;
         }
 
-        const overflow = count - player.invAdd(toInvType.id, objType.id, completed, false);
+        const overflow = completed - player.invAdd(toInvType.id, objType.id, completed, false);
         if (overflow > 0) {
             if (!objType.stackable || overflow === 1) {
                 for (let i = 0; i < overflow; i++) {
@@ -558,7 +558,7 @@ const InvOps: CommandHandlers = {
         if (objType.certtemplate === -1 && objType.certlink >= 0) {
             finalObj = objType.certlink;
         }
-        const overflow = count - player.invAdd(toInvType.id, finalObj, completed, false);
+        const overflow = completed - player.invAdd(toInvType.id, finalObj, completed, false);
         if (overflow > 0) {
             // should be a stackable cert already!
             World.addObj(new Obj(player.level, player.x, player.z, EntityLifeCycle.DESPAWN, finalObj, overflow), player.hash64, 200);
@@ -589,10 +589,20 @@ const InvOps: CommandHandlers = {
             return;
         }
 
+        let finalObj = objType.id;
         if (objType.certtemplate >= 0 && objType.certlink >= 0) {
-            player.invAdd(toInvType.id, objType.certlink, completed);
-        } else {
-            player.invAdd(toInvType.id, objType.id, completed);
+            finalObj = objType.certlink;
+        }
+
+        const overflow = completed - player.invAdd(toInvType.id, finalObj, completed, false);
+        if (overflow > 0) {
+            if (!objType.stackable || overflow === 1) {
+                for (let i = 0; i < overflow; i++) {
+                    World.addObj(new Obj(player.level, player.x, player.z, EntityLifeCycle.DESPAWN, finalObj, 1), player.hash64, 200);
+                }
+            } else {
+                World.addObj(new Obj(player.level, player.x, player.z, EntityLifeCycle.DESPAWN, finalObj, overflow), player.hash64, 200);
+            }
         }
     }),
 

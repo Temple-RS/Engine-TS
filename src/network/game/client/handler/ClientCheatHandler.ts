@@ -54,17 +54,34 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             player.addSessionLog(LoggerEventType.MODERATOR, 'Ran cheat', cheat);
         }
 
-        // Handle world chat: any player can send a yell with /message
-        if (cheat.startsWith('/')) {
-            const now = Date.now();
-            if (now - player.lastYellTime < 5000) {
-                player.messageGame(`You must wait ${5 - Math.ceil((now - player.lastYellTime) / 1000)} seconds before shouting again.`);
+        // Handle Clan Chat: any player can send a message with //message
+        if (cheat.startsWith('//')) {
+            const clanMessage = cheat.substring(2).trim();
+            if (clanMessage.length === 0) {
+                player.messageGame('Usage: // [message]');
                 return true;
             }
 
+            if (player.clanName) {
+                World.broadcastClan(player.clanName, `@red@[Clan] @bla@${player.displayName}: ${clanMessage}`, player);
+                player.messageGame(`@red@[Clan] @bla@${player.displayName}: ${clanMessage}`);
+            } else {
+                player.messageGame('You are not in a clan.');
+            }
+            return true;
+        }
+
+        // Handle World Yell: any player can send a message with /message
+        if (cheat.startsWith('/')) {
             const yellMessage = cheat.substring(1).trim();
             if (yellMessage.length === 0) {
-                player.messageGame('Usage: /your message');
+                player.messageGame('Usage: / [message]');
+                return true;
+            }
+
+            const now = Date.now();
+            if (now - player.lastYellTime < 5000) {
+                player.messageGame(`You must wait ${5 - Math.ceil((now - player.lastYellTime) / 1000)} seconds before shouting again.`);
                 return true;
             }
 
@@ -72,6 +89,42 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             const broadcastText = `[${player.displayName}]: ${yellMessage}`;
             World.broadcastYell(broadcastText, player);
             player.messageGame(broadcastText); // show same format to sender
+            return true;
+        }
+
+        if (cmd === 'c' || cmd === 'clan') {
+            if (args.length < 1) {
+                player.messageGame('Usage: ::c <message>');
+                return true;
+            }
+
+            if (player.clanName) {
+                const message = cheat.substring(cmd.length + 3).trim(); // +3 to skip "::" + cmd + " "
+                World.broadcastClan(player.clanName, `@red@[Clan] @bla@${player.displayName}: ${message}`, player);
+                player.messageGame(`@red@[Clan] @bla@${player.displayName}: ${message}`);
+            } else {
+                player.messageGame('You are not in a clan.');
+            }
+            return true;
+        }
+
+        if (cmd === 'yell') {
+            if (args.length < 1) {
+                player.messageGame('Usage: ::yell <message>');
+                return true;
+            }
+
+            const now = Date.now();
+            if (now - player.lastYellTime < 5000) {
+                player.messageGame(`You must wait ${5 - Math.ceil((now - player.lastYellTime) / 1000)} seconds before shouting again.`);
+                return true;
+            }
+
+            player.lastYellTime = now;
+            const message = cheat.substring(cmd.length + 3).trim(); // +3 to skip "::" + "yell" + " "
+            const broadcastText = `[${player.displayName}]: ${message}`;
+            World.broadcastYell(broadcastText, player);
+            player.messageGame(broadcastText);
             return true;
         }
 
@@ -703,6 +756,94 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
                     player.messageGame(`Player '${args[0]}' does not exist or is not logged in.`);
                 }
             }
+        }
+
+        if (cmd === 'join') {
+            if (args.length < 1) {
+                player.messageGame('Usage: ::join <clanname>');
+                return true;
+            }
+            World.joinClan(player, args[0]);
+            return true;
+        }
+
+        if (cmd === 'leave') {
+            World.leaveClan(player);
+            return true;
+        }
+
+        if (cmd === 'invite') {
+            if (args.length < 1) {
+                player.messageGame('Usage: ::invite <playername>');
+                return true;
+            }
+
+            if (!player.clanName) {
+                player.messageGame('You are not in a clan.');
+                return true;
+            }
+
+            const clan = World.getClan(player.clanName);
+            if (!clan || !clan.isOwner(player)) {
+                player.messageGame('Only the clan leader can invite players.');
+                return true;
+            }
+
+            const targetName = args[0].toLowerCase();
+            clan.invites.add(targetName);
+            player.messageGame(`You have invited ${args[0]} to join '${clan.name}'.`);
+            
+            // If target is online, notify them
+            const target = World.getPlayerByUsername(targetName);
+            if (target) {
+                target.messageGame(`You have been invited to join the clan: ${clan.name}`);
+                target.messageGame(`Type ::join ${clan.name} to accept.`);
+            }
+            return true;
+        }
+
+        if (cmd === 'lock') {
+            if (!player.clanName) {
+                player.messageGame('You are not in a clan.');
+                return true;
+            }
+
+            const clan = World.getClan(player.clanName);
+            if (!clan || !clan.isOwner(player)) {
+                player.messageGame('Only the clan leader can lock/unlock the clan.');
+                return true;
+            }
+
+            clan.locked = !clan.locked;
+            player.messageGame(`The clan '${clan.name}' is now ${clan.locked ? 'LOCKED' : 'UNLOCKED'}.`);
+            if (clan.locked) {
+                player.messageGame('Only invited players can now join.');
+            }
+            return true;
+        }
+
+        if (cmd === 'claninfo') {
+            const clanName = args.length > 0 ? args[0] : player.clanName;
+            if (!clanName) {
+                player.messageGame('Usage: ::claninfo [clanname]');
+                return true;
+            }
+
+            const clan = World.getClan(clanName);
+            if (!clan) {
+                player.messageGame(`Clan '${clanName}' not found.`);
+                return true;
+            }
+
+            player.messageGame(`@red@--- Clan Info: ${clan.name} ---`);
+            player.messageGame(`Owner: ${clan.owner}`);
+            player.messageGame(`Members: ${clan.memberNames.size}/100`);
+            player.messageGame(`Online: ${clan.members.size}`);
+            player.messageGame(`@yel@Total Clan Score: ${clan.score}`);
+            if (clan.locked) {
+                player.messageGame('Status: @red@LOCKED (Invite Only)');
+            }
+            return true;
         }
 
         return true;

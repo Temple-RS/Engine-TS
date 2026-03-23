@@ -78,6 +78,7 @@ export default class ClientGameProt {
     static readonly RESUME_PAUSEBUTTON = new ClientGameProt(146, 2); // NXT naming
     static readonly CLOSE_MODAL = new ClientGameProt(58, 0); // NXT naming
     static readonly RESUME_P_COUNTDIALOG = new ClientGameProt(161, 4); // NXT naming
+    static readonly RESUME_P_STRINGDIALOG = new ClientGameProt(63, -1);
     static readonly TUT_CLICKSIDE = new ClientGameProt(201, 1);
 
     static readonly MAP_BUILD_COMPLETE = new ClientGameProt(134, 0); // NXT naming

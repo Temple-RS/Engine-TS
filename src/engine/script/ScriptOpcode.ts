@@ -124,6 +124,8 @@ export const enum ScriptOpcode {
     LAST_TARGETSLOT,
     LAST_USEITEM, // official
     LAST_USESLOT, // official
+
+    // string statsl
     LONGQUEUE, // official
     LONGQUEUEVARARG,
     LOWMEM,
@@ -182,8 +184,8 @@ export const enum ScriptOpcode {
     STAT_HEAL, // official
     STAT_RANDOM,
     STAT_SUB,
-    STAT_TOTAL,
     STAT, // official
+
     STRONGQUEUE,
     STRONGQUEUEVARARG,
     TURNANIM,
@@ -441,6 +443,23 @@ export const enum ScriptOpcode {
     DB_FIND,
     DB_FIND_REFINE,
     DB_LISTALL,
+    
+    // Clan ops (8000-8099)
+    CLAN_NAME = 8000,
+    CLAN_SCORE,
+    CLAN_OWNER,
+    CLAN_MEMBERCOUNT,
+    CLAN_ONLINECOUNT,
+    CLAN_BROADCAST,
+    CLAN_JOIN,
+    CLAN_LEAVE,
+    CLAN_LOCKED,
+    CLAN_INVITE,
+    CLAN_CREATE,
+    LAST_STRING,
+    P_STRINGDIALOG,
+    STAT_TOTAL,
+
 
     // Debug ops (10000-11000)
     CONSOLE = 10000,
@@ -572,6 +591,7 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['LAST_TARGETSLOT', ScriptOpcode.LAST_TARGETSLOT],
     ['LAST_USEITEM', ScriptOpcode.LAST_USEITEM],
     ['LAST_USESLOT', ScriptOpcode.LAST_USESLOT],
+
     ['LONGQUEUE', ScriptOpcode.LONGQUEUE],
     ['LONGQUEUE*', ScriptOpcode.LONGQUEUEVARARG],
     ['LOWMEM', ScriptOpcode.LOWMEM],
@@ -584,6 +604,7 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['P_ARRIVEDELAY', ScriptOpcode.P_ARRIVEDELAY],
     ['P_CLEARPENDINGACTION', ScriptOpcode.P_CLEARPENDINGACTION],
     ['P_COUNTDIALOG', ScriptOpcode.P_COUNTDIALOG],
+
     ['P_DELAY', ScriptOpcode.P_DELAY],
     ['P_EXACTMOVE', ScriptOpcode.P_EXACTMOVE],
     ['P_FINDUID', ScriptOpcode.P_FINDUID],
@@ -636,7 +657,6 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['STAT_HEAL', ScriptOpcode.STAT_HEAL],
     ['STAT_RANDOM', ScriptOpcode.STAT_RANDOM],
     ['STAT_SUB', ScriptOpcode.STAT_SUB],
-    ['STAT_TOTAL', ScriptOpcode.STAT_TOTAL],
     ['STAT', ScriptOpcode.STAT],
     ['STRONGQUEUE', ScriptOpcode.STRONGQUEUE],
     ['STRONGQUEUE*', ScriptOpcode.STRONGQUEUEVARARG],
@@ -863,6 +883,21 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['DB_FIND', ScriptOpcode.DB_FIND],
     ['DB_FIND_REFINE', ScriptOpcode.DB_FIND_REFINE],
     ['DB_LISTALL', ScriptOpcode.DB_LISTALL],
+    
+    ['CLAN_NAME', ScriptOpcode.CLAN_NAME],
+    ['CLAN_SCORE', ScriptOpcode.CLAN_SCORE],
+    ['CLAN_OWNER', ScriptOpcode.CLAN_OWNER],
+    ['CLAN_MEMBERCOUNT', ScriptOpcode.CLAN_MEMBERCOUNT],
+    ['CLAN_ONLINECOUNT', ScriptOpcode.CLAN_ONLINECOUNT],
+    ['CLAN_BROADCAST', ScriptOpcode.CLAN_BROADCAST],
+    ['CLAN_JOIN', ScriptOpcode.CLAN_JOIN],
+    ['CLAN_LEAVE', ScriptOpcode.CLAN_LEAVE],
+    ['CLAN_LOCKED', ScriptOpcode.CLAN_LOCKED],
+    ['CLAN_INVITE', ScriptOpcode.CLAN_INVITE],
+    ['CLAN_CREATE', ScriptOpcode.CLAN_CREATE],
+    ['LAST_STRING', ScriptOpcode.LAST_STRING],
+    ['P_STRINGDIALOG', ScriptOpcode.P_STRINGDIALOG],
+    ['STAT_TOTAL', ScriptOpcode.STAT_TOTAL],
 
     ['CONSOLE', ScriptOpcode.CONSOLE],
     ['ERROR', ScriptOpcode.ERROR],

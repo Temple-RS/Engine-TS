@@ -299,7 +299,7 @@ export default class Player extends PathingEntity {
     invs: Map<number, Inventory> = new Map<number, Inventory>();
     nextTarget: Entity | null = null;
 
-    publicChat: ChatModePublic = ChatModePublic.ON;
+    publicChat: ChatModePublic = ChatModePublic.ALL;
     privateChat: ChatModePrivate = ChatModePrivate.ON;
     tradeDuel: ChatModeTradeDuel = ChatModeTradeDuel.ON;
 
@@ -313,9 +313,17 @@ export default class Player extends PathingEntity {
     webClient: boolean = false;
     combatLevel: number = 3;
     headicons: number = 0;
-    baseLevels = new Uint8Array(21);
-    lastStats: Int32Array = new Int32Array(21); // we track this so we know to flush stats only once a tick on changes
-    lastLevels: Uint8Array = new Uint8Array(21); // we track this so we know to flush stats only once a tick on changes
+    baseLevels = new Uint8Array(22);
+    lastStats: Int32Array = new Int32Array(22); // we track this so we know to flush stats only once a tick on changes
+    lastLevels: Uint8Array = new Uint8Array(22); // we track this so we know to flush stats only once a tick on changes
+
+    get totalLevel(): number {
+        let total = 0;
+        for (let i = 0; i < this.baseLevels.length; i++) {
+            total += this.baseLevels[i];
+        }
+        return total;
+    }
     originX: number = -1;
     originZ: number = -1;
     buildArea: BuildArea = new BuildArea(this);
@@ -407,6 +415,7 @@ export default class Player extends PathingEntity {
     chatEffect: number | null = null;
     chatRights: number | null = null;
     lastYellTime: number = 0;
+    clanName: string | null = null;
 
     constructor(username: string, username37: bigint, hash64: bigint) {
         super(
