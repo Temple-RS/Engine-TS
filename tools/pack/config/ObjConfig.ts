@@ -340,12 +340,12 @@ export function packObjConfigs(configs: Map<string, ConfigLine[]>, modelFlags: n
                 } else if (key === 'wearpos3') {
                     server.p1(27);
                     server.p1(value as number);
-                } else if (key.startsWith('op')) {
-                    const index = parseInt(key.substring('op'.length)) - 1;
+                } else if (/^op[1-5]$/.test(key)) {
+                    const index = parseInt(key.charAt(2)) - 1;
                     client.p1(30 + index);
                     client.pjstr(value as string);
-                } else if (key.startsWith('iop')) {
-                    const index = parseInt(key.substring('iop'.length)) - 1;
+                } else if (/^iop[1-5]$/.test(key)) {
+                    const index = parseInt(key.charAt(3)) - 1;
                     client.p1(35 + index);
                     client.pjstr(value as string);
                 } else if (key === 'weight') {

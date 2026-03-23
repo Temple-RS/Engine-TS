@@ -86,6 +86,18 @@ const ObjConfigOps: CommandHandlers = {
 
     [ScriptOpcode.OC_STACKABLE]: state => {
         state.pushInt(check(state.popInt(), ObjTypeValid).stackable ? 1 : 0);
+    },
+
+    [ScriptOpcode.OC_SETNAME]: state => {
+        const [objId, name] = [state.popInt(), state.popString()];
+        const objType: ObjType = check(objId, ObjTypeValid);
+        objType.name = name;
+    },
+
+    [ScriptOpcode.OC_SETCOST]: state => {
+        const [objId, cost] = state.popInts(2);
+        const objType: ObjType = check(objId, ObjTypeValid);
+        objType.cost = cost;
     }
 };
 

@@ -22,12 +22,18 @@ function validateFilesPack(pack: PackFile, paths: string[], ext: string, verify:
         }
 
         if (verify) {
+            let registered = false;
             for (let i = 0; i < files.length; i++) {
                 const name = files[i];
 
                 if (!pack.names.has(name)) {
-                    throw new Error(`${pack.type}: ${name} is missing an ID line, you may need to edit ${Environment.BUILD_SRC_DIR}/pack/${pack.type}.pack`);
+                    pack.register(pack.max++, name);
+                    registered = true;
                 }
+            }
+
+            if (registered) {
+                pack.refreshNames();
             }
 
             if (Environment.BUILD_VERIFY_PACK) {
@@ -60,9 +66,11 @@ function validateImagePack(pack: PackFile, path: string, ext: string): void {
 
         const name = files[i];
         if (!pack.names.has(name)) {
-            throw new Error(`${pack.type}: ${name} is missing an ID line, you may need to edit ${Environment.BUILD_SRC_DIR}/pack/${pack.type}.pack`);
+            pack.register(pack.max++, name);
         }
     }
+
+    pack.refreshNames();
 
     if (Environment.BUILD_VERIFY_PACK) {
         for (const name of pack.names) {
@@ -75,21 +83,19 @@ function validateImagePack(pack: PackFile, path: string, ext: string): void {
     pack.save();
 }
 
-function validateConfigPack(pack: PackFile, ext: string, transmitted: boolean = false): void {
+function validateConfigPack(pack: PackFile, ext: string): void {
     const names = crawlConfigNames(ext);
     const configNames = new Set(names);
 
     pack.load(`${Environment.BUILD_SRC_DIR}/pack/${pack.type}.pack`);
 
-    if (!transmitted || (!Environment.BUILD_VERIFY && transmitted)) {
-        for (let i = 0; i < names.length; i++) {
-            if (!pack.names.has(names[i])) {
-                pack.register(pack.max++, names[i]);
-            }
+    for (let i = 0; i < names.length; i++) {
+        if (!pack.names.has(names[i])) {
+            pack.register(pack.max++, names[i]);
         }
-
-        pack.refreshNames();
     }
+
+    pack.refreshNames();
 
     const missing = [];
     for (let i = 0; i < names.length; i++) {
@@ -120,9 +126,7 @@ function validateConfigPack(pack: PackFile, ext: string, transmitted: boolean = 
         }
     }
 
-    if (!transmitted || (!Environment.BUILD_VERIFY && transmitted)) {
-        pack.save();
-    }
+    pack.save();
 }
 
 function validateCategoryPack(pack: PackFile) {
@@ -156,7 +160,7 @@ function validateInterfacePack(pack: PackFile) {
 
         const inter = basename(file, '.if');
         if (!pack.names.has(inter)) {
-            throw new Error(`${Environment.BUILD_SRC_DIR}/pack/interface.pack is missing ID for interface ${inter} from ${file}`);
+            pack.register(pack.max++, inter);
         }
 
         for (let i = 0; i < lines.length; i++) {
@@ -167,11 +171,14 @@ function validateInterfacePack(pack: PackFile) {
                 const name = `${inter}:${com}`;
 
                 if (!pack.names.has(name)) {
-                    throw new Error(`${Environment.BUILD_SRC_DIR}/pack/interface.pack is missing ID for component ${name} from ${file}`);
+                    pack.register(pack.max++, name);
                 }
             }
         }
+
+        pack.refreshNames();
     });
+    pack.save();
 }
 
 // todo: validate triggers, names, and/or reuse IDs?

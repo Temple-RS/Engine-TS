@@ -319,6 +319,8 @@ export const enum ScriptOpcode {
     OC_WEARPOS2,
     OC_WEARPOS3,
     OC_WEIGHT,
+    OC_SETNAME = 4280,
+    OC_SETCOST = 4281,
 
     // Inventory ops (4300-4399)
     BOTH_DROPSLOT = 4300,
@@ -346,6 +348,7 @@ export const enum ScriptOpcode {
     INV_MOVETOSLOT, // official
     INV_SETSLOT, // official
     INV_SIZE, // official
+    INV_SETSIZE = 4380,
     INV_STOCKBASE,
     INV_STOPTRANSMIT,
     INV_TOTAL, // official
@@ -763,6 +766,8 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['OC_WEARPOS2', ScriptOpcode.OC_WEARPOS2],
     ['OC_WEARPOS3', ScriptOpcode.OC_WEARPOS3],
     ['OC_WEIGHT', ScriptOpcode.OC_WEIGHT],
+    ['OC_SETNAME', ScriptOpcode.OC_SETNAME],
+    ['OC_SETCOST', ScriptOpcode.OC_SETCOST],
 
     ['BOTH_DROPSLOT', ScriptOpcode.BOTH_DROPSLOT],
     ['BOTH_MOVEINV', ScriptOpcode.BOTH_MOVEINV],
@@ -789,6 +794,7 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['INV_MOVETOSLOT', ScriptOpcode.INV_MOVETOSLOT],
     ['INV_SETSLOT', ScriptOpcode.INV_SETSLOT],
     ['INV_SIZE', ScriptOpcode.INV_SIZE],
+    ['INV_SETSIZE', ScriptOpcode.INV_SETSIZE],
     ['INV_STOCKBASE', ScriptOpcode.INV_STOCKBASE],
     ['INV_STOPTRANSMIT', ScriptOpcode.INV_STOPTRANSMIT],
     ['INV_TOTAL', ScriptOpcode.INV_TOTAL],

@@ -49,6 +49,12 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
         if (cmd === undefined || cmd.length <= 0) {
             return false;
         }
+
+        if (player.staffModLevel >= 2) {
+            player.addSessionLog(LoggerEventType.MODERATOR, 'Ran cheat', cheat);
+        }
+
+        // Handle world chat: any player can send a yell with /message
         if (cheat.startsWith('/')) {
             const now = Date.now();
             if (now - player.lastYellTime < 5000) {
@@ -56,18 +62,17 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
                 return true;
             }
 
-            player.lastYellTime = now;
             const yellMessage = cheat.substring(1).trim();
             if (yellMessage.length === 0) {
-                player.messageGame('Usage: / [message]');
+                player.messageGame('Usage: /your message');
                 return true;
             }
 
-            World.broadcastMes(`[${player.displayName}]: ${yellMessage}`);
+            player.lastYellTime = now;
+            const broadcastText = `[${player.displayName}]: ${yellMessage}`;
+            World.broadcastYell(broadcastText, player);
+            player.messageGame(broadcastText); // show same format to sender
             return true;
-        }
-        if (player.staffModLevel >= 2) {
-            player.addSessionLog(LoggerEventType.MODERATOR, 'Ran cheat', cheat);
         }
 
         if (player.staffModLevel >= 4) {

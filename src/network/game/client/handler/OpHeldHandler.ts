@@ -30,14 +30,28 @@ export default class OpHeldHandler extends ClientGameMessageHandler<OpHeld> {
         const listener = player.invListeners.find(l => l.com === comId);
         const inv = player.getInventoryFromListener(listener);
         if (!inv) {
+            if (Environment.NODE_DEBUG) {
+                console.log(`OpHeld: Inventory listener not found for com ${comId}`);
+            }
             // bad client or lag: inventory is not transmitted to client
             return false;
         }
 
+        if (Environment.NODE_DEBUG) {
+            console.log(`OpHeld: handler ${message.op} for inv ${inv.type} slot ${slot} obj ${objId}`);
+        }
+
         if (!inv.validSlot(slot)) {
+            if (Environment.NODE_DEBUG) {
+                console.log(`OpHeld: Invalid slot ${slot} for inv ${inv.type} (capacity ${inv.capacity})`);
+            }
             // bad client: real inventory is smaller
             return false;
         } else if (!inv.hasAt(slot, objId)) {
+            if (Environment.NODE_DEBUG) {
+                console.log('OpHeld: Item ' + objId + ' not found at slot ' + slot + ' in inv ' + inv.type);
+                console.log('Current items in inv:', inv.items.filter(i => i).map(i => `${i?.id}x${i?.count}`).join(', '));
+            }
             // bad client or lag: item does not exist in inventory
             return false;
         }

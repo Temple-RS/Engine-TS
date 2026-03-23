@@ -360,6 +360,22 @@ export class Inventory {
         return slot >= 0 && slot < this.capacity;
     }
 
+    resize(newCapacity: number) {
+        if (newCapacity === this.capacity) {
+            return;
+        }
+
+        const oldItems = this.items;
+        (this as any).capacity = newCapacity;
+        (this as any).items = new Array(newCapacity).fill(null);
+
+        for (let i = 0; i < Math.min(oldItems.length, newCapacity); i++) {
+            this.items[i] = oldItems[i];
+        }
+
+        this.update = true;
+    }
+
     transfer(to: Inventory, item: Item, fromSlot = -1, toSlot = -1, note = false, unnote = false) {
         if (item.count <= 0) {
             return null;

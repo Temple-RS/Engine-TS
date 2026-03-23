@@ -319,5 +319,7 @@ export default class ObjType extends ConfigType {
         this.desc = `Swap this note at any bank for ${article} ${link.name}.`;
 
         this.stackable = true;
+        this.op = [...link.op];
+        this.iop = [...link.iop];
     }
 }

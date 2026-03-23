@@ -46,6 +46,7 @@ import { NpcEventRequest, NpcEventType } from '#/engine/entity/NpcEventRequest.j
 import { NpcStat } from '#/engine/entity/NpcStat.js';
 import Obj from '#/engine/entity/Obj.js';
 import Player from '#/engine/entity/Player.js';
+import { ChatModePublic } from '#/engine/entity/ChatModes.js';
 import { PlayerLoading } from '#/engine/entity/PlayerLoading.js';
 import { EntityQueueState, PlayerQueueType } from '#/engine/entity/PlayerQueueRequest.js';
 import { PlayerStat } from '#/engine/entity/PlayerStat.js';
@@ -1808,6 +1809,26 @@ class World {
 
     broadcastMes(message: string): void {
         for (const player of this.playerLoop.all()) {
+            if (message.includes('\n')) {
+                message.split('\n').forEach(wrap => player!.wrappedMessageGame(wrap));
+            } else {
+                player.wrappedMessageGame(message);
+            }
+        }
+    }
+
+    broadcastYell(message: string, sender: Player): void {
+        for (const player of this.playerLoop.all()) {
+            // Skip the sender — the client shows a local preview directly.
+            // Only skip other players if their public chat is OFF.
+            if (player === sender) {
+                continue;
+            }
+
+            if (player.publicChat === ChatModePublic.OFF) {
+                continue;
+            }
+
             if (message.includes('\n')) {
                 message.split('\n').forEach(wrap => player!.wrappedMessageGame(wrap));
             } else {

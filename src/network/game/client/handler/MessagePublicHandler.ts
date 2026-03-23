@@ -2,6 +2,7 @@ import { PlayerInfoProt } from '@2004scape/rsbuf';
 
 import WordEnc from '#/cache/wordenc/WordEnc.js';
 import Player from '#/engine/entity/Player.js';
+import World from '#/engine/World.js';
 import Packet from '#/io/Packet.js';
 import ClientGameMessageHandler from '#/network/game/client/ClientGameMessageHandler.js';
 import MessagePublic from '#/network/game/client/model/MessagePublic.js';
@@ -21,6 +22,25 @@ export default class MessagePublicHandler extends ClientGameMessageHandler<Messa
         }
 
         const unpacked = WordPack.unpack(new Packet(input), input.length);
+
+        if (unpacked.startsWith('/')) {
+            const now = Date.now();
+            if (now - player.lastYellTime < 5000) {
+                player.messageGame(`You must wait ${5 - Math.ceil((now - player.lastYellTime) / 1000)} seconds before shouting again.`);
+                return true;
+            }
+
+            player.lastYellTime = now;
+            const yellMessage = unpacked.substring(1).trim();
+            if (yellMessage.length === 0) {
+                player.messageGame('Usage: / [message]');
+                return true;
+            }
+
+            World.broadcastYell(`[${player.displayName}]: ${yellMessage}`, player);
+            return true;
+        }
+
         const filtered = WordEnc.filter(unpacked);
 
         const packBuf = Packet.alloc(0);

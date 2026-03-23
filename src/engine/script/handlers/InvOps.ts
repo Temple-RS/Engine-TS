@@ -615,6 +615,18 @@ const InvOps: CommandHandlers = {
         state.activePlayer.invSet(invType.id, objType.id, count, slot);
     }),
 
+    [ScriptOpcode.INV_SETSIZE]: checkedHandler(ActivePlayer, state => {
+        const [inv, size] = state.popInts(2);
+
+        const invType: InvType = check(inv, InvTypeValid);
+        invType.size = size;
+
+        const playerInv = state.activePlayer.getInventory(invType.id);
+        if (playerInv) {
+            playerInv.resize(size);
+        }
+    }),
+
     // inv read
     [ScriptOpcode.INV_TOTAL]: checkedHandler(ActivePlayer, state => {
         const [inv, obj] = state.popInts(2);
