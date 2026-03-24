@@ -820,7 +820,17 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             return true;
         }
 
-        if (cmd === 'lock') {
+        if (cmd === 'kick' || cmd === 'clankick') {
+            const targetName = cheat.substring(cmd.length).trim();
+            if (targetName.length === 0) {
+                player.messageGame('Usage: ::clankick <playername>');
+                return true;
+            }
+            World.kickClanMember(player, targetName);
+            return true;
+        }
+
+        if (cmd === 'lock' || cmd === 'clanlock') {
             if (!player.clanName) {
                 player.messageGame('You are not in a clan.');
                 return true;

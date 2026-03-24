@@ -1960,6 +1960,51 @@ class World {
         this.saveClans();
     }
 
+    kickClanMember(player: Player, targetName: string): void {
+        if (!player.clanName) {
+            player.messageGame('You are not in a clan.');
+            return;
+        }
+
+        const clanKey = player.clanName;
+        const clan = this.clans.get(clanKey);
+        
+        if (!clan || clan.owner !== player.username.toLowerCase()) {
+            player.messageGame('Only the clan leader can kick members.');
+            return;
+        }
+
+        const targetNameLower = targetName.toLowerCase();
+
+        if (!clan.memberNames.has(targetNameLower)) {
+            player.messageGame(`Player '${targetName}' is not in your clan.`);
+            return;
+        }
+
+        if (targetNameLower === player.username.toLowerCase()) {
+            player.messageGame('You cannot kick yourself. Please use ::deleteclan instead if you wish to disband.');
+            return;
+        }
+
+        // Remove from offline persistent member names
+        clan.memberNames.delete(targetNameLower);
+
+        // Remove an active online connection if present
+        let kickedPlayer = null;
+        for (const member of clan.members) {
+            if (member.username.toLowerCase() === targetNameLower) {
+                clan.members.delete(member);
+                member.clanName = '';
+                member.messageGame('You have been kicked from the clan.');
+                kickedPlayer = member;
+                break;
+            }
+        }
+
+        this.broadcastClan(clanKey, `@red@[Clan] @bla@${kickedPlayer ? kickedPlayer.displayName : targetName} has been kicked from the clan.`);
+        this.saveClans();
+    }
+
     deleteClan(player: Player): void {
         if (!player.clanName) {
             player.messageGame('You are not in a clan.');
