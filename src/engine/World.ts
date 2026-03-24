@@ -300,6 +300,8 @@ class World {
             this.gameMap.init();
         }
 
+        this.loadClans();
+
         setTimeout(() => {
             this.loginThread.postMessage({
                 type: 'world_startup'
@@ -941,6 +943,14 @@ class World {
 
             this.gameMap.getZone(player.x, player.z, player.level).enter(player);
             player.onLogin();
+
+            for (const clan of this.clans.values()) {
+                if (clan.memberNames.has(player.username.toLowerCase())) {
+                    clan.members.add(player);
+                    player.clanName = clan.name.toLowerCase();
+                    break;
+                }
+            }
 
             if (this.shutdownTick != -1) {
                 player.write(new UpdateRebootTimer(this.shutdownTick - this.currentTick));
@@ -1866,8 +1876,8 @@ class World {
     createClan(player: Player, clanName: string): boolean {
         const nameKey = clanName.toLowerCase();
 
-        if (player.totalLevel < 100) {
-            player.messageGame(`You need a total level of at least 100 to create a clan. Your current total level is ${player.totalLevel}.`);
+        if (player.totalLevel < 500) {
+            player.messageGame(`You need a total level of at least 500 to create a clan. Your current total level is ${player.totalLevel}.`);
             return false;
         }
 
@@ -1883,6 +1893,7 @@ class World {
         const clan = new Clan(clanName, player);
         this.clans.set(nameKey, clan);
         player.clanName = nameKey;
+        this.saveClans();
         player.messageGame(`You have successfully founded the clan: ${clanName}`);
         player.messageGame(`Current Clan Score: ${clan.score}`);
         return true;
@@ -1921,6 +1932,7 @@ class World {
         // Successfully joined
         if (clan.addMember(player)) {
             player.clanName = nameKey;
+            this.saveClans();
             this.broadcastClan(nameKey, `@red@[Clan] @bla@${player.displayName} has joined the clan.`, player);
             player.messageGame(`You have joined the clan: ${clanName}`);
             player.messageGame(`Total Clan Score: ${clan.score}`);
@@ -1945,6 +1957,79 @@ class World {
         }
 
         player.clanName = '';
+        this.saveClans();
+    }
+
+    deleteClan(player: Player): void {
+        if (!player.clanName) {
+            player.messageGame('You are not in a clan.');
+            return;
+        }
+
+        const clanKey = player.clanName;
+        const clan = this.clans.get(clanKey);
+        if (!clan) {
+            return;
+        }
+
+        if (clan.owner !== player.username.toLowerCase()) {
+            player.messageGame('Only the clan leader can disband the clan.');
+            return;
+        }
+
+        this.broadcastClan(clanKey, '@red@[Clan] @bla@The clan has been disbanded by the leader.');
+
+        for (const member of clan.members) {
+            member.clanName = '';
+            member.messageGame('Your clan has been disbanded.');
+        }
+
+        this.clans.delete(clanKey);
+        this.saveClans();
+    }
+
+    loadClans(): void {
+        try {
+            if (fs.existsSync('data/clans.json')) {
+                const data = JSON.parse(fs.readFileSync('data/clans.json', 'utf8'));
+                for (const clanData of data) {
+                    const clan = new Clan(clanData.name, clanData.owner);
+                    clan.locked = clanData.locked;
+                    if (clanData.memberNames) {
+                        for (const member of clanData.memberNames) {
+                            clan.memberNames.add(member);
+                        }
+                    }
+                    if (clanData.invites) {
+                        for (const invite of clanData.invites) {
+                            clan.invites.add(invite);
+                        }
+                    }
+                    this.clans.set(clanData.name.toLowerCase(), clan);
+                }
+                printInfo(`Loaded ${this.clans.size} clans`);
+            }
+        } catch (e) {
+            console.error('Error loading clans:', e);
+        }
+    }
+
+    saveClans(): void {
+        try {
+            const clansToSave = [];
+            for (const clan of this.clans.values()) {
+                clansToSave.push({
+                    name: clan.name,
+                    owner: clan.owner,
+                    locked: clan.locked,
+                    memberNames: Array.from(clan.memberNames),
+                    invites: Array.from(clan.invites)
+                });
+            }
+            fs.writeFileSync('data/clans.json', JSON.stringify(clansToSave, null, 2), 'utf8');
+        } catch (e) {
+            console.error('Error saving clans:', e);
+        }
     }
 
     rebuild() {

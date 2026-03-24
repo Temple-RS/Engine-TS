@@ -8,12 +8,18 @@ export default class Clan {
     locked: boolean = false;
     invites: Set<string> = new Set(); // usernames (lowercase)
 
-    constructor(name: string, owner: Player) {
+    constructor(name: string, owner: string | Player) {
         this.name = name;
-        const ownerName = owner.username.toLowerCase();
-        this.owner = ownerName;
-        this.members.add(owner);
-        this.memberNames.add(ownerName);
+        if (typeof owner === 'string') {
+            const ownerName = owner.toLowerCase();
+            this.owner = ownerName;
+            this.memberNames.add(ownerName);
+        } else {
+            const ownerName = owner.username.toLowerCase();
+            this.owner = ownerName;
+            this.members.add(owner);
+            this.memberNames.add(ownerName);
+        }
     }
 
     get score(): number {

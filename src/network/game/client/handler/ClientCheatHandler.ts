@@ -86,7 +86,7 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             player.lastYellTime = now;
-            const broadcastText = `[${player.displayName}]: ${yellMessage}`;
+            const broadcastText = `@blu@[${player.displayName}]@bla@: ${yellMessage}`;
             World.broadcastYell(broadcastText, player);
             player.messageGame(broadcastText); // show same format to sender
             return true;
@@ -758,23 +758,40 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
         }
 
-        if (cmd === 'join') {
-            if (args.length < 1) {
-                player.messageGame('Usage: ::join <clanname>');
+        if (cmd === 'create' || cmd === 'createclan') {
+            const clanName = cheat.substring(cmd.length).trim();
+            if (clanName.length === 0) {
+                player.messageGame('Usage: ::createclan <clanname>');
                 return true;
             }
-            World.joinClan(player, args[0]);
+            World.createClan(player, clanName);
             return true;
         }
 
-        if (cmd === 'leave') {
+        if (cmd === 'join' || cmd === 'joinclan') {
+            const clanName = cheat.substring(cmd.length).trim();
+            if (clanName.length === 0) {
+                player.messageGame('Usage: ::joinclan <clanname>');
+                return true;
+            }
+            World.joinClan(player, clanName);
+            return true;
+        }
+
+        if (cmd === 'leave' || cmd === 'leaveclan') {
             World.leaveClan(player);
             return true;
         }
 
-        if (cmd === 'invite') {
-            if (args.length < 1) {
-                player.messageGame('Usage: ::invite <playername>');
+        if (cmd === 'delete' || cmd === 'deleteclan' || cmd === 'disbandclan') {
+            World.deleteClan(player);
+            return true;
+        }
+
+        if (cmd === 'invite' || cmd === 'claninvite') {
+            const targetName = cheat.substring(cmd.length).trim();
+            if (targetName.length === 0) {
+                player.messageGame('Usage: ::claninvite <playername>');
                 return true;
             }
 
@@ -789,16 +806,17 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
                 return true;
             }
 
-            const targetName = args[0].toLowerCase();
-            clan.invites.add(targetName);
-            player.messageGame(`You have invited ${args[0]} to join '${clan.name}'.`);
-            
+            const targetNameLower = targetName.toLowerCase();
+            clan.invites.add(targetNameLower);
+            player.messageGame(`You have invited ${targetName} to join '${clan.name}'.`);
+
             // If target is online, notify them
-            const target = World.getPlayerByUsername(targetName);
+            const target = World.getPlayerByUsername(targetNameLower);
             if (target) {
                 target.messageGame(`You have been invited to join the clan: ${clan.name}`);
-                target.messageGame(`Type ::join ${clan.name} to accept.`);
+                target.messageGame(`Type ::joinclan ${clan.name} to accept.`);
             }
+            World.saveClans();
             return true;
         }
 
@@ -819,11 +837,14 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             if (clan.locked) {
                 player.messageGame('Only invited players can now join.');
             }
+            World.saveClans();
             return true;
         }
 
         if (cmd === 'claninfo') {
-            const clanName = args.length > 0 ? args[0] : player.clanName;
+            const parsedName = cheat.substring(cmd.length).trim();
+            const clanName = parsedName.length > 0 ? parsedName : player.clanName;
+
             if (!clanName) {
                 player.messageGame('Usage: ::claninfo [clanname]');
                 return true;
