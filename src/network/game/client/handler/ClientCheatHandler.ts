@@ -63,8 +63,8 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             if (player.clanName) {
-                World.broadcastClan(player.clanName, `@red@[Clan] @bla@${player.displayName}: ${clanMessage}`, player);
-                player.messageGame(`@red@[Clan] @bla@${player.displayName}: ${clanMessage}`);
+                World.broadcastClan(player.clanName, `@gre@[${player.clanName}] @bla@${player.displayName}: ${clanMessage}`, player);
+                player.messageGame(`@gre@[${player.clanName}] @bla@${player.displayName}: ${clanMessage}`);
             } else {
                 player.messageGame('You are not in a clan.');
             }
