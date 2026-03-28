@@ -548,6 +548,21 @@ const PlayerOps: CommandHandlers = {
         }
     }),
 
+    [ScriptOpcode.STAT_XP]: checkedHandler(ActivePlayer, state => {
+        const stat: PlayerStat = check(state.popInt(), PlayerStatValid);
+
+        state.pushInt(state.activePlayer.stats[stat]);
+    }),
+
+    [ScriptOpcode.STAT_SETXP]: checkedHandler(ActivePlayer, state => {
+        const [stat, xp] = state.popInts(2);
+
+        check(stat, PlayerStatValid);
+        check(xp, NumberNotNull);
+
+        state.activePlayer.setXp(stat, xp);
+    }),
+
     [ScriptOpcode.STAT_BOOST]: checkedHandler(ActivePlayer, state => {
         const [stat, constant, percent] = state.popInts(3);
 

@@ -202,6 +202,8 @@ export const enum ScriptOpcode {
     WEAKQUEUEVARARG,
     WEALTH_EVENT, // custom
     WEIGHT,
+    STAT_XP,
+    STAT_SETXP,
 
     // Npc ops (2500-2999)
     NPC_ADD = 2500, // official
@@ -869,6 +871,8 @@ export const ScriptOpcodeMap: Map<string, number> = new Map([
     ['COS_DEG', ScriptOpcode.COS_DEG],
     ['ATAN2_DEG', ScriptOpcode.ATAN2_DEG],
     ['ABS', ScriptOpcode.ABS],
+    ['STAT_XP', ScriptOpcode.STAT_XP],
+    ['STAT_SETXP', ScriptOpcode.STAT_SETXP],
 
     ['STRUCT_PARAM', ScriptOpcode.STRUCT_PARAM],
 

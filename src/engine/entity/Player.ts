@@ -1861,6 +1861,21 @@ export default class Player extends PathingEntity {
         }
     }
 
+    setXp(stat: number, xp: number) {
+        if (xp < 0) {
+            throw new Error(`Invalid xp parameter for setXp call: Stat was: ${stat}, Exp was: ${xp}`);
+        }
+
+        if (xp > 2_000_000_000) {
+            xp = 2_000_000_000;
+        }
+
+        this.stats[stat] = xp;
+        this.baseLevels[stat] = getLevelByExp(xp);
+        this.levels[stat] = this.baseLevels[stat];
+        this.changeStat(stat);
+    }
+
     changeStat(stat: number) {
         const script = ScriptProvider.getByTrigger(ServerTriggerType.CHANGESTAT, stat, -1);
         if (script) {

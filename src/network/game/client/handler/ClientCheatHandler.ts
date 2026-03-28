@@ -33,6 +33,7 @@ import ClientCheat from '#/network/game/client/model/ClientCheat.js';
 import { LoggerEventType } from '#/server/logger/LoggerEventType.js';
 
 import Environment from '#/util/Environment.js';
+import { toDisplayName } from '#/util/JString.js';
 import { printDebug } from '#/util/Logger.js';
 import { tryParseInt } from '#/util/TryParse.js';
 
@@ -63,8 +64,9 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             if (player.clanName) {
-                World.broadcastClan(player.clanName, `@gre@[${player.clanName}] @bla@${player.displayName}: ${clanMessage}`, player);
-                player.messageGame(`@gre@[${player.clanName}] @bla@${player.displayName}: ${clanMessage}`);
+                const clanDisplayName = toDisplayName(player.clanName);
+                World.broadcastClan(player.clanName, `@gre@[${clanDisplayName}] @bla@${player.displayName}: ${clanMessage}`, player);
+                player.messageGame(`@gre@[${clanDisplayName}] @bla@${player.displayName}: ${clanMessage}`);
             } else {
                 player.messageGame('You are not in a clan.');
             }
@@ -99,9 +101,10 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             if (player.clanName) {
+                const clanDisplayName = toDisplayName(player.clanName);
                 const message = cheat.substring(cmd.length + 3).trim(); // +3 to skip "::" + cmd + " "
-                World.broadcastClan(player.clanName, `@gre@[${player.clanName}] @bla@${player.displayName}: ${message}`, player);
-                player.messageGame(`@gre@[${player.clanName}] @bla@${player.displayName}: ${message}`);
+                World.broadcastClan(player.clanName, `@gre@[${clanDisplayName}] @bla@${player.displayName}: ${message}`, player);
+                player.messageGame(`@gre@[${clanDisplayName}] @bla@${player.displayName}: ${message}`);
             } else {
                 player.messageGame('You are not in a clan.');
             }
