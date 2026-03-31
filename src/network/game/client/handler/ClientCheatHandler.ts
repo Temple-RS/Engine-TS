@@ -33,7 +33,6 @@ import ClientCheat from '#/network/game/client/model/ClientCheat.js';
 import { LoggerEventType } from '#/server/logger/LoggerEventType.js';
 
 import Environment from '#/util/Environment.js';
-import { toDisplayName } from '#/util/JString.js';
 import { printDebug } from '#/util/Logger.js';
 import { tryParseInt } from '#/util/TryParse.js';
 
@@ -64,9 +63,8 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             if (player.clanName) {
-                const clanDisplayName = toDisplayName(player.clanName);
-                World.broadcastClan(player.clanName, `@gre@[${clanDisplayName}] @bla@${player.displayName}: ${clanMessage}`, player);
-                player.messageGame(`@gre@[${clanDisplayName}] @bla@${player.displayName}: ${clanMessage}`);
+                World.broadcastClan(player.clanName, `[@dre@${player.displayName}@bla@]: ${clanMessage}`, player);
+                player.wrappedMessageGame(`[@dre@${player.displayName}@bla@]: ${clanMessage}`, 2);
             } else {
                 player.messageGame('You are not in a clan.');
             }
@@ -88,9 +86,36 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             player.lastYellTime = now;
-            const broadcastText = `@blu@[${player.displayName}]@bla@: ${yellMessage}`;
-            World.broadcastYell(broadcastText, player);
-            player.messageGame(broadcastText); // show same format to sender
+            if (player.clanName != null) {
+                const broadcastText = `[@dbl@${player.displayName}@bla@]: ${yellMessage}`;
+                World.broadcastYell(broadcastText, player);
+                player.wrappedMessageGame(broadcastText, 2); // show same format to sender
+            } else {
+                const broadcastText = `[@dbl@${player.displayName}@bla@]: ${yellMessage}`;
+                World.broadcastYell(broadcastText, player);
+                player.wrappedMessageGame(broadcastText, 2); // show same format to sender
+            }
+            return true;
+        }
+
+        // Handle Trade Yell: any player can send a message with $message
+        if (cheat.startsWith('$')) {
+            const tradeMessage = cheat.substring(1).trim();
+            if (tradeMessage.length === 0) {
+                player.messageGame('Usage: $ [message]');
+                return true;
+            }
+
+            const now = Date.now();
+            if (now - player.lastTradeTime < 30000) {
+                player.messageGame(`You must wait ${30 - Math.ceil((now - player.lastTradeTime) / 1000)} seconds before shouting again.`);
+                return true;
+            }
+
+            player.lastTradeTime = now;
+            const broadcastText = `[@yel@${player.displayName}@bla@]: ${tradeMessage}`;
+            World.broadcastTrade(broadcastText, player);
+            player.wrappedMessageGame(broadcastText, 2); // show same format to sender with trade prefix
             return true;
         }
 
@@ -101,10 +126,9 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             if (player.clanName) {
-                const clanDisplayName = toDisplayName(player.clanName);
-                const message = cheat.substring(cmd.length + 3).trim(); // +3 to skip "::" + cmd + " "
-                World.broadcastClan(player.clanName, `@gre@[${clanDisplayName}] @bla@${player.displayName}: ${message}`, player);
-                player.messageGame(`@gre@[${clanDisplayName}] @bla@${player.displayName}: ${message}`);
+                const message = cheat.substring(cmd.length).trim(); // +3 to skip "::" + cmd + " "
+                World.broadcastClan(player.clanName, `[@dre@${player.displayName}@bla@]: ${message}`, player);
+                player.wrappedMessageGame(`[@dre@${player.displayName}@bla@]: ${message}`, 2);
             } else {
                 player.messageGame('You are not in a clan.');
             }
@@ -124,10 +148,10 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             player.lastYellTime = now;
-            const message = cheat.substring(cmd.length + 3).trim(); // +3 to skip "::" + "yell" + " "
-            const broadcastText = `[${player.displayName}]: ${message}`;
+            const message = cheat.substring(cmd.length).trim(); // +3 to skip "::" + "yell" + " "
+            const broadcastText = `[@dbl@${player.displayName}@bla@]: ${message}`;
             World.broadcastYell(broadcastText, player);
-            player.messageGame(broadcastText);
+            player.wrappedMessageGame(broadcastText, 2);
             return true;
         }
 

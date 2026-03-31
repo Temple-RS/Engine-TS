@@ -50,3 +50,4 @@ Thumbs.db
 .DS_Store
 ._*
 data/whitelist.txt
+data/clans.json

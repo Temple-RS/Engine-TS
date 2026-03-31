@@ -415,6 +415,7 @@ export default class Player extends PathingEntity {
     chatEffect: number | null = null;
     chatRights: number | null = null;
     lastYellTime: number = 0;
+    lastTradeTime: number = 0;
     clanName: string | null = null;
 
     constructor(username: string, username37: bigint, hash64: bigint) {
@@ -2221,11 +2222,18 @@ export default class Player extends PathingEntity {
         }
     }
 
-    wrappedMessageGame(mes: string) {
+    wrappedMessageGame(mes: string, maxLines: number = 2) {
         const font = FontType.get(1);
+        if (!font) {
+            return;
+        }
+
         const lines = font.split(mes, 456);
-        for (const line of lines) {
-            this.messageGame(line);
+        for (let i = 0; i < Math.min(lines.length, maxLines); i++) {
+            const line = lines[i];
+            if (line) {
+                this.messageGame(line);
+            }
         }
     }
 

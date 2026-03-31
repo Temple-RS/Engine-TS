@@ -1,3 +1,7788 @@
-class N0{key=0n;next=null;prev=null;unlink(){if(this.prev!=null){if(this.prev.next=this.next,this.next)this.next.prev=this.prev;this.next=null,this.prev=null}}}class T0 extends N0{next2=null;prev2=null;unlink2(){if(this.prev2!==null){if(this.prev2.next2=this.next2,this.next2)this.next2.prev2=this.prev2;this.next2=null,this.prev2=null}}}class G0{sentinel=new N0;cursor=null;constructor(){this.sentinel.next=this.sentinel,this.sentinel.prev=this.sentinel}push(T){if(T.prev)T.unlink();if(T.prev=this.sentinel.prev,T.next=this.sentinel,T.prev)T.prev.next=T;T.next.prev=T}addHead(T){if(T.prev)T.unlink();if(T.prev=this.sentinel,T.next=this.sentinel.next,T.prev.next=T,T.next)T.next.prev=T}pop(){let T=this.sentinel.next;if(T===this.sentinel)return null;return T?.unlink(),T}head(){let T=this.sentinel.next;if(T===this.sentinel)return this.cursor=null,null;return this.cursor=T?.next??null,T}tail(){let T=this.sentinel.prev;if(T===this.sentinel)return this.cursor=null,null;return this.cursor=T?.prev??null,T}next(){let T=this.cursor;if(T===this.sentinel)return this.cursor=null,null;return this.cursor=T?.next??null,T}prev(){let T=this.cursor;if(T===this.sentinel)return this.cursor=null,null;return this.cursor=T?.prev??null,T}clear(){while(!0){let T=this.sentinel.next;if(T===this.sentinel)return;T?.unlink()}}}var Q0=async(T)=>new Promise((E)=>setTimeout(E,T)),K0=async(T)=>new Uint8Array(await(await fetch(T)).arrayBuffer());function U0(T){let E=0n;for(let G=0;G<T.length;G++)E=E<<8n|BigInt(T[G]);return E}function b0(T){let E=[];while(T>0n)E.unshift(Number(T&0xffn)),T>>=8n;if(E[0]&128)E.unshift(0);return new Uint8Array(E)}function n0(T,E,G){let L=1n;while(E>0n){if(E%2n===1n)L=L*T%G;T=T*T%G,E>>=1n}return L}class D extends T0{static CRC32_POLYNOMIAL=3988292384;static crctable=new Int32Array(256);static bitmask=new Uint32Array(33);static cacheMin=new G0;static cacheMid=new G0;static cacheMax=new G0;static cacheMinCount=0;static cacheMidCount=0;static cacheMaxCount=0;static{for(let T=0;T<32;T++)D.bitmask[T]=(1<<T)-1;D.bitmask[32]=4294967295;for(let T=0;T<256;T++){let E=T;for(let G=0;G<8;G++)if((E&1)===1)E=E>>>1^D.CRC32_POLYNOMIAL;else E>>>=1;D.crctable[T]=E}}static getcrc(T,E,G){let L=4294967295;for(let Q=E;Q<G;Q++)L=L>>>8^this.crctable[(L^T[Q])&255];return~L}static checkcrc(T,E,G,L=0){return D.getcrc(T,E,G)==L}view;data;pos=0;bitPos=0;random=null;constructor(T){if(!T)throw new Error;super();if(T instanceof Int8Array)this.data=new Uint8Array(T);else this.data=T;this.view=new DataView(this.data.buffer,this.data.byteOffset,this.data.byteLength)}get length(){return this.view.byteLength}get available(){return this.view.byteLength-this.pos}static alloc(T){let E=null;if(T===0&&D.cacheMinCount>0)D.cacheMinCount--,E=D.cacheMin.pop();else if(T===1&&D.cacheMidCount>0)D.cacheMidCount--,E=D.cacheMid.pop();else if(T===2&&D.cacheMaxCount>0)D.cacheMaxCount--,E=D.cacheMax.pop();if(E)return E.pos=0,E;if(T===0)return new D(new Uint8Array(100));else if(T===1)return new D(new Uint8Array(5000));else return new D(new Uint8Array(30000))}release(){if(this.pos=0,this.length===100&&D.cacheMinCount<1000)D.cacheMin.push(this),D.cacheMinCount++;else if(this.length===5000&&D.cacheMidCount<250)D.cacheMid.push(this),D.cacheMidCount++;else if(this.length===30000&&D.cacheMaxCount<50)D.cacheMax.push(this),D.cacheMaxCount++}g1(){return this.view.getUint8(this.pos++)}g1b(){return this.view.getInt8(this.pos++)}g2(){let T=this.view.getUint16(this.pos);return this.pos+=2,T}g2b(){let T=this.view.getInt16(this.pos);return this.pos+=2,T}g3(){let T=this.view.getUint8(this.pos++)<<16|this.view.getUint16(this.pos);return this.pos+=2,T}g4(){let T=this.view.getInt32(this.pos);return this.pos+=4,T}g8(){let T=this.view.getBigInt64(this.pos);return this.pos+=8,T}gsmart(){return this.view.getUint8(this.pos)<128?this.g1()-64:this.g2()-49152}gsmarts(){return this.view.getUint8(this.pos)<128?this.g1():this.g2()-32768}gjstr(){let T=this.view,E=T.byteLength,G="",L;while((L=T.getUint8(this.pos++))!==10&&this.pos<E)G+=String.fromCharCode(L);return G}gdata(T,E,G){G.set(this.data.subarray(this.pos,this.pos+T),E),this.pos+=T}pIsaac(T){this.view.setUint8(this.pos++,T+(this.random?.nextInt??0)&255)}p1(T){this.view.setUint8(this.pos++,T)}p2(T){this.view.setUint16(this.pos,T),this.pos+=2}ip2(T){this.view.setUint16(this.pos,T,!0),this.pos+=2}p3(T){this.view.setUint8(this.pos++,T>>16),this.view.setUint16(this.pos,T),this.pos+=2}p4(T){this.view.setInt32(this.pos,T),this.pos+=4}ip4(T){this.view.setInt32(this.pos,T,!0),this.pos+=4}p8(T){this.view.setBigInt64(this.pos,T),this.pos+=8}pjstr(T){let E=this.view,G=T.length;for(let L=0;L<G;L++)E.setUint8(this.pos++,T.charCodeAt(L));E.setUint8(this.pos++,10)}pdata(T,E,G){this.data.set(T.subarray(G,G+E),this.pos),this.pos+=E-G}psize1(T){this.view.setUint8(this.pos-T-1,T)}bits(){this.bitPos=this.pos<<3}bytes(){this.pos=this.bitPos+7>>>3}gBit(T){let E=this.bitPos>>>3,G=8-(this.bitPos&7),L=0;this.bitPos+=T;for(;T>G;G=8)L+=(this.view.getUint8(E++)&D.bitmask[G])<<T-G,T-=G;if(T===G)L+=this.view.getUint8(E)&D.bitmask[G];else L+=this.view.getUint8(E)>>>G-T&D.bitmask[T];return L}rsaenc(T,E){let G=this.pos;this.pos=0;let L=new Uint8Array(G);this.gdata(G,0,L);let Q=U0(L),N=n0(Q,E,T),$=b0(N);this.pos=0,this.p1($.length),this.pdata($,$.length,0)}}class r{static active=!1;static old=null;static out=null;static lastTime=0;static trackedCount=0;static lastMoveTime=0;static lastX=0;static lastY=0;static activate(){this.old=D.alloc(1),this.out=null,this.lastTime=performance.now(),this.active=!0}static deactivate(){this.active=!1,this.old=null,this.out=null}static flush(){let T=null;if(this.out&&this.active)T=this.out;return this.out=null,T}static stop(){let T=null;if(this.old&&this.old.pos>0&&this.active)T=this.old;return this.deactivate(),T}static ensureCapacity(T){if(!this.old)return;if(this.old.pos+T>=500){let E=this.old;this.old=D.alloc(1),this.out=E}}static mousePressed(T,E,G,L){if(!this.old)return;if(!this.active&&(T>=0&&T<789&&E>=0&&E<532))return;this.trackedCount++;let Q=performance.now(),N=(Q-this.lastTime)/10|0;if(N>250)N=250;if(this.lastTime=Q,this.ensureCapacity(5),G===2)this.old.p1(1);else this.old.p1(2);this.old.p1(N),this.old.p3(T+(E<<10))}static mouseReleased(T,E){if(!this.old)return;if(!this.active)return;this.trackedCount++;let G=performance.now(),L=(G-this.lastTime)/10|0;if(L>250)L=250;if(this.lastTime=G,this.ensureCapacity(2),T===2)this.old.p1(3);else this.old.p1(4);this.old.p1(L)}static mouseMoved(T,E,G){if(!this.old)return;if(!this.active&&(T>=0&&T<789&&E>=0&&E<532))return;let L=performance.now();if(L-this.lastMoveTime<50)return;this.lastMoveTime=L,this.trackedCount++;let Q=(L-this.lastTime)/10|0;if(Q>250)Q=250;if(this.lastTime=L,T-this.lastX<8&&T-this.lastX>=-8&&E-this.lastY<8&&E-this.lastY>=-8)this.ensureCapacity(3),this.old.p1(5),this.old.p1(Q),this.old.p1(T+(E-this.lastY+8<<4)+8-this.lastX);else if(T-this.lastX<128&&T-this.lastX>=-128&&E-this.lastY<128&&E-this.lastY>=-128)this.ensureCapacity(4),this.old.p1(6),this.old.p1(Q),this.old.p1(T+128-this.lastX),this.old.p1(E+128-this.lastY);else this.ensureCapacity(5),this.old.p1(7),this.old.p1(Q),this.old.p3(T+(E<<10));this.lastX=T,this.lastY=E}static keyPressed(T){if(!this.old)return;if(!this.active)return;this.trackedCount++;let E=performance.now(),G=(E-this.lastTime)/10|0;if(G>250)G=250;if(this.lastTime=E,T===1000)T=11;else if(T===1001)T=12;else if(T===1002)T=14;else if(T===1003)T=15;else if(T>=1008)T-=992;this.ensureCapacity(3),this.old.p1(8),this.old.p1(G),this.old.p1(T)}static keyReleased(T){if(!this.old)return;if(!this.active)return;this.trackedCount++;let E=performance.now(),G=(E-this.lastTime)/10|0;if(G>250)G=250;if(this.lastTime=E,T===1000)T=11;else if(T===1001)T=12;else if(T===1002)T=14;else if(T===1003)T=15;else if(T>=1008)T-=992;this.ensureCapacity(3),this.old.p1(9),this.old.p1(G),this.old.p1(T)}static focusGained(){if(!this.old)return;if(!this.active)return;this.trackedCount++;let T=performance.now(),E=(T-this.lastTime)/10|0;if(E>250)E=250;this.lastTime=T,this.ensureCapacity(2),this.old.p1(10),this.old.p1(E)}static focusLost(){if(!this.old)return;if(!this.active)return;this.trackedCount++;let T=performance.now(),E=(T-this.lastTime)/10|0;if(E>250)E=250;this.lastTime=T,this.ensureCapacity(2),this.old.p1(11),this.old.p1(E)}static mouseEntered(){if(!this.old)return;if(!this.active)return;this.trackedCount++;let T=performance.now(),E=(T-this.lastTime)/10|0;if(E>250)E=250;this.lastTime=T,this.ensureCapacity(2),this.old.p1(12),this.old.p1(E)}static mouseExited(){if(!this.old)return;if(!this.active)return;this.trackedCount++;let T=performance.now(),E=(T-this.lastTime)/10|0;if(E>250)E=250;this.lastTime=T,this.ensureCapacity(2),this.old.p1(13),this.old.p1(E)}}var k0=["F11","F12"],m=new Map;m.set("ArrowLeft",{code:37,ch:1});m.set("ArrowRight",{code:39,ch:2});m.set("ArrowUp",{code:38,ch:3});m.set("ArrowDown",{code:40,ch:4});m.set("Control",{code:17,ch:5});m.set("Shift",{code:16,ch:6});m.set("Alt",{code:18,ch:7});m.set("Backspace",{code:8,ch:8});m.set("Tab",{code:9,ch:9});m.set("Enter",{code:10,ch:10});m.set("Escape",{code:27,ch:27});m.set(" ",{code:32,ch:32});m.set("Delete",{code:127,ch:127});m.set("Home",{code:36,ch:1000});m.set("End",{code:35,ch:1001});m.set("PageUp",{code:33,ch:1002});m.set("PageDown",{code:34,ch:1003});m.set("F1",{code:112,ch:1008});m.set("F2",{code:113,ch:1009});m.set("F3",{code:114,ch:1010});m.set("F4",{code:115,ch:1011});m.set("F5",{code:116,ch:1012});m.set("F6",{code:117,ch:1013});m.set("F7",{code:118,ch:1014});m.set("F8",{code:119,ch:1015});m.set("F9",{code:120,ch:1016});m.set("F10",{code:121,ch:1017});m.set("F11",{code:122,ch:1018});m.set("F12",{code:123,ch:1019});m.set("CapsLock",{code:20,ch:65535});m.set("Meta",{code:524,ch:65535});m.set("Insert",{code:155,ch:65535});m.set("`",{code:192,ch:96});m.set("~",{code:192,ch:126});m.set("!",{code:49,ch:33});m.set("@",{code:50,ch:64});m.set("#",{code:51,ch:35});m.set("£",{code:51,ch:163});m.set("$",{code:52,ch:36});m.set("%",{code:53,ch:37});m.set("^",{code:54,ch:94});m.set("&",{code:55,ch:38});m.set("*",{code:56,ch:42});m.set("(",{code:57,ch:40});m.set(")",{code:48,ch:41});m.set("-",{code:45,ch:45});m.set("_",{code:45,ch:95});m.set("=",{code:61,ch:61});m.set("+",{code:61,ch:43});m.set("[",{code:91,ch:91});m.set("{",{code:91,ch:123});m.set("]",{code:93,ch:93});m.set("}",{code:93,ch:125});m.set("\\",{code:92,ch:92});m.set("|",{code:92,ch:124});m.set(";",{code:59,ch:59});m.set(":",{code:59,ch:58});m.set("'",{code:222,ch:39});m.set('"',{code:222,ch:34});m.set(",",{code:44,ch:44});m.set("<",{code:44,ch:60});m.set(".",{code:46,ch:46});m.set(">",{code:46,ch:62});m.set("/",{code:47,ch:47});m.set("?",{code:47,ch:63});m.set("0",{code:48,ch:48});m.set("1",{code:49,ch:49});m.set("2",{code:50,ch:50});m.set("3",{code:51,ch:51});m.set("4",{code:52,ch:52});m.set("5",{code:53,ch:53});m.set("6",{code:54,ch:54});m.set("7",{code:55,ch:55});m.set("8",{code:56,ch:56});m.set("9",{code:57,ch:57});m.set("a",{code:65,ch:97});m.set("b",{code:66,ch:98});m.set("c",{code:67,ch:99});m.set("d",{code:68,ch:100});m.set("e",{code:69,ch:101});m.set("f",{code:70,ch:102});m.set("g",{code:71,ch:103});m.set("h",{code:72,ch:104});m.set("i",{code:73,ch:105});m.set("j",{code:74,ch:106});m.set("k",{code:75,ch:107});m.set("l",{code:76,ch:108});m.set("m",{code:77,ch:109});m.set("n",{code:78,ch:110});m.set("o",{code:79,ch:111});m.set("p",{code:80,ch:112});m.set("q",{code:81,ch:113});m.set("r",{code:82,ch:114});m.set("s",{code:83,ch:115});m.set("t",{code:84,ch:116});m.set("u",{code:85,ch:117});m.set("v",{code:86,ch:118});m.set("w",{code:87,ch:119});m.set("x",{code:88,ch:120});m.set("y",{code:89,ch:121});m.set("z",{code:90,ch:122});m.set("A",{code:65,ch:65});m.set("B",{code:66,ch:66});m.set("C",{code:67,ch:67});m.set("D",{code:68,ch:68});m.set("E",{code:69,ch:69});m.set("F",{code:70,ch:70});m.set("G",{code:71,ch:71});m.set("H",{code:72,ch:72});m.set("I",{code:73,ch:73});m.set("J",{code:74,ch:74});m.set("K",{code:75,ch:75});m.set("L",{code:76,ch:76});m.set("M",{code:77,ch:77});m.set("N",{code:78,ch:78});m.set("O",{code:79,ch:79});m.set("P",{code:80,ch:80});m.set("Q",{code:81,ch:81});m.set("R",{code:82,ch:82});m.set("S",{code:83,ch:83});m.set("T",{code:84,ch:84});m.set("U",{code:85,ch:85});m.set("V",{code:86,ch:86});m.set("W",{code:87,ch:87});m.set("X",{code:88,ch:88});m.set("Y",{code:89,ch:89});m.set("Z",{code:90,ch:90});var h=document.getElementById("canvas"),d=h?.getContext("2d",{willReadFrequently:!0}),$0=document.createElement("canvas"),E0=document.createElement("img"),Z0=$0.getContext("2d",{willReadFrequently:!0});function v0(T,E){let G=document.createElement("a");G.href=T,G.download=E,document.body.appendChild(G),G.click(),document.body.removeChild(G)}class I extends T0{static pixels=new Int32Array;static width=0;static height=0;static clipMinX=0;static clipMaxX=0;static clipMinY=0;static clipMaxY=0;static sizeX=0;static maxX=0;static maxY=0;static setPixels(T,E,G){this.pixels=T,this.width=E,this.height=G,this.setClipping(0,0,E,G)}static resetClipping(){this.clipMinX=0,this.clipMinY=0,this.clipMaxX=this.width,this.clipMaxY=this.height,this.sizeX=this.clipMaxX-1,this.maxX=this.clipMaxX/2|0}static setClipping(T,E,G,L){if(T<0)T=0;if(E<0)E=0;if(G>this.width)G=this.width;if(L>this.height)L=this.height;this.clipMinY=E,this.clipMaxY=L,this.clipMinX=T,this.clipMaxX=G,this.sizeX=this.clipMaxX-1,this.maxX=this.clipMaxX/2|0,this.maxY=this.clipMaxY/2|0}static cls(){let T=this.width*this.height;for(let E=0;E<T;E++)this.pixels[E]=0}static fillRectTrans(T,E,G,L,Q,N){if(T<this.clipMinX)G-=this.clipMinX-T,T=this.clipMinX;if(E<this.clipMinY)L-=this.clipMinY-E,E=this.clipMinY;if(T+G>this.clipMaxX)G=this.clipMaxX-T;if(E+L>this.clipMaxY)L=this.clipMaxY-E;let $=256-N,H=(Q>>16&255)*N,_=(Q>>8&255)*N,J=(Q&255)*N,q=this.width-G,Z=T+E*this.width;for(let R=0;R<L;R++){for(let M=-G;M<0;M++){let F=(this.pixels[Z]>>16&255)*$,k=(this.pixels[Z]>>8&255)*$,j=(this.pixels[Z]&255)*$,z=(H+F>>8<<16)+(_+k>>8<<8)+(J+j>>8);this.pixels[Z++]=z}Z+=q}}static fillRect(T,E,G,L,Q){if(T<this.clipMinX)G-=this.clipMinX-T,T=this.clipMinX;if(E<this.clipMinY)L-=this.clipMinY-E,E=this.clipMinY;if(T+G>this.clipMaxX)G=this.clipMaxX-T;if(E+L>this.clipMaxY)L=this.clipMaxY-E;let N=this.width-G,$=T+E*this.width;for(let H=-L;H<0;H++){for(let _=-G;_<0;_++)this.pixels[$++]=Q;$+=N}}static drawRect(T,E,G,L,Q){this.hline(T,E,Q,G),this.hline(T,E+L-1,Q,G),this.vline(T,E,Q,L),this.vline(T+G-1,E,Q,L)}static drawRectTrans(T,E,G,L,Q,N){if(this.hlineTrans(T,E,Q,G,N),this.hlineTrans(T,E+L-1,Q,G,N),L>=3)this.vlineTrans(T,E,Q,L,N),this.vlineTrans(T+G-1,E,Q,L,N)}static hline(T,E,G,L){if(E<this.clipMinY||E>=this.clipMaxY)return;if(T<this.clipMinX)L-=this.clipMinX-T,T=this.clipMinX;if(T+L>this.clipMaxX)L=this.clipMaxX-T;let Q=T+E*this.width;for(let N=0;N<L;N++)this.pixels[Q+N]=G}static hlineTrans(T,E,G,L,Q){if(E<this.clipMinY||E>=this.clipMaxY)return;if(T<this.clipMinX)L-=this.clipMinX-T,T=this.clipMinX;if(T+L>this.clipMaxX)L=this.clipMaxX-T;let N=256-Q,$=(G>>16&255)*Q,H=(G>>8&255)*Q,_=(G&255)*Q,J=this.width-L,q=T+E*this.width;for(let Z=0;Z<L;Z++){let R=(this.pixels[q]>>16&255)*N,M=(this.pixels[q]>>8&255)*N,F=(this.pixels[q]&255)*N,k=($+R>>8<<16)+(H+M>>8<<8)+(_+F>>8);this.pixels[q++]=k}}static vline(T,E,G,L){if(T<this.clipMinX||T>=this.clipMaxX)return;if(E<this.clipMinY)L-=this.clipMinY-E,E=this.clipMinY;if(E+L>this.clipMaxY)L=this.clipMaxY-E;let Q=T+E*this.width;for(let N=0;N<L;N++)this.pixels[Q+N*this.width]=G}static vlineTrans(T,E,G,L,Q){if(T<this.clipMinX||T>=this.clipMaxX)return;if(E<this.clipMinY)L-=this.clipMinY-E,E=this.clipMinY;if(E+L>this.clipMaxY)L=this.clipMaxY-E;let N=256-Q,$=(G>>16&255)*Q,H=(G>>8&255)*Q,_=(G&255)*Q,J=T+E*this.width;for(let q=0;q<L;q++){let Z=(this.pixels[J]>>16&255)*N,R=(this.pixels[J]>>8&255)*N,M=(this.pixels[J]&255)*N,F=($+Z>>8<<16)+(H+R>>8<<8)+(_+M>>8);this.pixels[J]=F,J+=this.width}}static fillCircle(T,E,G,L,Q){let N=256-Q,$=(L>>16&255)*Q,H=(L>>8&255)*Q,_=(L&255)*Q,J=E-G;if(J<0)J=0;let q=E+G;if(q>=this.height)q=this.height-1;for(let Z=J;Z<=q;Z++){let R=Z-E,M=Math.sqrt(G*G-R*R)|0,F=T-M;if(F<0)F=0;let k=T+M;if(k>=this.width)k=this.width-1;let j=F+Z*this.width;for(let z=F;z<=k;z++){let v=(this.pixels[j]>>16&255)*N,K=(this.pixels[j]>>8&255)*N,V=(this.pixels[j]&255)*N,U=($+v>>8<<16)+(H+K>>8<<8)+(_+V>>8);this.pixels[j++]=U}}}}class L0 extends I{owi;ohi;bpal;xof;yof;wi;hi;data;constructor(T,E,G){super();this.data=new Int8Array(T*E),this.wi=this.owi=T,this.hi=this.ohi=E,this.xof=this.yof=0,this.bpal=G}static load(T,E,G=0){let L=new D(T.read(E+".dat")),Q=new D(T.read("index.dat"));Q.pos=L.g2();let N=Q.g2(),$=Q.g2(),H=Q.g1(),_=new Int32Array(H);for(let k=0;k<H-1;k++)_[k+1]=Q.g3();for(let k=0;k<G;k++)Q.pos+=2,L.pos+=Q.g2()*Q.g2(),Q.pos+=1;if(L.pos>L.length||Q.pos>Q.length)throw new Error;let J=Q.g1(),q=Q.g1(),Z=Q.g2(),R=Q.g2(),M=new L0(Z,R,_);M.xof=J,M.yof=q,M.owi=N,M.ohi=$;let F=Q.g1();if(F===0)for(let k=0;k<M.wi*M.hi;k++)M.data[k]=L.g1b();else if(F===1)for(let k=0;k<M.wi;k++)for(let j=0;j<M.hi;j++)M.data[k+j*M.wi]=L.g1b();return M}halveSize(){this.owi|=0,this.ohi|=0,this.owi/=2,this.ohi/=2,this.owi|=0,this.ohi|=0;let T=new Int8Array(this.owi*this.ohi),E=0;for(let G=0;G<this.hi;G++)for(let L=0;L<this.wi;L++)T[(L+this.xof>>1)+(G+this.yof>>1)*this.owi]=this.data[E++];this.data=T,this.wi=this.owi,this.hi=this.ohi,this.xof=0,this.yof=0}trim(){if(this.wi===this.owi&&this.hi===this.ohi)return;let T=new Int8Array(this.owi*this.ohi),E=0;for(let G=0;G<this.hi;G++)for(let L=0;L<this.wi;L++)T[L+this.xof+(G+this.yof)*this.owi]=this.data[E++];this.data=T,this.wi=this.owi,this.hi=this.ohi,this.xof=0,this.yof=0}hflip(){let T=this.data,E=this.wi,G=this.hi;for(let L=0;L<G;L++){let Q=E/2|0;for(let N=0;N<Q;N++){let $=N+L*E,H=E-N-1+L*E,_=T[$];T[$]=T[H],T[H]=_}}}vflip(){let T=this.data,E=this.wi,G=this.hi;for(let L=0;L<(G/2|0);L++)for(let Q=0;Q<E;Q++){let N=Q+L*E,$=Q+(G-L-1)*E,H=T[N];T[N]=T[$],T[$]=H}}rgbAdjust(T,E,G){for(let L=0;L<this.bpal.length;L++){let Q=this.bpal[L]>>16&255;if(Q+=T,Q<0)Q=0;else if(Q>255)Q=255;let N=this.bpal[L]>>8&255;if(N+=E,N<0)N=0;else if(N>255)N=255;let $=this.bpal[L]&255;if($+=G,$<0)$=0;else if($>255)$=255;this.bpal[L]=(Q<<16)+(N<<8)+$}}plotSprite(T,E){T|=0,E|=0,T+=this.xof,E+=this.yof;let G=T+E*I.width,L=0,Q=this.hi,N=this.wi,$=I.width-N,H=0;if(E<I.clipMinY){let _=I.clipMinY-E;Q-=_,E=I.clipMinY,L+=_*N,G+=_*I.width}if(E+Q>I.clipMaxY)Q-=E+Q-I.clipMaxY;if(T<I.clipMinX){let _=I.clipMinX-T;N-=_,T=I.clipMinX,L+=_,G+=_,H+=_,$+=_}if(T+N>I.clipMaxX){let _=T+N-I.clipMaxX;N-=_,H+=_,$+=_}if(N>0&&Q>0)this.plot(N,Q,this.data,L,H,I.pixels,G,$)}plot(T,E,G,L,Q,N,$,H){let _=-(T>>2);T=-(T&3);for(let J=-E;J<0;J++){for(let q=_;q<0;q++){let Z=G[L++];if(Z===0)$++;else N[$++]=this.bpal[Z&255];if(Z=G[L++],Z===0)$++;else N[$++]=this.bpal[Z&255];if(Z=G[L++],Z===0)$++;else N[$++]=this.bpal[Z&255];if(Z=G[L++],Z===0)$++;else N[$++]=this.bpal[Z&255]}for(let q=T;q<0;q++){let Z=G[L++];if(Z===0)$++;else N[$++]=this.bpal[Z&255]}$+=H,L+=Q}}scalePlotSprite(T,E,G,L){try{let Q=this.wi,N=this.hi,$=0,H=0,_=(Q<<16)/G|0,J=(N<<16)/L|0,q=this.owi,Z=this.ohi,R=(q<<16)/G|0,M=(Z<<16)/L|0;if(T=T+(this.xof*G+q-1)/q|0,E=E+(this.yof*L+Z-1)/Z|0,this.xof*G%q!=0)$=(q-this.xof*G%q<<16)/G|0;if(this.yof*L%Z!=0)H=(Z-this.yof*L%Z<<16)/L|0;G=G*(this.wi-($>>16))/q|0,L=L*(this.hi-(H>>16))/Z|0;let F=T+E*I.width,k=I.width-G,j;if(E<I.clipMinY)j=I.clipMinY-E,L-=j,E=0,F+=j*I.width,H+=M*j;if(E+L>I.clipMaxY)L-=E+L-I.clipMaxY;if(T<I.clipMinX)j=I.clipMinX-T,G-=j,T=0,F+=j,$+=R*j,k+=j;if(T+G>I.clipMaxX)j=T+G-I.clipMaxX,G-=j,k+=j;this.plotScale(I.pixels,this.data,this.bpal,$,H,F,k,G,L,R,M,Q)}catch(Q){}}plotScale(T,E,G,L,Q,N,$,H,_,J,q,Z){try{let R=L;for(let M=-_;M<0;M++){let F=(Q>>16)*Z;for(let k=-H;k<0;k++){let j=E[(L>>16)+F];if(j==0)N++;else T[N++]=G[j&255];L+=J}Q+=q,L=R,N+=$}}catch(R){}}}class e extends Array{constructor(T,E){super(T);for(let G=0;G<T;G++)this[G]=E}}class y extends Array{constructor(T,E,G){super(T);for(let L=0;L<T;L++){this[L]=new Array(E);for(let Q=0;Q<E;Q++)this[L][Q]=G}}}class M0 extends Array{constructor(T,E){super(T);for(let G=0;G<T;G++)this[G]=new Int32Array(E)}}class R0 extends I{static lowMem=!1;static lowDetail=!0;static divTable=new Int32Array(512);static divTable2=new Int32Array(2048);static sinTable=new Int32Array(2048);static cosTable=new Int32Array(2048);static colourTable=new Int32Array(65536);static textures=new e(50,null);static textureTranslucent=new e(50,!1);static averageTextureRgb=new Int32Array(50);static activeTexels=new e(50,null);static textureCycle=new Int32Array(50);static texPal=new e(50,null);static textureCount=0;static originX=0;static originY=0;static texelPool=null;static poolSize=0;static opaque=!1;static cycle=0;static scanline=new Int32Array;static hclip=!1;static trans=0;static{for(let T=1;T<512;T++)this.divTable[T]=32768/T|0;for(let T=1;T<2048;T++)this.divTable2[T]=65536/T|0;for(let T=0;T<2048;T++)this.sinTable[T]=Math.sin(T*0.0030679615757712823)*65536|0,this.cosTable[T]=Math.cos(T*0.0030679615757712823)*65536|0}static setRenderClipping(){this.scanline=new Int32Array(I.height);for(let T=0;T<I.height;T++)this.scanline[T]=I.width*T;this.originX=I.width/2|0,this.originY=I.height/2|0}static setClipping(T,E){this.scanline=new Int32Array(E);for(let G=0;G<E;G++)this.scanline[G]=T*G;this.originX=T/2|0,this.originY=E/2|0}static clearTexels(){this.texelPool=null,this.activeTexels.fill(null)}static initPool(T){if(this.texelPool)return;if(this.poolSize=T,this.lowMem)this.texelPool=new M0(T,16384);else this.texelPool=new M0(T,65536);this.activeTexels.fill(null)}static unpackTextures(T){this.textureCount=0;for(let E=0;E<50;E++)try{if(this.textures[E]=L0.load(T,E.toString()),this.lowMem&&this.textures[E]?.owi===128)this.textures[E]?.halveSize();else this.textures[E]?.trim();this.textureCount++}catch(G){}}static getAverageTextureRgb(T){if(this.averageTextureRgb[T]!==0)return this.averageTextureRgb[T];let E=this.texPal[T];if(!E)return 0;let G=0,L=0,Q=0,N=E.length;for(let H=0;H<N;H++)G+=E[H]>>16&255,L+=E[H]>>8&255,Q+=E[H]&255;let $=((G/N|0)<<16)+((L/N|0)<<8)+(Q/N|0);if($=this.gammaCorrect($,1.4),$===0)$=1;return this.averageTextureRgb[T]=$,$}static pushTexture(T){if(this.activeTexels[T]&&this.texelPool)this.texelPool[this.poolSize++]=this.activeTexels[T],this.activeTexels[T]=null}static getTexels(T){if(this.textureCycle[T]=this.cycle++,this.activeTexels[T])return this.activeTexels[T];let E;if(this.poolSize>0&&this.texelPool)E=this.texelPool[--this.poolSize],this.texelPool[this.poolSize]=null;else{let Q=0,N=-1;for(let $=0;$<this.textureCount;$++)if(this.activeTexels[$]&&(this.textureCycle[$]<Q||N===-1))Q=this.textureCycle[$],N=$;E=this.activeTexels[N],this.activeTexels[N]=null}this.activeTexels[T]=E;let G=this.textures[T],L=this.texPal[T];if(!E||!G||!L)return null;if(this.lowMem){this.textureTranslucent[T]=!1;for(let Q=0;Q<4096;Q++){let N=E[Q]=L[G.data[Q]]&16316671;if(N===0)this.textureTranslucent[T]=!0;E[Q+4096]=N-(N>>>3)&16316671,E[Q+8192]=N-(N>>>2)&16316671,E[Q+12288]=N-(N>>>2)-(N>>>3)&16316671}}else{if(G.wi===64)for(let Q=0;Q<128;Q++)for(let N=0;N<128;N++)E[N+(Q<<7|0)]=L[G.data[(N>>1)+(Q>>1<<6|0)]];else for(let Q=0;Q<16384;Q++)E[Q]=L[G.data[Q]];this.textureTranslucent[T]=!1;for(let Q=0;Q<16384;Q++){E[Q]&=16316671;let N=E[Q];if(N===0)this.textureTranslucent[T]=!0;E[Q+16384]=N-(N>>>3)&16316671,E[Q+32768]=N-(N>>>2)&16316671,E[Q+49152]=N-(N>>>2)-(N>>>3)&16316671}}return E}static initColourTable(T){let E=T+Math.random()*0.03-0.015,G=0;for(let L=0;L<512;L++){let Q=(L/8|0)/64+0.0078125,N=(L&7)/8+0.0625;for(let $=0;$<128;$++){let H=$/128,_=H,J=H,q=H;if(N!==0){let k;if(H<0.5)k=H*(N+1);else k=H+N-H*N;let j=H*2-k,z=Q+0.3333333333333333;if(z>1)z--;let v=Q-0.3333333333333333;if(v<0)v++;if(z*6<1)_=j+(k-j)*6*z;else if(z*2<1)_=k;else if(z*3<2)_=j+(k-j)*(0.6666666666666666-z)*6;else _=j;if(Q*6<1)J=j+(k-j)*6*Q;else if(Q*2<1)J=k;else if(Q*3<2)J=j+(k-j)*(0.6666666666666666-Q)*6;else J=j;if(v*6<1)q=j+(k-j)*6*v;else if(v*2<1)q=k;else if(v*3<2)q=j+(k-j)*(0.6666666666666666-v)*6;else q=j}let Z=_*256|0,R=J*256|0,M=q*256|0,F=(Z<<16)+(R<<8)+M;this.colourTable[G++]=this.gammaCorrect(F,E)}}for(let L=0;L<50;L++){let Q=this.textures[L];if(!Q)continue;let N=Q.bpal;this.texPal[L]=new Int32Array(N.length);for(let $=0;$<N.length;$++){let H=this.texPal[L];if(!H)continue;H[$]=this.gammaCorrect(N[$],E)}}for(let L=0;L<50;L++)this.pushTexture(L)}static gammaCorrect(T,E){let G=(T>>16)/256,L=(T>>8&255)/256,Q=(T&255)/256,N=Math.pow(G,E),$=Math.pow(L,E),H=Math.pow(Q,E),_=N*256|0,J=$*256|0,q=H*256|0;return(_<<16)+(J<<8)+q}static gouraudTriangle(T,E,G,L,Q,N,$,H,_){let J=0,q=0;if(Q!==L)J=(E-T<<16)/(Q-L)|0,q=(H-$<<15)/(Q-L)|0;let Z=0,R=0;if(N!==Q)Z=(G-E<<16)/(N-Q)|0,R=(_-H<<15)/(N-Q)|0;let M=0,F=0;if(N!==L)M=(T-G<<16)/(L-N)|0,F=($-_<<15)/(L-N)|0;if(L<=Q&&L<=N){if(L>=I.clipMaxY)return;if(Q>I.clipMaxY)Q=I.clipMaxY;if(N>I.clipMaxY)N=I.clipMaxY;if(Q<N){if(G=T<<=16,_=$<<=15,L<0)G-=M*L,T-=J*L,_-=F*L,$-=q*L,L=0;if(E<<=16,H<<=15,Q<0)E-=Z*Q,H-=R*Q,Q=0;if(L!==Q&&M<J||L===Q&&M>Z){N-=Q,Q-=L,L=this.scanline[L];while(!0){if(Q--,Q<0)while(!0){if(N--,N<0)return;this.gouraudRaster(G>>16,E>>16,_>>7,H>>7,I.pixels,L,0),G+=M,E+=Z,_+=F,H+=R,L+=I.width}this.gouraudRaster(G>>16,T>>16,_>>7,$>>7,I.pixels,L,0),G+=M,T+=J,_+=F,$+=q,L+=I.width}}else{N-=Q,Q-=L,L=this.scanline[L];while(!0){if(Q--,Q<0)while(!0){if(N--,N<0)return;this.gouraudRaster(E>>16,G>>16,H>>7,_>>7,I.pixels,L,0),G+=M,E+=Z,_+=F,H+=R,L+=I.width}this.gouraudRaster(T>>16,G>>16,$>>7,_>>7,I.pixels,L,0),G+=M,T+=J,_+=F,$+=q,L+=I.width}}}else{if(E=T<<=16,H=$<<=15,L<0)E-=M*L,T-=J*L,H-=F*L,$-=q*L,L=0;if(G<<=16,_<<=15,N<0)G-=Z*N,_-=R*N,N=0;if(L!==N&&M<J||L===N&&Z>J){Q-=N,N-=L,L=this.scanline[L];while(!0){if(N--,N<0)while(!0){if(Q--,Q<0)return;this.gouraudRaster(G>>16,T>>16,_>>7,$>>7,I.pixels,L,0),G+=Z,T+=J,_+=R,$+=q,L+=I.width}this.gouraudRaster(E>>16,T>>16,H>>7,$>>7,I.pixels,L,0),E+=M,T+=J,H+=F,$+=q,L+=I.width}}else{Q-=N,N-=L,L=this.scanline[L];while(!0){if(N--,N<0)while(!0){if(Q--,Q<0)return;this.gouraudRaster(T>>16,G>>16,$>>7,_>>7,I.pixels,L,0),G+=Z,T+=J,_+=R,$+=q,L+=I.width}this.gouraudRaster(T>>16,E>>16,$>>7,H>>7,I.pixels,L,0),E+=M,T+=J,H+=F,$+=q,L+=I.width}}}}else if(Q<=N){if(Q>=I.clipMaxY)return;if(N>I.clipMaxY)N=I.clipMaxY;if(L>I.clipMaxY)L=I.clipMaxY;if(N<L){if(T=E<<=16,$=H<<=15,Q<0)T-=J*Q,E-=Z*Q,$-=q*Q,H-=R*Q,Q=0;if(G<<=16,_<<=15,N<0)G-=M*N,_-=F*N,N=0;if(Q!==N&&J<Z||Q===N&&J>M){L-=N,N-=Q,Q=this.scanline[Q];while(!0){if(N--,N<0)while(!0){if(L--,L<0)return;this.gouraudRaster(T>>16,G>>16,$>>7,_>>7,I.pixels,Q,0),T+=J,G+=M,$+=q,_+=F,Q+=I.width}this.gouraudRaster(T>>16,E>>16,$>>7,H>>7,I.pixels,Q,0),T+=J,E+=Z,$+=q,H+=R,Q+=I.width}}else{L-=N,N-=Q,Q=this.scanline[Q];while(!0){if(N--,N<0)while(!0){if(L--,L<0)return;this.gouraudRaster(G>>16,T>>16,_>>7,$>>7,I.pixels,Q,0),T+=J,G+=M,$+=q,_+=F,Q+=I.width}this.gouraudRaster(E>>16,T>>16,H>>7,$>>7,I.pixels,Q,0),T+=J,E+=Z,$+=q,H+=R,Q+=I.width}}}else{if(G=E<<=16,_=H<<=15,Q<0)G-=J*Q,E-=Z*Q,_-=q*Q,H-=R*Q,Q=0;if(T<<=16,$<<=15,L<0)T-=M*L,$-=F*L,L=0;if(N-=L,L-=Q,Q=this.scanline[Q],J<Z)while(!0){if(L--,L<0)while(!0){if(N--,N<0)return;this.gouraudRaster(T>>16,E>>16,$>>7,H>>7,I.pixels,Q,0),T+=M,E+=Z,$+=F,H+=R,Q+=I.width}this.gouraudRaster(G>>16,E>>16,_>>7,H>>7,I.pixels,Q,0),G+=J,E+=Z,_+=q,H+=R,Q+=I.width}else while(!0){if(L--,L<0)while(!0){if(N--,N<0)return;this.gouraudRaster(E>>16,T>>16,H>>7,$>>7,I.pixels,Q,0),T+=M,E+=Z,$+=F,H+=R,Q+=I.width}this.gouraudRaster(E>>16,G>>16,H>>7,_>>7,I.pixels,Q,0),G+=J,E+=Z,_+=q,H+=R,Q+=I.width}}}else{if(N>=I.clipMaxY)return;if(L>I.clipMaxY)L=I.clipMaxY;if(Q>I.clipMaxY)Q=I.clipMaxY;if(L<Q){if(E=G<<=16,H=_<<=15,N<0)E-=Z*N,G-=M*N,H-=R*N,_-=F*N,N=0;if(T<<=16,$<<=15,L<0)T-=J*L,$-=q*L,L=0;if(Q-=L,L-=N,N=this.scanline[N],Z<M)while(!0){if(L--,L<0)while(!0){if(Q--,Q<0)return;this.gouraudRaster(E>>16,T>>16,H>>7,$>>7,I.pixels,N,0),E+=Z,T+=J,H+=R,$+=q,N+=I.width}this.gouraudRaster(E>>16,G>>16,H>>7,_>>7,I.pixels,N,0),E+=Z,G+=M,H+=R,_+=F,N+=I.width}else while(!0){if(L--,L<0)while(!0){if(Q--,Q<0)return;this.gouraudRaster(T>>16,E>>16,$>>7,H>>7,I.pixels,N,0),E+=Z,T+=J,H+=R,$+=q,N+=I.width}this.gouraudRaster(G>>16,E>>16,_>>7,H>>7,I.pixels,N,0),E+=Z,G+=M,H+=R,_+=F,N+=I.width}}else{if(T=G<<=16,$=_<<=15,N<0)T-=Z*N,G-=M*N,$-=R*N,_-=F*N,N=0;if(E<<=16,H<<=15,Q<0)E-=J*Q,H-=q*Q,Q=0;if(L-=Q,Q-=N,N=this.scanline[N],Z<M)while(!0){if(Q--,Q<0)while(!0){if(L--,L<0)return;this.gouraudRaster(E>>16,G>>16,H>>7,_>>7,I.pixels,N,0),E+=J,G+=M,H+=q,_+=F,N+=I.width}this.gouraudRaster(T>>16,G>>16,$>>7,_>>7,I.pixels,N,0),T+=Z,G+=M,$+=R,_+=F,N+=I.width}else while(!0){if(Q--,Q<0)while(!0){if(L--,L<0)return;this.gouraudRaster(G>>16,E>>16,_>>7,H>>7,I.pixels,N,0),E+=J,G+=M,H+=q,_+=F,N+=I.width}this.gouraudRaster(G>>16,T>>16,_>>7,$>>7,I.pixels,N,0),T+=Z,G+=M,$+=R,_+=F,N+=I.width}}}}static gouraudRaster(T,E,G,L,Q,N,$){let H;if(this.lowDetail){let _;if(this.hclip){if(E-T>3)_=(L-G)/(E-T)|0;else _=0;if(E>I.sizeX)E=I.sizeX;if(T<0)G-=T*_,T=0;if(T>=E)return;N+=T,$=E-T>>2,_<<=2}else if(T<E)if(N+=T,$=E-T>>2,$>0)_=(L-G)*this.divTable[$]>>15;else _=0;else return;if(this.trans===0)while(!0){if($--,$<0){if($=E-T&3,$>0){H=this.colourTable[G>>8];do Q[N++]=H,$--;while($>0);return}break}H=this.colourTable[G>>8],G+=_,Q[N++]=H,Q[N++]=H,Q[N++]=H,Q[N++]=H}else{let J=this.trans,q=256-this.trans;while(!0){if($--,$<0){if($=E-T&3,$>0){H=this.colourTable[G>>8],H=((H&16711935)*q>>8&16711935)+((H&65280)*q>>8&65280);do Q[N++]=H+((Q[N]&16711935)*J>>8&16711935)+((Q[N]&65280)*J>>8&65280),$--;while($>0)}break}H=this.colourTable[G>>8],G+=_,H=((H&16711935)*q>>8&16711935)+((H&65280)*q>>8&65280),Q[N++]=H+((Q[N]&16711935)*J>>8&16711935)+((Q[N]&65280)*J>>8&65280),Q[N++]=H+((Q[N]&16711935)*J>>8&16711935)+((Q[N]&65280)*J>>8&65280),Q[N++]=H+((Q[N]&16711935)*J>>8&16711935)+((Q[N]&65280)*J>>8&65280),Q[N++]=H+((Q[N]&16711935)*J>>8&16711935)+((Q[N]&65280)*J>>8&65280)}}}else if(T<E){let _=(L-G)/(E-T)|0;if(this.hclip){if(E>I.sizeX)E=I.sizeX;if(T<0)G-=T*_,T=0;if(T>=E)return}if(N+=T,$=E-T,this.trans===0)do Q[N++]=this.colourTable[G>>8],G+=_,$--;while($>0);else{let J=this.trans,q=256-this.trans;do H=this.colourTable[G>>8],G+=_,H=((H&16711935)*q>>8&16711935)+((H&65280)*q>>8&65280),Q[N++]=H+((Q[N]&16711935)*J>>8&16711935)+((Q[N]&65280)*J>>8&65280),$--;while($>0)}}}static flatTriangle(T,E,G,L,Q,N,$){let H=0;if(Q!==L)H=(E-T<<16)/(Q-L)|0;let _=0;if(N!==Q)_=(G-E<<16)/(N-Q)|0;let J=0;if(N!==L)J=(T-G<<16)/(L-N)|0;if(L<=Q&&L<=N){if(L>=I.clipMaxY)return;if(Q>I.clipMaxY)Q=I.clipMaxY;if(N>I.clipMaxY)N=I.clipMaxY;if(Q<N){if(G=T<<=16,L<0)G-=J*L,T-=H*L,L=0;if(E<<=16,Q<0)E-=_*Q,Q=0;if(L!==Q&&J<H||L===Q&&J>_){N-=Q,Q-=L,L=this.scanline[L];while(!0){if(Q--,Q<0)while(!0){if(N--,N<0)return;this.flatRaster(G>>16,E>>16,I.pixels,L,$),G+=J,E+=_,L+=I.width}this.flatRaster(G>>16,T>>16,I.pixels,L,$),G+=J,T+=H,L+=I.width}}else{N-=Q,Q-=L,L=this.scanline[L];while(!0){if(Q--,Q<0)while(!0){if(N--,N<0)return;this.flatRaster(E>>16,G>>16,I.pixels,L,$),G+=J,E+=_,L+=I.width}this.flatRaster(T>>16,G>>16,I.pixels,L,$),G+=J,T+=H,L+=I.width}}}else{if(E=T<<=16,L<0)E-=J*L,T-=H*L,L=0;if(G<<=16,N<0)G-=_*N,N=0;if(L!==N&&J<H||L===N&&_>H){Q-=N,N-=L,L=this.scanline[L];while(!0){if(N--,N<0)while(!0){if(Q--,Q<0)return;this.flatRaster(G>>16,T>>16,I.pixels,L,$),G+=_,T+=H,L+=I.width}this.flatRaster(E>>16,T>>16,I.pixels,L,$),E+=J,T+=H,L+=I.width}}else{Q-=N,N-=L,L=this.scanline[L];while(!0){if(N--,N<0)while(!0){if(Q--,Q<0)return;this.flatRaster(T>>16,G>>16,I.pixels,L,$),G+=_,T+=H,L+=I.width}this.flatRaster(T>>16,E>>16,I.pixels,L,$),E+=J,T+=H,L+=I.width}}}}else if(Q<=N){if(Q>=I.clipMaxY)return;if(N>I.clipMaxY)N=I.clipMaxY;if(L>I.clipMaxY)L=I.clipMaxY;if(N<L){if(T=E<<=16,Q<0)T-=H*Q,E-=_*Q,Q=0;if(G<<=16,N<0)G-=J*N,N=0;if(Q!==N&&H<_||Q===N&&H>J){L-=N,N-=Q,Q=this.scanline[Q];while(!0){if(N--,N<0)while(!0){if(L--,L<0)return;this.flatRaster(T>>16,G>>16,I.pixels,Q,$),T+=H,G+=J,Q+=I.width}this.flatRaster(T>>16,E>>16,I.pixels,Q,$),T+=H,E+=_,Q+=I.width}}else{L-=N,N-=Q,Q=this.scanline[Q];while(!0){if(N--,N<0)while(!0){if(L--,L<0)return;this.flatRaster(G>>16,T>>16,I.pixels,Q,$),T+=H,G+=J,Q+=I.width}this.flatRaster(E>>16,T>>16,I.pixels,Q,$),T+=H,E+=_,Q+=I.width}}}else{if(G=E<<=16,Q<0)G-=H*Q,E-=_*Q,Q=0;if(T<<=16,L<0)T-=J*L,L=0;if(N-=L,L-=Q,Q=this.scanline[Q],H<_)while(!0){if(L--,L<0)while(!0){if(N--,N<0)return;this.flatRaster(T>>16,E>>16,I.pixels,Q,$),T+=J,E+=_,Q+=I.width}this.flatRaster(G>>16,E>>16,I.pixels,Q,$),G+=H,E+=_,Q+=I.width}else while(!0){if(L--,L<0)while(!0){if(N--,N<0)return;this.flatRaster(E>>16,T>>16,I.pixels,Q,$),T+=J,E+=_,Q+=I.width}this.flatRaster(E>>16,G>>16,I.pixels,Q,$),G+=H,E+=_,Q+=I.width}}}else{if(N>=I.clipMaxY)return;if(L>I.clipMaxY)L=I.clipMaxY;if(Q>I.clipMaxY)Q=I.clipMaxY;if(L<Q){if(E=G<<=16,N<0)E-=_*N,G-=J*N,N=0;if(T<<=16,L<0)T-=H*L,L=0;if(Q-=L,L-=N,N=this.scanline[N],_<J)while(!0){if(L--,L<0)while(!0){if(Q--,Q<0)return;this.flatRaster(E>>16,T>>16,I.pixels,N,$),E+=_,T+=H,N+=I.width}this.flatRaster(E>>16,G>>16,I.pixels,N,$),E+=_,G+=J,N+=I.width}else while(!0){if(L--,L<0)while(!0){if(Q--,Q<0)return;this.flatRaster(T>>16,E>>16,I.pixels,N,$),E+=_,T+=H,N+=I.width}this.flatRaster(G>>16,E>>16,I.pixels,N,$),E+=_,G+=J,N+=I.width}}else{if(T=G<<=16,N<0)T-=_*N,G-=J*N,N=0;if(E<<=16,Q<0)E-=H*Q,Q=0;if(L-=Q,Q-=N,N=this.scanline[N],_<J)while(!0){if(Q--,Q<0)while(!0){if(L--,L<0)return;this.flatRaster(E>>16,G>>16,I.pixels,N,$),E+=H,G+=J,N+=I.width}this.flatRaster(T>>16,G>>16,I.pixels,N,$),T+=_,G+=J,N+=I.width}else while(!0){if(Q--,Q<0)while(!0){if(L--,L<0)return;this.flatRaster(G>>16,E>>16,I.pixels,N,$),E+=H,G+=J,N+=I.width}this.flatRaster(G>>16,T>>16,I.pixels,N,$),T+=_,G+=J,N+=I.width}}}}static flatRaster(T,E,G,L,Q){if(this.hclip){if(E>I.sizeX)E=I.sizeX;if(T<0)T=0}if(T>=E)return;L+=T;let N=E-T>>2;if(this.trans===0)while(!0){if(N--,N<0){N=E-T&3;while(!0){if(N--,N<0)return;G[L++]=Q}}G[L++]=Q,G[L++]=Q,G[L++]=Q,G[L++]=Q}else{let $=this.trans,H=256-this.trans;Q=((Q&16711935)*H>>8&16711935)+((Q&65280)*H>>8&65280);while(!0){if(N--,N<0){N=E-T&3;while(!0){if(N--,N<0)return;G[L++]=Q+((G[L]&16711935)*$>>8&16711935)+((G[L]&65280)*$>>8&65280)}}G[L++]=Q+((G[L]&16711935)*$>>8&16711935)+((G[L]&65280)*$>>8&65280),G[L++]=Q+((G[L]&16711935)*$>>8&16711935)+((G[L]&65280)*$>>8&65280),G[L++]=Q+((G[L]&16711935)*$>>8&16711935)+((G[L]&65280)*$>>8&65280),G[L++]=Q+((G[L]&16711935)*$>>8&16711935)+((G[L]&65280)*$>>8&65280)}}}static textureTriangle(T,E,G,L,Q,N,$,H,_,J,q,Z,R,M,F,k,j,z,v){let K=this.getTexels(v);this.opaque=!this.textureTranslucent[v];let V=J-R,U=q-F,O=Z-j,n=M-J,b=k-q,o=z-Z,X=n*q-b*J<<14,u=b*Z-o*q<<8,S=o*J-n*Z<<5,Y=V*q-U*J<<14,g=U*Z-O*q<<8,p=O*J-V*Z<<5,W=U*n-V*b<<14,w=O*b-U*o<<8,P=V*o-O*n<<5,l=0,c=0;if(Q!==L)l=(E-T<<16)/(Q-L)|0,c=(H-$<<16)/(Q-L)|0;let A=0,i=0;if(N!==Q)A=(G-E<<16)/(N-Q)|0,i=(_-H<<16)/(N-Q)|0;let C=0,s=0;if(N!==L)C=(T-G<<16)/(L-N)|0,s=($-_<<16)/(L-N)|0;if(L<=Q&&L<=N){if(L>=I.clipMaxY)return;if(Q>I.clipMaxY)Q=I.clipMaxY;if(N>I.clipMaxY)N=I.clipMaxY;if(Q<N){if(G=T<<=16,_=$<<=16,L<0)G-=C*L,T-=l*L,_-=s*L,$-=c*L,L=0;if(E<<=16,H<<=16,Q<0)E-=A*Q,H-=i*Q,Q=0;let f=L-this.originY;if(X+=S*f,Y+=p*f,W+=P*f,X|=0,Y|=0,W|=0,L!==Q&&C<l||L===Q&&C>A){N-=Q,Q-=L,L=this.scanline[L];while(!0){if(Q--,Q<0)while(!0){if(N--,N<0)return;this.textureRaster(G>>16,E>>16,I.pixels,L,K,0,0,X,Y,W,u,g,w,_>>8,H>>8),G+=C,E+=A,_+=s,H+=i,L+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(G>>16,T>>16,I.pixels,L,K,0,0,X,Y,W,u,g,w,_>>8,$>>8),G+=C,T+=l,_+=s,$+=c,L+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}else{N-=Q,Q-=L,L=this.scanline[L];while(!0){if(Q--,Q<0)while(!0){if(N--,N<0)return;this.textureRaster(E>>16,G>>16,I.pixels,L,K,0,0,X,Y,W,u,g,w,H>>8,_>>8),G+=C,E+=A,_+=s,H+=i,L+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(T>>16,G>>16,I.pixels,L,K,0,0,X,Y,W,u,g,w,$>>8,_>>8),G+=C,T+=l,_+=s,$+=c,L+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}}else{if(E=T<<=16,H=$<<=16,L<0)E-=C*L,T-=l*L,H-=s*L,$-=c*L,L=0;if(G<<=16,_<<=16,N<0)G-=A*N,_-=i*N,N=0;let f=L-this.originY;if(X+=S*f,Y+=p*f,W+=P*f,X|=0,Y|=0,W|=0,(L===N||C>=l)&&(L!==N||A<=l)){Q-=N,N-=L,L=this.scanline[L];while(!0){if(N--,N<0)while(!0){if(Q--,Q<0)return;this.textureRaster(T>>16,G>>16,I.pixels,L,K,0,0,X,Y,W,u,g,w,$>>8,_>>8),G+=A,T+=l,_+=i,$+=c,L+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(T>>16,E>>16,I.pixels,L,K,0,0,X,Y,W,u,g,w,$>>8,H>>8),E+=C,T+=l,H+=s,$+=c,L+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}else{Q-=N,N-=L,L=this.scanline[L];while(!0){if(N--,N<0)while(!0){if(Q--,Q<0)return;this.textureRaster(G>>16,T>>16,I.pixels,L,K,0,0,X,Y,W,u,g,w,_>>8,$>>8),G+=A,T+=l,_+=i,$+=c,L+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(E>>16,T>>16,I.pixels,L,K,0,0,X,Y,W,u,g,w,H>>8,$>>8),E+=C,T+=l,H+=s,$+=c,L+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}}}else if(Q<=N){if(Q>=I.clipMaxY)return;if(N>I.clipMaxY)N=I.clipMaxY;if(L>I.clipMaxY)L=I.clipMaxY;if(N<L){if(T=E<<=16,$=H<<=16,Q<0)T-=l*Q,E-=A*Q,$-=c*Q,H-=i*Q,Q=0;if(G<<=16,_<<=16,N<0)G-=C*N,_-=s*N,N=0;let f=Q-this.originY;if(X+=S*f,Y+=p*f,W+=P*f,X|=0,Y|=0,W|=0,Q!==N&&l<A||Q===N&&l>C){L-=N,N-=Q,Q=this.scanline[Q];while(!0){if(N--,N<0)while(!0){if(L--,L<0)return;this.textureRaster(T>>16,G>>16,I.pixels,Q,K,0,0,X,Y,W,u,g,w,$>>8,_>>8),T+=l,G+=C,$+=c,_+=s,Q+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(T>>16,E>>16,I.pixels,Q,K,0,0,X,Y,W,u,g,w,$>>8,H>>8),T+=l,E+=A,$+=c,H+=i,Q+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}else{L-=N,N-=Q,Q=this.scanline[Q];while(!0){if(N--,N<0)while(!0){if(L--,L<0)return;this.textureRaster(G>>16,T>>16,I.pixels,Q,K,0,0,X,Y,W,u,g,w,_>>8,$>>8),T+=l,G+=C,$+=c,_+=s,Q+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(E>>16,T>>16,I.pixels,Q,K,0,0,X,Y,W,u,g,w,H>>8,$>>8),T+=l,E+=A,$+=c,H+=i,Q+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}}else{if(G=E<<=16,_=H<<=16,Q<0)G-=l*Q,E-=A*Q,_-=c*Q,H-=i*Q,Q=0;if(T<<=16,$<<=16,L<0)T-=C*L,$-=s*L,L=0;let f=Q-this.originY;if(X+=S*f,Y+=p*f,W+=P*f,X|=0,Y|=0,W|=0,N-=L,L-=Q,Q=this.scanline[Q],l<A)while(!0){if(L--,L<0)while(!0){if(N--,N<0)return;this.textureRaster(T>>16,E>>16,I.pixels,Q,K,0,0,X,Y,W,u,g,w,$>>8,H>>8),T+=C,E+=A,$+=s,H+=i,Q+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(G>>16,E>>16,I.pixels,Q,K,0,0,X,Y,W,u,g,w,_>>8,H>>8),G+=l,E+=A,_+=c,H+=i,Q+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}else while(!0){if(L--,L<0)while(!0){if(N--,N<0)return;this.textureRaster(E>>16,T>>16,I.pixels,Q,K,0,0,X,Y,W,u,g,w,H>>8,$>>8),T+=C,E+=A,$+=s,H+=i,Q+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(E>>16,G>>16,I.pixels,Q,K,0,0,X,Y,W,u,g,w,H>>8,_>>8),G+=l,E+=A,_+=c,H+=i,Q+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}}else{if(N>=I.clipMaxY)return;if(L>I.clipMaxY)L=I.clipMaxY;if(Q>I.clipMaxY)Q=I.clipMaxY;if(L<Q){if(E=G<<=16,H=_<<=16,N<0)E-=A*N,G-=C*N,H-=i*N,_-=s*N,N=0;if(T<<=16,$<<=16,L<0)T-=l*L,$-=c*L,L=0;let f=N-this.originY;if(X+=S*f,Y+=p*f,W+=P*f,X|=0,Y|=0,W|=0,Q-=L,L-=N,N=this.scanline[N],A<C)while(!0){if(L--,L<0)while(!0){if(Q--,Q<0)return;this.textureRaster(E>>16,T>>16,I.pixels,N,K,0,0,X,Y,W,u,g,w,H>>8,$>>8),E+=A,T+=l,H+=i,$+=c,N+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(E>>16,G>>16,I.pixels,N,K,0,0,X,Y,W,u,g,w,H>>8,_>>8),E+=A,G+=C,H+=i,_+=s,N+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}else while(!0){if(L--,L<0)while(!0){if(Q--,Q<0)return;this.textureRaster(T>>16,E>>16,I.pixels,N,K,0,0,X,Y,W,u,g,w,$>>8,H>>8),E+=A,T+=l,H+=i,$+=c,N+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(G>>16,E>>16,I.pixels,N,K,0,0,X,Y,W,u,g,w,_>>8,H>>8),E+=A,G+=C,H+=i,_+=s,N+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}else{if(T=G<<=16,$=_<<=16,N<0)T-=A*N,G-=C*N,$-=i*N,_-=s*N,N=0;if(E<<=16,H<<=16,Q<0)E-=l*Q,H-=c*Q,Q=0;let f=N-this.originY;if(X+=S*f,Y+=p*f,W+=P*f,X|=0,Y|=0,W|=0,L-=Q,Q-=N,N=this.scanline[N],A<C)while(!0){if(Q--,Q<0)while(!0){if(L--,L<0)return;this.textureRaster(E>>16,G>>16,I.pixels,N,K,0,0,X,Y,W,u,g,w,H>>8,_>>8),E+=l,G+=C,H+=c,_+=s,N+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(T>>16,G>>16,I.pixels,N,K,0,0,X,Y,W,u,g,w,$>>8,_>>8),T+=A,G+=C,$+=i,_+=s,N+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}else while(!0){if(Q--,Q<0)while(!0){if(L--,L<0)return;this.textureRaster(G>>16,E>>16,I.pixels,N,K,0,0,X,Y,W,u,g,w,_>>8,H>>8),E+=l,G+=C,H+=c,_+=s,N+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}this.textureRaster(G>>16,T>>16,I.pixels,N,K,0,0,X,Y,W,u,g,w,_>>8,$>>8),T+=A,G+=C,$+=i,_+=s,N+=I.width,X+=S,Y+=p,W+=P,X|=0,Y|=0,W|=0}}}}static textureRaster(T,E,G,L,Q,N,$,H,_,J,q,Z,R,M,F){if(!Q)return;if(T>=E)return;let k,j;if(this.hclip){if(k=(F-M)/(E-T)|0,E>I.sizeX)E=I.sizeX;if(T<0)M-=T*k,T=0;if(T>=E)return;j=E-T>>3,k<<=12}else if(E-T>7)j=E-T>>3,k=(F-M)*this.divTable[j]>>6;else j=0,k=0;M<<=9,L+=T;let z,v,K,V,U,O,n;if(this.lowMem){if(z=0,v=0,V=T-this.originX,H=H+(q>>3)*V,_=_+(Z>>3)*V,J=J+(R>>3)*V,H|=0,_|=0,J|=0,K=J>>12,K!==0){if(N=H/K|0,$=_/K|0,N<0)N=0;else if(N>4032)N=4032}if(H=H+q,_=_+Z,J=J+R,H|=0,_|=0,J|=0,K=J>>12,K!==0){if(z=H/K|0,v=_/K|0,z<7)z=7;else if(z>4032)z=4032}if(U=z-N>>3,O=v-$>>3,N+=M>>3&786432,n=M>>23,this.opaque){while(j-- >0){if(G[L++]=Q[($&4032)+(N>>6)]>>>n,N+=U,$+=O,G[L++]=Q[($&4032)+(N>>6)]>>>n,N+=U,$+=O,G[L++]=Q[($&4032)+(N>>6)]>>>n,N+=U,$+=O,G[L++]=Q[($&4032)+(N>>6)]>>>n,N+=U,$+=O,G[L++]=Q[($&4032)+(N>>6)]>>>n,N+=U,$+=O,G[L++]=Q[($&4032)+(N>>6)]>>>n,N+=U,$+=O,G[L++]=Q[($&4032)+(N>>6)]>>>n,N+=U,$+=O,G[L++]=Q[($&4032)+(N>>6)]>>>n,N=z,$=v,H+=q,_+=Z,J+=R,H|=0,_|=0,J|=0,K=J>>12,K!==0){if(z=H/K|0,v=_/K|0,z<7)z=7;else if(z>4032)z=4032}U=z-N>>3,O=v-$>>3,M+=k,N+=M>>3&786432,n=M>>23}j=E-T&7;while(j-- >0)G[L++]=Q[($&4032)+(N>>6)]>>>n,N+=U,$+=O}else{while(j-- >0){let b;if((b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;if(L++,N=z,$=v,H+=q,_+=Z,J+=R,H|=0,_|=0,J|=0,K=J>>12,K!==0){if(z=H/K|0,v=_/K|0,z<7)z=7;else if(z>4032)z=4032}U=z-N>>3,O=v-$>>3,M+=k,N+=M>>3&786432,n=M>>23}j=E-T&7;while(j-- >0){let b;if((b=Q[($&4032)+(N>>6)]>>>n)!==0)G[L]=b;L++,N+=U,$+=O}}}else{if(z=0,v=0,V=T-this.originX,H=H+(q>>3)*V,_=_+(Z>>3)*V,J=J+(R>>3)*V,H|=0,_|=0,J|=0,K=J>>14,K!==0){if(N=H/K|0,$=_/K|0,N<0)N=0;else if(N>16256)N=16256}if(H=H+q,_=_+Z,J=J+R,H|=0,_|=0,J|=0,K=J>>14,K!==0){if(z=H/K|0,v=_/K|0,z<7)z=7;else if(z>16256)z=16256}if(U=z-N>>3,O=v-$>>3,N+=M&6291456,n=M>>23,this.opaque){while(j-- >0){if(G[L++]=Q[($&16256)+(N>>7)]>>>n,N+=U,$+=O,G[L++]=Q[($&16256)+(N>>7)]>>>n,N+=U,$+=O,G[L++]=Q[($&16256)+(N>>7)]>>>n,N+=U,$+=O,G[L++]=Q[($&16256)+(N>>7)]>>>n,N+=U,$+=O,G[L++]=Q[($&16256)+(N>>7)]>>>n,N+=U,$+=O,G[L++]=Q[($&16256)+(N>>7)]>>>n,N+=U,$+=O,G[L++]=Q[($&16256)+(N>>7)]>>>n,N+=U,$+=O,G[L++]=Q[($&16256)+(N>>7)]>>>n,N=z,$=v,H+=q,_+=Z,J+=R,H|=0,_|=0,J|=0,K=J>>14,K!==0){if(z=H/K|0,v=_/K|0,z<7)z=7;else if(z>16256)z=16256}U=z-N>>3,O=v-$>>3,M+=k,N+=M&6291456,n=M>>23}j=E-T&7;while(j-- >0)G[L++]=Q[($&16256)+(N>>7)]>>>n,N+=U,$+=O}else{while(j-- >0&&Q){let b;if((b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;if(L++,N+=U,$+=O,(b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;if(L++,N=z,$=v,H+=q,_+=Z,J+=R,H|=0,_|=0,J|=0,K=J>>14,K!==0){if(z=H/K|0,v=_/K|0,z<7)z=7;else if(z>16256)z=16256}U=z-N>>3,O=v-$>>3,M+=k,N+=M&6291456,n=M>>23}j=E-T&7;while(j-- >0&&Q){let b;if((b=Q[($&16256)+(N>>7)]>>>n)!==0)G[L]=b;L++,N+=U,$+=O}}}}}class H0{data;width;height;ctx;paint;img;constructor(T,E,G=d){this.width=T,this.height=E,this.data=new Int32Array(T*E),this.ctx=G,this.img=this.ctx.getImageData(0,0,T,E),this.paint=new Uint32Array(this.img.data.buffer),this.bind()}bind(){I.setPixels(this.data,this.width,this.height)}draw(T,E){this.prepareCanvas(),this.ctx.putImageData(this.img,T,E)}prepareCanvas(){for(let T=0;T<this.data.length;T++){let E=this.data[T];this.paint[T]=E>>16&255|(E>>8&255)<<8|(E&255)<<16|4278190080}}}class F0{state=0;deltime=20;mindel=1;otim=new Array(10);fps=0;debug=!1;drawArea=null;redrawScreen=!0;focus=!0;idleTimer=performance.now();mouseButton=0;mouseX=-1;mouseY=-1;nextMouseClickButton=0;nextMouseClickX=-1;nextMouseClickY=-1;mouseClickButton=0;mouseClickX=-1;mouseClickY=-1;nextMouseClickTime=0;mouseClickTime=0;keyHeld=[];keyQueue=[];keyQueueReadPos=0;keyQueueWritePos=0;resizeToFit=!1;tfps=50;async maininit(){}async mainloop(){}async maindraw(){}refresh(){}constructor(T=!1){if(h.tabIndex=-1,d.fillStyle="black",d.fillRect(0,0,h.width,h.height),this.resizeToFit=T,this.resizeToFit)this.resize(window.innerWidth,window.innerHeight);else this.resize(h.width,h.height)}get sWid(){return h.width}get sHei(){return h.height}resize(T,E){h.width=T,h.height=E,this.drawArea=new H0(T,E),R0.setRenderClipping()}async run(){if(h.addEventListener("resize",()=>{if(this.resizeToFit)this.resize(window.innerWidth,window.innerHeight)},!1),h.onfocus=this.onfocus.bind(this),h.onblur=this.onblur.bind(this),h.onkeydown=this.onkeydown.bind(this),h.onkeyup=this.onkeyup.bind(this),h.onmousedown=this.onmousedown.bind(this),h.onpointerdown=this.onpointerdown.bind(this),h.onmouseup=this.onmouseup.bind(this),h.onpointerup=this.onpointerup.bind(this),h.onpointerenter=this.onpointerenter.bind(this),h.onpointerleave=this.onpointerleave.bind(this),h.onpointermove=this.onpointermove.bind(this),window.onmouseup=this.windowMouseUp.bind(this),window.onmousemove=this.windowMouseMove.bind(this),this.isTouchDevice)if(this.hasTouchEvents)h.ontouchstart=this.ontouchstart.bind(this);else h.style.touchAction="none";h.oncontextmenu=(N)=>{N.preventDefault()},window.oncontextmenu=(N)=>{N.preventDefault()},await this.drawProgress(0,"Loading..."),await this.maininit();let T=0,E=0,G=256,L=1,Q=0;for(let N=0;N<10;N++)this.otim[N]=performance.now();while(this.state>=0){if(this.state>0){if(this.state--,this.state===0){this.shutdown();return}}let N=G,$=L;G=300,L=1,T=performance.now();let H=this.otim[E];if(H===0)G=N,L=$;else if(T>H)G=this.deltime*2560/(T-H)|0;if(G<25)G=25;else if(G>256)G=256,L=this.deltime-(T-H)/10|0;if(this.otim[E]=T,E=(E+1)%10,L>1){for(let _=0;_<10;_++)if(this.otim[_]!==0)this.otim[_]+=L}if(L<this.mindel)L=this.mindel;await Q0(L);while(Q<256)this.mouseClickButton=this.nextMouseClickButton,this.mouseClickX=this.nextMouseClickX,this.mouseClickY=this.nextMouseClickY,this.mouseClickTime=this.nextMouseClickTime,this.nextMouseClickButton=0,await this.mainloop(),Q+=G;if(Q&=255,this.deltime>0)this.fps=G*1000/(this.deltime*256)|0;if(await this.maindraw(),this.tfps<50){let _=1000/this.tfps-(performance.now()-T);if(_>0)await Q0(_)}if(this.debug){for(let _=0;_<10;_++){let J=(E-_-1+20)%10}this.debug=!1}}if(this.state===-1)this.shutdown()}shutdown(){this.state=-2}setFramerate(T){this.deltime=1000/T|0}setTargetedFramerate(T){this.tfps=Math.max(Math.min(50,T|0),0)}start(){if(this.state>=0)this.state=0}stop(){if(this.state>=0)this.state=4000/this.deltime|0}async drawProgress(T,E){let G=this.sWid,L=this.sHei;if(this.redrawScreen)d.fillStyle="black",d.fillRect(0,0,G,L),this.redrawScreen=!1;let Q=L/2-18;d.strokeStyle="rgb(140, 17, 17)",d.strokeRect((G/2|0)-152,Q,304,34),d.fillStyle="rgb(140, 17, 17)",d.fillRect((G/2|0)-150,Q+2,T*3,30),d.fillStyle="black",d.fillRect((G/2|0)-150+T*3,Q+2,300-T*3,30),d.font="bold 13px helvetica, sans-serif",d.textAlign="center",d.fillStyle="white",d.fillText(E,G/2|0,Q+22),await Q0(5)}onmousedown(T){if(T.clientX<0||T.clientY<0)return;let{x:E,y:G}=this.getMousePos(T);this.mouseDown(E,G,T)}mouseDown(T,E,G){if(this.idleTimer=performance.now(),this.nextMouseClickX=T,this.nextMouseClickY=E,this.nextMouseClickTime=performance.now(),this.mouseX=T,this.mouseY=E,G.button===2)this.nextMouseClickButton=2,this.mouseButton=2;else if(G.button===1)this.nextMouseClickButton=4,this.mouseButton=4;else this.nextMouseClickButton=1,this.mouseButton=1;if(r.active)r.mousePressed(T,E,G.button,"mouse")}onpointerdown(T){if(T.clientX<0||T.clientY<0)return;let{x:E,y:G}=this.getMousePos(T);this.pointerDown(E,G,T)}pointerDown(T,E,G){}onmouseup(T){let{x:E,y:G}=this.getMousePos(T);this.mouseUp(E,G,T)}mouseUp(T,E,G){if(this.idleTimer=performance.now(),this.mouseButton=0,r.active)r.mouseReleased(G.button,"mouse");this.mouseX=T,this.mouseY=E}onpointerup(T){let{x:E,y:G}=this.getMousePos(T);this.pointerUp(E,G,T)}pointerUp(T,E,G){}onpointerenter(T){if(T.clientX<0||T.clientY<0)return;let{x:E,y:G}=this.getMousePos(T);this.pointerEnter(E,G,T)}pointerEnter(T,E,G){if(this.mouseX=T,this.mouseY=E,r.active)r.mouseEntered()}onpointerleave(T){this.pointerLeave(T)}pointerLeave(T){if(this.idleTimer=performance.now(),this.mouseX=-1,this.mouseY=-1,r.active)r.mouseExited();this.nextMouseClickX=-1,this.nextMouseClickY=-1,this.nextMouseClickButton=0,this.mouseButton=0}onpointermove(T){if(T.clientX<0||T.clientY<0)return;let{x:E,y:G}=this.getMousePos(T);this.pointerMove(E,G,T)}pointerMove(T,E,G){if(this.idleTimer=performance.now(),this.mouseX=T,this.mouseY=E,r.active)r.mouseMoved(T,E,G.pointerType)}windowMouseUp(T){}windowMouseMove(T){}ontouchstart(T){this.touchStart(T)}touchStart(T){if(T.touches.length<2)T.preventDefault()}onkeydown(T){this.idleTimer=performance.now();let E=m.get(T.key);if(!E||T.code.length===0&&!T.isTrusted)return;let G=E.ch;if(T.ctrlKey){if(G>=65&&G<=93||G==95)G-=64;else if(G>=97&&G<=122)G-=96}if(G>0&&G<128)this.keyHeld[G]=1;if(G>4)this.keyQueue[this.keyQueueWritePos]=G,this.keyQueueWritePos=this.keyQueueWritePos+1&127;if(r.active)r.keyPressed(G);if(!k0.includes(T.key))T.preventDefault()}onkeyup(T){this.idleTimer=performance.now();let E=m.get(T.key);if(!E||T.code.length===0&&!T.isTrusted)return;let G=E.ch;if(T.ctrlKey){if(G>=65&&G<=93||G==95)G-=64;else if(G>=97&&G<=122)G-=96}if(G>0&&G<128)this.keyHeld[G]=0;if(r.active)r.keyReleased(G);if(!k0.includes(T.key))T.preventDefault()}pollKey(){let T=-1;if(this.keyQueueWritePos!==this.keyQueueReadPos)T=this.keyQueue[this.keyQueueReadPos],this.keyQueueReadPos=this.keyQueueReadPos+1&127;return T}onfocus(T){if(this.focus=!0,this.redrawScreen=!0,this.refresh(),r.active)r.focusGained()}onblur(T){this.focus=!1;for(let E=0;E<128;E++)this.keyHeld[E]=0;if(r.active)r.focusLost()}get hasTouchEvents(){return"ontouchstart"in window}get isTouchDevice(){return this.hasTouchEvents||navigator.maxTouchPoints>0||navigator.msMaxTouchPoints>0}get isMobile(){if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone|Mobile/i.test(navigator.userAgent))return!0;return this.isTouchDevice}isFullScreen(){return document.fullscreenElement!==null}getMousePos(T){let E=this.sWid,G=this.sHei,L=h.getBoundingClientRect(),Q={x:T.clientX-L.left,y:T.clientY-L.top},N=0,$=0;if(this.isFullScreen()){let H=E/G,J=window.innerWidth/window.innerHeight>=H,q=0,Z=0,R=0,M=0;if(J)q=window.innerHeight*H,Z=window.innerHeight,R=(window.innerWidth-q)/2;else q=window.innerWidth,Z=window.innerWidth/H,M=(window.innerHeight-Z)/2;let F=E/q,k=G/Z;N=(Q.x-R)*F|0,$=(Q.y-M)*k|0}else{let H=h.width/L.width,_=h.height/L.height;N=Q.x*H|0,$=Q.y*_|0}if(N<0)N=0;if(N>E)N=E;if($<0)$=0;if($>G)$=G;return{x:N,y:$}}}async function V0(T){if(T[0]!==255)T[0]=255;URL.revokeObjectURL(E0.src),E0.src=URL.createObjectURL(new Blob([T],{type:"image/jpeg"})),await new Promise((L)=>E0.onload=()=>L()),Z0.clearRect(0,0,$0.width,$0.height);let E=E0.naturalWidth,G=E0.naturalHeight;return $0.width=E,$0.height=G,Z0.drawImage(E0,0,0),Z0.getImageData(0,0,E,G)}class t extends I{data;owi;ohi;xof;yof;wi;hi;constructor(T,E){super();this.data=new Int32Array(T*E),this.wi=this.owi=T,this.hi=this.ohi=E,this.xof=this.yof=0}static async loadJpeg(T,E){let G=T.read(E+".dat");if(!G)throw new Error;let L=await V0(G),Q=new t(L.width,L.height),N=new Uint32Array(L.data.buffer);for(let $=0;$<Q.data.length;$++){let H=N[$];Q.data[$]=(H>>24&255)<<24|(H&255)<<16|(H>>8&255)<<8|H>>16&255}return Q}static load(T,E,G=0){let L=new D(T.read(E+".dat")),Q=new D(T.read("index.dat"));Q.pos=L.g2();let N=Q.g2(),$=Q.g2(),H=Q.g1(),_=new Int32Array(H);for(let k=0;k<H-1;k++)if(_[k+1]=Q.g3(),_[k+1]===0)_[k+1]=1;for(let k=0;k<G;k++)Q.pos+=2,L.pos+=Q.g2()*Q.g2(),Q.pos+=1;if(L.pos>L.length||Q.pos>Q.length)throw new Error;let J=Q.g1(),q=Q.g1(),Z=Q.g2(),R=Q.g2(),M=new t(Z,R);M.xof=J,M.yof=q,M.owi=N,M.ohi=$;let F=Q.g1();if(F===0)for(let k=0;k<M.wi*M.hi;k++)M.data[k]=_[L.g1()];else if(F===1)for(let k=0;k<M.wi;k++)for(let j=0;j<M.hi;j++)M.data[k+j*M.wi]=_[L.g1()];return M}setPixels(){I.setPixels(this.data,this.wi,this.hi)}rgbAdjust(T,E,G){for(let L=0;L<this.data.length;L++){let Q=this.data[L];if(Q!==0){let N=Q>>16&255;if(N+=T,N<1)N=1;else if(N>255)N=255;let $=Q>>8&255;if($+=E,$<1)$=1;else if($>255)$=255;let H=Q&255;if(H+=G,H<1)H=1;else if(H>255)H=255;this.data[L]=(N<<16)+($<<8)+H}}}trim(){let T=new Int32Array(this.owi*this.ohi);for(let E=0;E<this.hi;E++)for(let G=0;G<this.wi;G++)T[(this.yof+E)*this.owi+this.xof+G]=this.data[this.wi*E+G];this.data=T,this.wi=this.owi,this.hi=this.ohi,this.xof=0,this.yof=0}quickPlotSprite(T,E){T|=0,E|=0,T+=this.xof,E+=this.yof;let G=T+E*I.width,L=0,Q=this.hi,N=this.wi,$=I.width-N,H=0;if(E<I.clipMinY){let _=I.clipMinY-E;Q-=_,E=I.clipMinY,L+=_*N,G+=_*I.width}if(E+Q>I.clipMaxY)Q-=E+Q-I.clipMaxY;if(T<I.clipMinX){let _=I.clipMinX-T;N-=_,T=I.clipMinX,L+=_,G+=_,H+=_,$+=_}if(T+N>I.clipMaxX){let _=T+N-I.clipMaxX;N-=_,H+=_,$+=_}if(N>0&&Q>0)this.plotQuick(N,Q,this.data,L,H,I.pixels,G,$)}plotQuick(T,E,G,L,Q,N,$,H){let _=-(T>>2);T=-(T&3);for(let J=-E;J<0;J++){for(let q=_;q<0;q++)N[$++]=G[L++],N[$++]=G[L++],N[$++]=G[L++],N[$++]=G[L++];for(let q=T;q<0;q++)N[$++]=G[L++];$+=H,L+=Q}}plotSprite(T,E){T|=0,E|=0,T+=this.xof,E+=this.yof;let G=T+E*I.width,L=0,Q=this.hi,N=this.wi,$=I.width-N,H=0;if(E<I.clipMinY){let _=I.clipMinY-E;Q-=_,E=I.clipMinY,L+=_*N,G+=_*I.width}if(E+Q>I.clipMaxY)Q-=E+Q-I.clipMaxY;if(T<I.clipMinX){let _=I.clipMinX-T;N-=_,T=I.clipMinX,L+=_,G+=_,H+=_,$+=_}if(T+N>I.clipMaxX){let _=T+N-I.clipMaxX;N-=_,H+=_,$+=_}if(N>0&&Q>0)this.plot(N,Q,this.data,L,H,I.pixels,G,$)}plot(T,E,G,L,Q,N,$,H){let _=-(T>>2);T=-(T&3);for(let J=-E;J<0;J++){for(let q=_;q<0;q++){let Z=G[L++];if(Z===0)$++;else N[$++]=Z;if(Z=G[L++],Z===0)$++;else N[$++]=Z;if(Z=G[L++],Z===0)$++;else N[$++]=Z;if(Z=G[L++],Z===0)$++;else N[$++]=Z}for(let q=T;q<0;q++){let Z=G[L++];if(Z===0)$++;else N[$++]=Z}$+=H,L+=Q}}transPlotSprite(T,E,G){E|=0,G|=0,E+=this.xof,G+=this.yof;let L=E+G*I.width,Q=0,N=this.hi,$=this.wi,H=I.width-$,_=0;if(G<I.clipMinY){let J=I.clipMinY-G;N-=J,G=I.clipMinY,Q+=J*$,L+=J*I.width}if(G+N>I.clipMaxY)N-=G+N-I.clipMaxY;if(E<I.clipMinX){let J=I.clipMinX-E;$-=J,E=I.clipMinX,Q+=J,L+=J,_+=J,H+=J}if(E+$>I.clipMaxX){let J=E+$-I.clipMaxX;$-=J,_+=J,H+=J}if($>0&&N>0)this.tranSprite($,N,this.data,Q,_,I.pixels,L,H,T)}tranSprite(T,E,G,L,Q,N,$,H,_){let J=256-_;for(let q=-E;q<0;q++){for(let Z=-T;Z<0;Z++){let R=G[L++];if(R===0)$++;else{let M=N[$];N[$++]=((R&16711935)*_+(M&16711935)*J&4278255360)+((R&65280)*_+(M&65280)*J&16711680)>>8}}$+=H,L+=Q}}hflip(){let T=this.data,E=this.wi,G=this.hi;for(let L=0;L<G;L++){let Q=E/2|0;for(let N=0;N<Q;N++){let $=N+L*E,H=E-N-1+L*E,_=T[$];T[$]=T[H],T[H]=_}}}vflip(){let T=this.data,E=this.wi,G=this.hi;for(let L=0;L<(G/2|0);L++)for(let Q=0;Q<E;Q++){let N=Q+L*E,$=Q+(G-L-1)*E,H=T[N];T[N]=T[$],T[$]=H}}scanlineRotatePlotSprite(T,E,G,L,Q,N,$,H,_,J){T|=0,E|=0,G|=0,L|=0;try{let q=-G/2|0,Z=-L/2|0,R=Math.sin(_/326.11)*65536|0,M=Math.cos(_/326.11)*65536|0,F=R*J>>8,k=M*J>>8,j=($<<16)+Z*F+q*k,z=(H<<16)+(Z*k-q*F),v=T+E*I.width;for(let K=0;K<L;K++){let V=Q[K],U=v+V,O=j+k*V,n=z-F*V;for(let b=-N[K];b<0;b++)I.pixels[U++]=this.data[(O>>16)+(n>>16)*this.wi],O+=k,n-=F;j+=F,z+=k,v+=I.width}}catch(q){}}rotatePlotSprite(T,E,G,L,Q,N,$,H){H|=0,T|=0,N|=0,$|=0;try{let _=-N/2|0,J=-$/2|0,q=Math.sin(E)*65536|0,Z=Math.cos(E)*65536|0,R=q*G>>8,M=Z*G>>8,F=(L<<16)+(J*R+_*M),k=(Q<<16)+(J*M-_*R),j=H+T*I.width;for(let z=0;z<$;z++){let v=j,K=F,V=k;for(let U=-N;U<0;U++){let O=this.data[(K>>16)+(V>>16)*this.owi];if(O==0)v++;else I.pixels[v++]=O;K+=M,V-=R}F+=R,k+=M,j+=I.width}}catch(_){}}scanlinePlotSprite(T,E,G){T|=0,E|=0,T+=this.xof,E+=this.yof;let L=T+E*I.width,Q=0,N=this.hi,$=this.wi,H=I.width-$,_=0;if(E<I.clipMinY){let J=I.clipMinY-E;N-=J,E=I.clipMinY,Q+=J*$,L+=J*I.width}if(E+N>I.clipMaxY)N-=E+N-I.clipMaxY;if(T<I.clipMinX){let J=I.clipMinX-T;$-=J,T=I.clipMinX,Q+=J,L+=J,_+=J,H+=J}if(T+$>I.clipMaxX){let J=T+$-I.clipMaxX;$-=J,_+=J,H+=J}if($>0&&N>0)this.scanlinePlot($,N,this.data,_,Q,I.pixels,L,H,G.data)}scanlinePlot(T,E,G,L,Q,N,$,H,_){let J=-(T>>2);T=-(T&3);for(let q=-E;q<0;q++){for(let Z=J;Z<0;Z++){let R=G[Q++];if(R!==0&&_[$]===0)N[$++]=R;else $++;if(R=G[Q++],R!==0&&_[$]===0)N[$++]=R;else $++;if(R=G[Q++],R!==0&&_[$]===0)N[$++]=R;else $++;if(R=G[Q++],R!==0&&_[$]===0)N[$++]=R;else $++}for(let Z=T;Z<0;Z++){let R=G[Q++];if(R!==0&&_[$]===0)N[$++]=R;else $++}$+=H,Q+=L}}}var S0=Math.pow(2,53);var[D0,Y0,m0]=[5,57068,58989],W0=0,J0=0,I0=0;function P0(){let T=11,E=I0*m0+T;T=E>>>16,E&=65535;let G=J0*m0+I0*Y0+T;T=G>>>16,G&=65535;let L=W0*m0+J0*Y0+I0*D0+T;return L&=65535,[W0,J0,I0]=[L,G,E],W0*65536+J0}function z0(T){return P0()>>32-T}function _0(T){return P0()>>>32-T}function O0(T,E=Number.MAX_SAFE_INTEGER){if(T<0||T>E)throw RangeError("number must be > 0")}class j0{constructor(T){if(typeof T==="undefined")T=Math.floor(Math.random()*281474976710656);this.setSeed(T)}setSeed(T){O0(T),I0=T&65535^m0,J0=T/65536&65535^Y0,W0=T/4294967296&65535^D0}nextInt(T){if(T===void 0)return z0(32);if(O0(T,2147483647),(T&-T)===T){let L=_0(31)/2147483648;return~~(T*L)}let E,G;do E=_0(31),G=E%T;while(E-G+(T-1)<0);return G}nextLong(){let T=BigInt(z0(32)),E=BigInt(z0(32)),G=BigInt(4294967296);return T*G+E}nextBoolean(){return _0(1)!=0}nextFloat(){return _0(24)/16777216}nextDouble(){return(134217728*_0(26)+_0(27))/S0}}class x extends T0{static CHARSET=`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!"£$%^&*()-_=+[{]};:'@#~,<.>/?\\| `;static CHARCODESET=[];charMask=[];charMaskWidth=new Int32Array(94);charMaskHeight=new Int32Array(94);charOffsetX=new Int32Array(94);charOffsetY=new Int32Array(94);charAdvance=new Int32Array(95);drawWidth=new Int32Array(256);rand=new j0(Date.now());strikeout=!1;height2d=0;static{let T=navigator.userAgent.includes("Capacitor");for(let E=0;E<256;E++){let G=x.CHARSET.indexOf(String.fromCharCode(E));if(T){if(G>=63)G--}if(G===-1)G=74;x.CHARCODESET[E]=G}}static fromArchive(T,E){let G=new D(T.read(E+".dat")),L=new D(T.read("index.dat"));L.pos=G.g2()+4;let Q=L.g1();if(Q>0)L.pos+=(Q-1)*3;let N=new x;for(let $=0;$<94;$++){N.charOffsetX[$]=L.g1(),N.charOffsetY[$]=L.g1();let H=N.charMaskWidth[$]=L.g2(),_=N.charMaskHeight[$]=L.g2(),J=L.g1(),q=H*_;if(N.charMask[$]=new Int8Array(q),J===0)for(let Z=0;Z<H*_;Z++)N.charMask[$][Z]=G.g1b();else if(J===1)for(let Z=0;Z<H;Z++)for(let R=0;R<_;R++)N.charMask[$][Z+R*H]=G.g1b();if(_>N.height2d)N.height2d=_;N.charOffsetX[$]=1,N.charAdvance[$]=H+2;{let Z=0;for(let R=_/7|0;R<_;R++)Z+=N.charMask[$][R*H];if(Z<=(_/7|0))N.charAdvance[$]--,N.charOffsetX[$]=0}{let Z=0;for(let R=_/7|0;R<_;R++)Z+=N.charMask[$][H+R*H-1];if(Z<=(_/7|0))N.charAdvance[$]--}}N.charAdvance[94]=N.charAdvance[8];for(let $=0;$<256;$++)N.drawWidth[$]=N.charAdvance[x.CHARCODESET[$]];return N}centreString(T,E,G,L){if(!G)return;T|=0,E|=0,this.drawString(T-(this.stringWid(G)/2|0),E,G,L)}centreStringTag(T,E,G,L,Q){T|=0,E|=0,this.drawStringTag(T-(this.stringWid(G)/2|0),E,G,L,Q)}stringWid(T){if(!T)return 0;let E=T.length,G=0;for(let L=0;L<E;L++)if(T.charAt(L)==="@"&&L+4<E&&T.charAt(L+4)==="@")L+=4;else G+=this.drawWidth[T.charCodeAt(L)];return G}drawString(T,E,G,L){if(!G)return;T|=0,E|=0,E-=this.height2d;for(let Q=0;Q<G.length;Q++){let N=x.CHARCODESET[G.charCodeAt(Q)];if(N!==94)this.plotLetter(this.charMask[N],T+this.charOffsetX[N],E+this.charOffsetY[N],this.charMaskWidth[N],this.charMaskHeight[N],L);T+=this.charAdvance[N]}}centerStringWave(T,E,G,L,Q){if(!G)return;T|=0,E|=0,T-=this.stringWid(G)/2|0;let N=E-this.height2d;for(let $=0;$<G.length;$++){let H=x.CHARCODESET[G.charCodeAt($)];if(H!=94)this.plotLetter(this.charMask[H],T+this.charOffsetX[H],N+this.charOffsetY[H]+(Math.sin($/2+Q/5)*5|0),this.charMaskWidth[H],this.charMaskHeight[H],L);T+=this.charAdvance[H]}}drawStringTag(T,E,G,L,Q){T|=0,E|=0,this.strikeout=!1;let N=T,$=G.length;E-=this.height2d;for(let H=0;H<$;H++)if(G.charAt(H)==="@"&&H+4<$&&G.charAt(H+4)==="@"){let _=this.evaluateTag(G.substring(H+1,H+4));if(_!==-1)L=_;H+=4}else{let _=x.CHARCODESET[G.charCodeAt(H)];if(_!==94){if(Q)this.plotLetter(this.charMask[_],T+this.charOffsetX[_]+1,E+this.charOffsetY[_]+1,this.charMaskWidth[_],this.charMaskHeight[_],0);this.plotLetter(this.charMask[_],T+this.charOffsetX[_],E+this.charOffsetY[_],this.charMaskWidth[_],this.charMaskHeight[_],L)}T+=this.charAdvance[_]}if(this.strikeout)I.hline(N,E+(this.height2d*0.7|0),8388608,T-N)}drawStringAntiMacro(T,E,G,L,Q,N){T|=0,E|=0,this.rand.setSeed(N);let $=(this.rand.nextInt()&31)+192,H=E-this.height2d;for(let _=0;_<G.length;_++)if(G.charAt(_)==="@"&&_+4<G.length&&G.charAt(_+4)==="@"){let J=this.evaluateTag(G.substring(_+1,_+4));if(J!==-1)L=J;_+=4}else{let J=x.CHARCODESET[G.charCodeAt(_)];if(J!==94){if(Q)this.plotLetterTrans(T+this.charOffsetX[J]+1,H+this.charOffsetY[J]+1,this.charMaskWidth[J],this.charMaskHeight[J],0,192,this.charMask[J]);this.plotLetterTrans(T+this.charOffsetX[J],H+this.charOffsetY[J],this.charMaskWidth[J],this.charMaskHeight[J],L,$,this.charMask[J])}if(T+=this.charAdvance[J],(this.rand.nextInt()&3)===0)T++}}evaluateTag(T){if(T==="red")return 16711680;else if(T==="gre")return 65280;else if(T==="blu")return 255;else if(T==="yel")return 16776960;else if(T==="cya")return 65535;else if(T==="mag")return 16711935;else if(T==="whi")return 16777215;else if(T==="bla")return 0;else if(T==="lre")return 16748608;else if(T==="dre")return 8388608;else if(T==="dbl")return 128;else if(T==="or1")return 16756736;else if(T==="or2")return 16740352;else if(T==="or3")return 16723968;else if(T==="gr1")return 12648192;else if(T==="gr2")return 8453888;else if(T==="gr3")return 4259584;else{if(T==="str")this.strikeout=!0;return-1}}drawStringRight(T,E,G,L,Q=!0){if(T|=0,E|=0,Q)this.drawString(T-this.stringWid(G)+1,E+1,G,0);this.drawString(T-this.stringWid(G),E,G,L)}plotLetter(T,E,G,L,Q,N){E|=0,G|=0,L|=0,Q|=0;let $=E+G*I.width,H=I.width-L,_=0,J=0;if(G<I.clipMinY){let q=I.clipMinY-G;Q-=q,G=I.clipMinY,J+=q*L,$+=q*I.width}if(G+Q>=I.clipMaxY)Q-=G+Q+1-I.clipMaxY;if(E<I.clipMinX){let q=I.clipMinX-E;L-=q,E=I.clipMinX,J+=q,$+=q,_+=q,H+=q}if(E+L>=I.clipMaxX){let q=E+L+1-I.clipMaxX;L-=q,_+=q,H+=q}if(L>0&&Q>0)this.plot(L,Q,T,J,_,I.pixels,$,H,N)}plot(T,E,G,L,Q,N,$,H,_){T|=0,E|=0;let J=-(T>>2);T=-(T&3);for(let q=-E;q<0;q++){for(let Z=J;Z<0;Z++){if(G[L++]===0)$++;else N[$++]=_;if(G[L++]===0)$++;else N[$++]=_;if(G[L++]===0)$++;else N[$++]=_;if(G[L++]===0)$++;else N[$++]=_}for(let Z=T;Z<0;Z++)if(G[L++]===0)$++;else N[$++]=_;$+=H,L+=Q}}plotLetterTrans(T,E,G,L,Q,N,$){T|=0,E|=0,G|=0,L|=0;let H=T+E*I.width,_=I.width-G,J=0,q=0;if(E<I.clipMinY){let Z=I.clipMinY-E;L-=Z,E=I.clipMinY,q+=Z*G,H+=Z*I.width}if(E+L>=I.clipMaxY)L-=E+L+1-I.clipMaxY;if(T<I.clipMinX){let Z=I.clipMinX-T;G-=Z,T=I.clipMinX,q+=Z,H+=Z,J+=Z,_+=Z}if(T+G>=I.clipMaxX){let Z=T+G+1-I.clipMaxX;G-=Z,J+=Z,_+=Z}if(G>0&&L>0)this.plotTrans(G,L,I.pixels,H,_,$,q,J,Q,N)}plotTrans(T,E,G,L,Q,N,$,H,_,J){T|=0,E|=0;let q=((_&16711935)*J&4278255360)+((_&65280)*J&16711680)>>8,Z=256-J;for(let R=-E;R<0;R++){for(let M=-T;M<0;M++)if(N[$++]===0)L++;else{let F=G[L];G[L++]=(((F&16711935)*Z&4278255360)+((F&65280)*Z&16711680)>>8)+q}L+=Q,$+=H}}}var g0=[0,79764919,159529838,222504665,319059676,398814059,445009330,507990021,638119352,583659535,797628118,726387553,890018660,835552979,1015980042,944750013,1276238704,1221641927,1167319070,1095957929,1595256236,1540665371,1452775106,1381403509,1780037320,1859660671,1671105958,1733955601,2031960084,2111593891,1889500026,1952343757,2552477408,2632100695,2443283854,2506133561,2334638140,2414271883,2191915858,2254759653,3190512472,3135915759,3081330742,3009969537,2905550212,2850959411,2762807018,2691435357,3560074640,3505614887,3719321342,3648080713,3342211916,3287746299,3467911202,3396681109,4063920168,4143685023,4223187782,4286162673,3779000052,3858754371,3904687514,3967668269,881225847,809987520,1023691545,969234094,662832811,591600412,771767749,717299826,311336399,374308984,453813921,533576470,25881363,88864420,134795389,214552010,2023205639,2086057648,1897238633,1976864222,1804852699,1867694188,1645340341,1724971778,1587496639,1516133128,1461550545,1406951526,1302016099,1230646740,1142491917,1087903418,2896545431,2825181984,2770861561,2716262478,3215044683,3143675388,3055782693,3001194130,2326604591,2389456536,2200899649,2280525302,2578013683,2640855108,2418763421,2498394922,3769900519,3832873040,3912640137,3992402750,4088425275,4151408268,4197601365,4277358050,3334271071,3263032808,3476998961,3422541446,3585640067,3514407732,3694837229,3640369242,1762451694,1842216281,1619975040,1682949687,2047383090,2127137669,1938468188,2001449195,1325665622,1271206113,1183200824,1111960463,1543535498,1489069629,1434599652,1363369299,622672798,568075817,748617968,677256519,907627842,853037301,1067152940,995781531,51762726,131386257,177728840,240578815,269590778,349224269,429104020,491947555,4046411278,4126034873,4172115296,4234965207,3794477266,3874110821,3953728444,4016571915,3609705398,3555108353,3735388376,3664026991,3290680682,3236090077,3449943556,3378572211,3174993278,3120533705,3032266256,2961025959,2923101090,2868635157,2813903052,2742672763,2604032198,2683796849,2461293480,2524268063,2284983834,2364738477,2175806836,2238787779,1569362073,1498123566,1409854455,1355396672,1317987909,1246755826,1192025387,1137557660,2072149281,2135122070,1912620623,1992383480,1753615357,1816598090,1627664531,1707420964,295390185,358241886,404320391,483945776,43990325,106832002,186451547,266083308,932423249,861060070,1041341759,986742920,613929101,542559546,756411363,701822548,3316196985,3244833742,3425377559,3370778784,3601682597,3530312978,3744426955,3689838204,3819031489,3881883254,3928223919,4007849240,4037393693,4100235434,4180117107,4259748804,2310601993,2373574846,2151335527,2231098320,2596047829,2659030626,2470359227,2550115596,2947551409,2876312838,2788305887,2733848168,3165939309,3094707162,3040238851,2985771188],w0=[0,1,3,7,15,31,63,127,255,511,1023,2047,4095,8191,16383,32767,65535,131071,262143,524287,1048575,2097151,4194303,8388607,16777215,33554431,67108863,134217727,268435455,536870911,1073741823,-2147483648];function p0(T){let E=[];for(let J=0;J<T.length;J+=1)E.push([J,T[J]]);E.push([T.length,-1]);let G=[],L=E[0][0],Q=E[0][1];for(let J=0;J<E.length;J+=1){let q=E[J][0],Z=E[J][1];if(Q)for(let R=L;R<q;R+=1)G.push({code:R,bits:Q,symbol:void 0});if(L=q,Q=Z,Z===-1)break}G.sort((J,q)=>J.bits-q.bits||J.code-q.code);let N=0,$=-1,H=[],_;for(let J=0;J<G.length;J+=1){let q=G[J];if($+=1,q.bits!==N)$<<=q.bits-N,N=q.bits,_=H[N]={};q.symbol=$,_[$]=q}return{table:G,fastAccess:H}}function u0(T,E){if(E<0||E>=T.length)throw RangeError("Out of bound");let G=T.slice();T.sort((_,J)=>_-J);let L={};for(let _=T.length-1;_>=0;_-=1)L[T[_]]=_;let Q=[];for(let _=0;_<T.length;_+=1)Q.push(L[G[_]]++);let N,$=T[N=E],H=[];for(let _=1;_<T.length;_+=1){let J=T[N=Q[N]];if(J===void 0)H.push(255);else H.push(J)}return H.push($),H.reverse(),H}function X0(T,E=!1,G=!1){let L=0,Q=0,N=0,$=(Z)=>{if(Z>=32){let F=Z>>1;return $(F)*(1<<F)+$(Z-F)}while(N<Z)Q=(Q<<8)+T[L],L+=1,N+=8;let R=w0[Z],M=Q>>N-Z&R;return N-=Z,Q&=~(R<<N),M},H=1;if(E){if($(16)!==16986)throw new Error("Invalid magic");if($(8)!==104)throw new Error("Invalid method");if(H=$(8),H>=49&&H<=57)H-=48;else throw new Error("Invalid blocksize")}let _=new Uint8Array(T.length*1.5),J=0,q=-1;while(!0){let Z=$(48),R=$(32)|0;if(Z===54156738319193){if($(1))throw new Error("do not support randomised");let M=$(24),F=[],k=$(16);for(let W=32768;W>0;W>>=1){if(!(k&W)){for(let P=0;P<16;P+=1)F.push(!1);continue}let w=$(16);for(let P=32768;P>0;P>>=1)F.push(!!(w&P))}let j=$(3);if(j<2||j>6)throw new Error("Invalid number of huffman groups");let z=$(15),v=[],K=Array.from({length:j},(W,w)=>w);for(let W=0;W<z;W+=1){let w=0;while($(1))if(w+=1,w>=j)throw new Error("MTF table out of range");let P=K[w];for(let l=w;l>0;K[l]=K[--l]);v.push(P),K[0]=P}let V=F.reduce((W,w)=>W+w,0)+2,U=[];for(let W=0;W<j;W+=1){let w=$(5),P=[];for(let l=0;l<V;l+=1){if(w<0||w>20)throw new Error("Huffman group length outside range");while($(1))w-=$(1)*2-1;P.push(w)}U.push(p0(P))}let O=[];for(let W=0;W<F.length-1;W+=1)if(F[W])O.push(W);let n=0,b=0,o,X,u=0,S=0,Y=[];while(!0){if(n-=1,n<=0){if(n=50,b<=v.length)o=U[v[b]],b+=1}for(let W in o.fastAccess){if(!Object.prototype.hasOwnProperty.call(o.fastAccess,W))continue;if(N<W)Q=(Q<<8)+T[L],L+=1,N+=8;if(X=o.fastAccess[W][Q>>N-W],X){Q&=w0[N-=W],X=X.code;break}}if(X>=0&&X<=1){if(u===0)S=1;u+=S<<X,S<<=1;continue}else{let W=O[0];for(;u>0;u-=1)Y.push(W)}if(X===V-1)break;else{let W=O[X-1];for(let w=X-1;w>0;O[w]=O[--w]);O[0]=W,Y.push(W)}}let g=u0(Y,M),p=0;while(p<g.length){let W=g[p],w=1;if(p<g.length-4&&g[p+1]===W&&g[p+2]===W&&g[p+3]===W)w=g[p+4]+4,p+=5;else p+=1;if(J+w>=_.length){let P=_;_=new Uint8Array(P.length*2),_.set(P)}for(let P=0;P<w;P+=1){if(G)q=q<<8^g0[(q>>24^W)&255];_[J]=W,J+=1}}if(G){let W=q^-1;if(W!==R)throw new Error(`CRC mismatch: ${W} !== ${R}`);q=-1}}else if(Z===25779555029136){$(N&7);break}else throw new Error("Invalid bz2 blocktype")}return _.subarray(0,J)}class q0{static genHash(T){let E=0;T=T.toUpperCase();for(let G=0;G<T.length;G++)E=E*61+T.charCodeAt(G)-32|0;return E}data;unpacked;fileCount;fileHash;fileUnpackedSize;filePackedSize;fileOffset;fileUnpacked=[];constructor(T){let E=new D(new Uint8Array(T)),G=E.g3(),L=E.g3();if(G===L)this.data=T,this.unpacked=!1;else this.data=X0(T.subarray(6)),E=new D(new Uint8Array(this.data)),this.unpacked=!0;this.fileCount=E.g2(),this.fileHash=[],this.fileUnpackedSize=[],this.filePackedSize=[],this.fileOffset=[];let Q=E.pos+this.fileCount*10;for(let N=0;N<this.fileCount;N++)this.fileHash.push(E.g4()),this.fileUnpackedSize.push(E.g3()),this.filePackedSize.push(E.g3()),this.fileOffset.push(Q),Q+=this.filePackedSize[N]}read(T){let E=q0.genHash(T),G=this.fileHash.indexOf(E);if(G===-1)return null;return this.readIndex(G)}readIndex(T){if(T<0||T>=this.fileCount)return null;if(this.fileUnpacked[T])return this.fileUnpacked[T];let E=this.fileOffset[T],G=this.filePackedSize[T],L=new Uint8Array(this.data.subarray(E,E+G));if(this.unpacked)return this.fileUnpacked[T]=L,L;else{let Q=X0(L);return this.fileUnpacked[T]=Q,Q}}}class B extends I{static CHARSET=`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!"£$%^&*()-_=+[{]};:'@#~,<.>/?\\| `;static fontChar=new e(256,0);static fonts="Arial, Helvetica, sans-serif";static{for(let T=0;T<256;T++){let E=B.CHARSET.indexOf(String.fromCharCode(T));if(E===-1)E=74;B.fontChar[T]=E*9}}fontCharTrans=!1;fontCharPos=0;fontCharInfo=new Uint8Array(1e5);canvas;ctx;static load(T,E){let G=new B,L=T.read(`${E}.dat`);if(!L)throw new Error;return G.fontCharTrans=!1,G.fontCharInfo=L,G.fontCharPos=L.length,G}static fromSystem(T,E){let G=new B;G.fontCharPos=855,G.fontCharTrans=!1,G.canvas=document.createElement("canvas"),G.canvas.width=T+50,G.canvas.height=T+50,G.ctx=G.canvas.getContext("2d",{willReadFrequently:!0});let L=E?"bold":"";G.ctx.font=`${L} ${T}px ${B.fonts}`;for(let Q=0;Q<95;Q++)G.loadGlyph(B.CHARSET[Q],Q,!1);if(E&&G.fontCharTrans){G.ctx.font=`${T}px ${B.fonts}`;for(let Q=0;Q<95;Q++)G.loadGlyph(B.CHARSET[Q],Q,!1);if(!G.fontCharTrans){G.fontCharPos=855,G.fontCharTrans=!1;for(let Q=0;Q<95;Q++)G.loadGlyph(B.CHARSET[Q],Q,!0)}}return G.fontCharInfo=G.fontCharInfo.slice(0,G.fontCharPos),G}loadGlyph(T,E,G){let L=this.ctx.measureText(T),Q=Math.ceil(L.width),N=Q;if(G){if(T==="/")G=!1;if(T==="f"||T==="t"||T==="w"||T==="v"||T==="k"||T==="x"||T==="y"||T==="A"||T==="V"||T==="W")Q++}let $=Math.ceil(L.actualBoundingBoxAscent),H=Math.ceil(L.actualBoundingBoxDescent),_=$+H,J=L.fontBoundingBoxAscent+L.fontBoundingBoxDescent;if(this.ctx.fillStyle="black",this.ctx.fillRect(0,0,Q,J),this.ctx.fillStyle="white",this.ctx.fillText(T,0,$),G)this.ctx.fillText(T,1,$);let Z=this.ctx.getImageData(0,0,Q,J).data,R=_,M=Q,F=0,k=0;for(let j=0;j<_;j++)for(let z=0;z<Q;z++)if(Z[(z+j*Q)*4]!==0)R=Math.min(R,j),F=Math.max(F,j+1),M=Math.min(M,z),k=Math.max(k,z+1);this.fontCharInfo[E*9+0]=this.fontCharPos>>14,this.fontCharInfo[E*9+1]=this.fontCharPos>>7&127,this.fontCharInfo[E*9+2]=this.fontCharPos&127,this.fontCharInfo[E*9+3]=k-M,this.fontCharInfo[E*9+4]=F-R,this.fontCharInfo[E*9+5]=M,this.fontCharInfo[E*9+6]=$-R,this.fontCharInfo[E*9+7]=N,this.fontCharInfo[E*9+8]=J;for(let j=R;j<F;j++)for(let z=M;z<k;z++){let v=Z[(z+j*Q)*4]&255;if(v>30&&v<230)this.fontCharTrans=!0;this.fontCharInfo[this.fontCharPos++]=v}}centreString(T,E,G,L,Q){this.drawString(T,E-(this.stringWid(T)/2|0),G,L,Q)}stringWid(T){let E=T.length,G=0;for(let L=0;L<E;L++)if(T.charAt(L)==="@"&&L+4<E&&T.charAt(L+4)==="@")L+=4;else if(T.charAt(L)==="~"&&L+4<E&&T.charAt(L+4)==="~")L+=4;else{let Q=B.fontChar[T.charCodeAt(L)];G+=this.fontCharInfo[Q+7]}return G}drawString(T,E,G,L,Q){if(this.fontCharTrans||L===0)Q=!1;for(let N=0;N<T.length;N++){let $=B.fontChar[T.charCodeAt(N)];if(Q)this.drawChar($,E+1,G,0),this.drawChar($,E,G+1,0);this.drawChar($,E,G,L),E+=this.fontCharInfo[$+7]}}drawChar(T,E,G,L){let Q=this.fontCharInfo,N=E+Q[T+5],$=G-Q[T+6],H=Q[T+3],_=Q[T+4],J=Q[T]<<14|Q[T+1]<<7|Q[T+2],q=0,Z=N+$*I.width,R=I.width-H;if(G<I.clipMinY){let M=I.clipMinY-G;_-=M,G=I.clipMinY,J+=M*H,Z+=M*I.width}if(G+_>I.clipMaxY)_-=G+_-I.clipMaxY;if(E<I.clipMinX){let M=I.clipMinX-E;H-=M,E=I.clipMinX,J+=M,Z+=M,q+=M,R+=M}if(E+H>I.clipMaxX){let M=E+H-I.clipMaxX;H-=M,q+=M,R+=M}if(H>0&&_>0)if(this.fontCharTrans)this.plotLetterTrans(H,_,Q,L,J,q,I.pixels,Z,R);else this.plotLetter(H,_,Q,L,J,q,I.pixels,Z,R)}plotLetter(T,E,G,L,Q,N,$,H,_){let J=-(T>>2);T=-(T&3);for(let q=-E;q<0;q++){for(let Z=J;Z<0;Z++){if(G[Q++]===0)H++;else $[H++]=L;if(G[Q++]===0)H++;else $[H++]=L;if(G[Q++]===0)H++;else $[H++]=L;if(G[Q++]===0)H++;else $[H++]=L}for(let Z=T;Z<0;Z++)if(G[Q++]===0)H++;else $[H++]=L;H+=_,Q+=N}}plotLetterTrans(T,E,G,L,Q,N,$,H,_){for(let J=-E;J<0;J++){for(let q=-T;q<0;q++){let Z=G[Q++]&255;if(Z===0)H++;else if(Z>=230)$[H++]=L;else{let R=$[H];$[H++]=((L&16711935)*Z+(R&16711935)*(256-Z)&4278255360)+((L&65280)*Z+(R&65280)*(256-Z)&16711680)>>8}}H+=_,Q+=N}}getHeight(){return this.fontCharInfo[8]-1}getYOffset(){return this.fontCharInfo[6]}}class a extends F0{static shouldDrawBorders=!1;static shouldDrawLabels=!0;static shouldDrawNpcs=!1;static shouldDrawItems=!1;static shouldDrawMultimap=!1;static shouldDrawFreemap=!1;mapStartX=3200;mapStartZ=3200;mapWidth=1280;mapHeight=1216;mapOriginX=2304;mapOriginZ=2816;mapArea=0;maxLabelCount=1000;mapLabelCount=0;mapLabel=[];mapLabelX=[];mapLabelY=[];mapLabelSize=[];floorcol1=[0];floorcol2=[0];floort1=[];floort2=[];floorsr=[];locWall=[];locMapscene=[];locMapfunction=[];objPos=[];npcPos=[];multiPos=[];freePos=[];mapscene=[];mapfunction=[];mapdot0=null;mapdot1=null;b12=null;f11=null;f12=null;f14=null;f17=null;f19=null;f22=null;f26=null;f30=null;blendedGroundColour=[];redraw=!0;redrawTimer=0;dragFocusX=-1;dragFocusZ=-1;keyX=5;keyY=13;keyWidth=140;keyHeight=470;showKey=!1;keyPage=0;lastKeyPage=0;currentKeyHover=-1;lastKeyHover=0;currentKey=0;flashTimer=0;visibleMapFunctionsX=new Int32Array(2000);visibleMapFunctionsY=new Int32Array(2000);visibleMapFunctions=new Int32Array(2000);activeMapFunctionX=new Int32Array(2000);activeMapFunctionZ=new Int32Array(2000);activeMapFunctions=new Int32Array(2000);activeMapFunctionCount=0;overview=null;overviewHeight=200;overviewWidth=this.overviewHeight*this.mapWidth/this.mapHeight|0;overviewX=635-this.overviewWidth-5;overviewY=503-this.overviewHeight-20;showOverview=!1;INACTIVE_BORDER_TL=8943445;INACTIVE=7824964;INACTIVE_BORDER_BR=6706483;ACTIVE_BORDER_TL=11141120;ACTIVE=10027008;ACTIVE_BORDER_BR=8912896;zoom=4;targetZoom=4;focusX=this.mapStartX-this.mapOriginX;focusZ=this.mapOriginZ+this.mapHeight-this.mapStartZ;keyNames=["General Store","Sword Shop","Magic Shop","Axe Shop","Helmet Shop","Bank","Quest Start","Amulet Shop","Mining Site","Furnace","Anvil","Combat Training","Dungeon","Staff Shop","Platebody Shop","Platelegs Shop","Scimitar Shop","Archery Shop","Shield Shop","Altar","Herbalist","Jewelery","Gem Shop","Crafting Shop","Candle Shop","Fishing Shop","Fishing Spot","Clothes Shop","Apothecary","Silk Trader","Kebab Seller","Pub/Bar","Mace Shop","Tannery","Rare Trees","Spinning Wheel","Food Shop","Cookery Shop","???","Water Source","Cooking Range","Skirt Shop","Potters Wheel","Windmill","Mining Shop","Chainmail Shop","Silver Shop","Fur Trader","Spice Shop"];constructor(){super();this.run()}async maininit(){this.keyHeight=this.sHei-this.keyY-20,this.overviewX=this.sWid-this.overviewWidth-5,this.overviewY=this.sHei-this.overviewHeight-20,this.redrawScreen=!0,h.style.cursor="grab";let T=await this.loadWorldmap();await this.drawProgress(100,"Please wait... Rendering Map");let E=new D(T.read("labels.dat"));this.mapLabelCount=E.g2();for(let Z=0;Z<this.mapLabelCount;Z++)this.mapLabel[Z]=E.gjstr(),this.mapLabelX[Z]=E.g2(),this.mapLabelY[Z]=E.g2(),this.mapLabelSize[Z]=E.g1();let G=new D(T.read("floorcol.dat")),L=G.g2();for(let Z=0;Z<L;Z++)this.floorcol1[Z+1]=G.g4(),this.floorcol2[Z+1]=G.g4();let Q=new D(T.read("underlay.dat"));this.floort1=new y(this.mapWidth,this.mapHeight,0),this.loadUnderlay(Q);let N=new D(T.read("overlay.dat"));this.floort2=new y(this.mapWidth,this.mapHeight,0),this.floorsr=new y(this.mapWidth,this.mapHeight,0),this.loadOverlay(N);let $=new D(T.read("loc.dat"));this.locWall=new y(this.mapWidth,this.mapHeight,0),this.locMapscene=new y(this.mapWidth,this.mapHeight,0),this.locMapfunction=new y(this.mapWidth,this.mapHeight,0),this.loadLoc($);let H=new D(T.read("obj.dat"));this.objPos=new y(this.mapWidth,this.mapHeight,!1),this.loadObj(H);let _=new D(T.read("npc.dat"));this.npcPos=new y(this.mapWidth,this.mapHeight,!1),this.loadNpc(_);let J=new D(T.read("multi.dat"));this.multiPos=new y(this.mapWidth,this.mapHeight,!1),this.loadMulti(J);let q=new D(T.read("free.dat"));this.freePos=new y(this.mapWidth,this.mapHeight,!1),this.loadFree(q);try{for(let Z=0;Z<50;Z++)this.mapscene[Z]=L0.load(T,"mapscene",Z)}catch(Z){}try{for(let Z=0;Z<50;Z++)this.mapfunction[Z]=t.load(T,"mapfunction",Z)}catch(Z){}this.mapdot0=t.load(T,"mapdots",0),this.mapdot1=t.load(T,"mapdots",1),this.b12=x.fromArchive(T,"b12");try{this.f11=B.load(T,"f11"),this.f12=B.load(T,"f12"),this.f14=B.load(T,"f14"),this.f17=B.load(T,"f17"),this.f19=B.load(T,"f19"),this.f22=B.load(T,"f22"),this.f26=B.load(T,"f26"),this.f30=B.load(T,"f30")}catch(Z){this.f11=B.fromSystem(11,!0),this.f12=B.fromSystem(12,!0),this.f14=B.fromSystem(14,!0),this.f17=B.fromSystem(17,!0),this.f19=B.fromSystem(19,!0),this.f22=B.fromSystem(22,!0),this.f26=B.fromSystem(26,!0),this.f30=B.fromSystem(30,!0)}this.blendedGroundColour=new y(this.mapWidth,this.mapHeight,0),this.getBlendedGroundColour(),this.overview=new t(this.overviewWidth,this.overviewHeight),this.overview.setPixels(),this.renderWorldMap(0,0,this.mapWidth,this.mapHeight,0,0,this.overviewWidth,this.overviewHeight),I.drawRect(0,0,this.overviewWidth,this.overviewHeight,0),I.drawRect(1,1,this.overviewWidth-2,this.overviewHeight-2,this.INACTIVE_BORDER_TL),this.drawArea?.bind()}async maindraw(){if(this.redraw){this.redraw=!1,this.redrawTimer=0,I.cls();let T=this.focusX-(this.sWid/this.zoom|0),E=this.focusZ-(this.sHei/this.zoom|0),G=this.focusX+(this.sWid/this.zoom|0),L=this.focusZ+(this.sHei/this.zoom|0);if(this.renderWorldMap(T,E,G,L,0,0,this.sWid,this.sHei),this.showOverview){if(this.overview?.quickPlotSprite(this.overviewX,this.overviewY),I.fillRectTrans(this.overviewX+this.overviewWidth*T/this.mapWidth|0,this.overviewY+this.overviewHeight*E/this.mapHeight|0,(G-T)*this.overviewWidth/this.mapWidth|0,(L-E)*this.overviewHeight/this.mapHeight|0,16711680,128),I.drawRect(this.overviewX+this.overviewWidth*T/this.mapWidth|0,this.overviewY+this.overviewHeight*E/this.mapHeight|0,(G-T)*this.overviewWidth/this.mapWidth|0,(L-E)*this.overviewHeight/this.mapHeight|0,16711680),this.flashTimer>0&&this.flashTimer%10<5){for(let N=0;N<this.activeMapFunctionCount;N++)if(this.activeMapFunctions[N]==this.currentKey){let $=this.overviewX+this.overviewWidth*this.activeMapFunctionX[N]/this.mapWidth|0,H=this.overviewY+this.overviewHeight*this.activeMapFunctionZ[N]/this.mapHeight|0;I.fillCircle($,H,2,16776960,256)}}}if(this.showKey){this.drawStringBox(this.keyX,this.keyY,this.keyWidth,18,10066329,7829367,5592405,"Prev page"),this.drawStringBox(this.keyX,this.keyY+18,this.keyWidth,this.keyHeight-36,10066329,7829367,5592405,""),this.drawStringBox(this.keyX,this.keyY+this.keyHeight-18,this.keyWidth,18,10066329,7829367,5592405,"Next page");let N=(this.keyHeight-20)/18,$=this.keyY+18+3;for(let H=0;H<N;H++){if(H+this.lastKeyPage<this.mapfunction.length&&H+this.lastKeyPage<this.keyNames.length){if(this.keyNames[H+this.lastKeyPage]==="???")continue;this.mapfunction[H+this.lastKeyPage].plotSprite(this.keyX+3,$),this.b12?.drawString(this.keyX+21,$+14,this.keyNames[H+this.lastKeyPage],0);let _=16777215;if(this.currentKeyHover==H+this.lastKeyPage)_=12298922;if(this.flashTimer>0&&this.flashTimer%10<5&&this.currentKey==H+this.lastKeyPage)_=16776960;this.b12?.drawString(this.keyX+20,$+13,this.keyNames[H+this.lastKeyPage],_)}$+=17}}this.drawStringBox(this.overviewX,this.overviewY+this.overviewHeight,this.overviewWidth,18,this.INACTIVE_BORDER_TL,this.INACTIVE,this.INACTIVE_BORDER_BR,"Overview"),this.drawStringBox(this.keyX,this.keyY+this.keyHeight,this.keyWidth,18,this.INACTIVE_BORDER_TL,this.INACTIVE,this.INACTIVE_BORDER_BR,"Key");let Q=this.sHei-this.keyY-20+1;if(this.targetZoom==3)this.drawStringBox(170,Q,50,30,this.ACTIVE_BORDER_TL,this.ACTIVE,this.ACTIVE_BORDER_BR,"37%");else this.drawStringBox(170,Q,50,30,this.INACTIVE_BORDER_TL,this.INACTIVE,this.INACTIVE_BORDER_BR,"37%");if(this.targetZoom==4)this.drawStringBox(230,Q,50,30,this.ACTIVE_BORDER_TL,this.ACTIVE,this.ACTIVE_BORDER_BR,"50%");else this.drawStringBox(230,Q,50,30,this.INACTIVE_BORDER_TL,this.INACTIVE,this.INACTIVE_BORDER_BR,"50%");if(this.targetZoom==6)this.drawStringBox(290,Q,50,30,this.ACTIVE_BORDER_TL,this.ACTIVE,this.ACTIVE_BORDER_BR,"75%");else this.drawStringBox(290,Q,50,30,this.INACTIVE_BORDER_TL,this.INACTIVE,this.INACTIVE_BORDER_BR,"75%");if(this.targetZoom==8)this.drawStringBox(350,Q,50,30,this.ACTIVE_BORDER_TL,this.ACTIVE,this.ACTIVE_BORDER_BR,"100%");else this.drawStringBox(350,Q,50,30,this.INACTIVE_BORDER_TL,this.INACTIVE,this.INACTIVE_BORDER_BR,"100%")}if(this.redrawTimer--,this.redrawTimer<=0)this.drawArea?.draw(0,0),this.redrawTimer=50}refresh(){this.redrawTimer=0}async mainloop(){if(this.keyHeld[1]==1)this.focusX=this.focusX-16/this.zoom|0,this.redraw=!0;if(this.keyHeld[2]==1)this.focusX=this.focusX+16/this.zoom|0,this.redraw=!0;if(this.keyHeld[3]==1)this.focusZ=this.focusZ-16/this.zoom|0,this.redraw=!0;if(this.keyHeld[4]==1)this.focusZ=this.focusZ+16/this.zoom|0,this.redraw=!0;let T=1;do{if(T=this.pollKey(),T===-1)break;if(T==49)this.targetZoom=3,this.redraw=!0;else if(T==50)this.targetZoom=4,this.redraw=!0;else if(T==51)this.targetZoom=6,this.redraw=!0;else if(T==52)this.targetZoom=8,this.redraw=!0;else if(T==107||T==75)this.showKey=!this.showKey,this.redraw=!0;else if(T==111||T==79)this.showOverview=!this.showOverview,this.redraw=!0;else if(T==101||T==69){let N=this.mapWidth*2,$=this.mapHeight*2,H=new t(N,$);H.setPixels(),this.renderWorldMap(0,0,this.mapWidth,this.mapHeight,0,0,N,$);let _=document.createElement("canvas");_.width=N,_.height=$;let J=_.getContext("2d"),q=new H0(this.mapWidth*2,this.mapHeight*2,J);q.bind(),H.quickPlotSprite(0,0),q.draw(0,0),this.drawArea?.bind();let Z=_.toDataURL("image/png").replace(/^data:image\/[^;]/,"data:application/octet-stream");v0(Z,"worldmap.png")}else if(T==110||T==78)a.shouldDrawNpcs=!a.shouldDrawNpcs,this.redraw=!0;else if(T==105||T==73)a.shouldDrawItems=!a.shouldDrawItems,this.redraw=!0;else if(T==108||T==76)a.shouldDrawLabels=!a.shouldDrawLabels,this.redraw=!0;else if(T==98||T==66)a.shouldDrawBorders=!a.shouldDrawBorders,this.redraw=!0;else if(T==109||T==77)a.shouldDrawMultimap=!a.shouldDrawMultimap,this.redraw=!0;else if(T==102||T==70)a.shouldDrawFreemap=!a.shouldDrawFreemap,this.redraw=!0;else if(T===91)await this.reloadMain();else if(T===93)await this.reloadDungeon();else if(T===92)await this.reloadExtra()}while(T>0);if(this.mouseClickButton==1){this.nextMouseClickX=this.mouseClickX,this.nextMouseClickY=this.mouseClickY,this.dragFocusX=this.focusX,this.dragFocusZ=this.focusZ;let N=this.sHei-this.keyY-20+1;if(this.mouseClickX>170&&this.mouseClickX<220&&this.mouseClickY>N)this.targetZoom=3,this.nextMouseClickX=-1;else if(this.mouseClickX>230&&this.mouseClickX<280&&this.mouseClickY>N)this.targetZoom=4,this.nextMouseClickX=-1;else if(this.mouseClickX>290&&this.mouseClickX<340&&this.mouseClickY>N)this.targetZoom=6,this.nextMouseClickX=-1;else if(this.mouseClickX>350&&this.mouseClickX<400&&this.mouseClickY>N)this.targetZoom=8,this.nextMouseClickX=-1;else if(this.mouseClickX>this.keyX&&this.mouseClickY>this.keyY+this.keyHeight&&this.mouseClickX<this.keyX+this.keyWidth)this.showKey=!this.showKey,this.nextMouseClickX=-1;else if(this.mouseClickX>this.overviewX&&this.mouseClickY>this.overviewY+this.overviewHeight&&this.mouseClickX<this.overviewX+this.overviewWidth)this.showOverview=!this.showOverview,this.nextMouseClickX=-1;if(this.showKey){if(this.mouseClickX>this.keyX&&this.mouseClickY>this.keyY&&this.mouseClickX<this.keyX+this.keyWidth&&this.mouseClickY<this.keyY+this.keyHeight)this.nextMouseClickX=-1;if(this.mouseClickX>this.keyX&&this.mouseClickY>this.keyY&&this.mouseClickX<this.keyX+this.keyWidth&&this.mouseClickY<this.keyY+18)this.keyPage=0;else if(this.mouseClickX>this.keyX&&this.mouseClickY>this.keyY+this.keyHeight-18&&this.mouseClickX<this.keyX+this.keyWidth&&this.mouseClickY<this.keyY+this.keyHeight)this.keyPage=25}this.redraw=!0}if(this.showKey){if(this.currentKeyHover=-1,this.mouseX>this.keyX&&this.mouseX<this.keyX+this.keyWidth){let N=(this.keyHeight-20)/18,$=this.keyY+21+5;for(let H=0;H<N;H++)if(H+this.lastKeyPage<this.keyNames.length&&this.keyNames[H+this.lastKeyPage]!=="???"){if(this.mouseY>=$&&this.mouseY<$+17){if(this.currentKeyHover=H+this.lastKeyPage,this.mouseClickButton==1)this.currentKey=H+this.lastKeyPage,this.flashTimer=50}$+=17}}if(this.currentKeyHover!=this.lastKeyHover)this.lastKeyHover=this.currentKeyHover,this.redraw=!0}if((this.mouseButton==1||this.mouseClickButton==1)&&this.showOverview){let N=this.mouseClickX,$=this.mouseClickY;if(this.mouseButton==1)N=this.mouseX,$=this.mouseY;if(N>this.overviewX&&$>this.overviewY&&N<this.overviewX+this.overviewWidth&&$<this.overviewY+this.overviewHeight)this.focusX=(N-this.overviewX)*this.mapWidth/this.overviewWidth|0,this.focusZ=($-this.overviewY)*this.mapHeight/this.overviewHeight|0,this.nextMouseClickX=-1,this.redraw=!0}if(this.mouseButton==1&&this.nextMouseClickX!=-1)this.focusX=this.dragFocusX+((this.nextMouseClickX-this.mouseX)*2/this.targetZoom|0),this.focusZ=this.dragFocusZ+((this.nextMouseClickY-this.mouseY)*2/this.targetZoom|0),this.redraw=!0;if(this.zoom<this.targetZoom){if(this.redraw=!0,this.zoom+=this.zoom/30,this.zoom>this.targetZoom)this.zoom=this.targetZoom}if(this.zoom>this.targetZoom){if(this.redraw=!0,this.zoom-=this.zoom/30,this.zoom<this.targetZoom)this.zoom=this.targetZoom}if(this.lastKeyPage<this.keyPage)this.redraw=!0,this.lastKeyPage++;if(this.lastKeyPage>this.keyPage)this.redraw=!0,this.lastKeyPage--;if(this.flashTimer>0)this.redraw=!0,this.flashTimer--;let E=this.focusX-(this.sWid/this.zoom|0),G=this.focusZ-(this.sHei/this.zoom|0),L=this.focusX+(this.sWid/this.zoom|0),Q=this.focusZ+(this.sHei/this.zoom|0);if(E<48)this.focusX=(this.sWid/this.zoom|0)+48;if(G<48)this.focusZ=(this.sHei/this.zoom|0)+48;if(L>this.mapWidth-48)this.focusX=this.mapWidth-48-(this.sWid/this.zoom|0);if(Q>this.mapHeight-48)this.focusZ=this.mapHeight-48-(this.sHei/this.zoom|0)}worldmap=null;async loadWorldmap(){if(this.worldmap)return this.worldmap;let T=void 0,E=5;while(!T){await this.drawProgress(0,"Requesting map");try{T=await K0("/worldmap.jag")}catch(G){T=void 0;for(let L=E;L>0;L--)await this.drawProgress(0,`Error loading - Will retry in ${L} secs.`),await Q0(1000);if(E*=2,E>60)E=60}}return this.worldmap=new q0(T),this.worldmap}drawStringBox(T,E,G,L,Q,N,$,H){T=Math.trunc(T),E=Math.trunc(E),G=Math.trunc(G),L=Math.trunc(L),I.drawRect(T,E,G,L,0);let _=T+1,J=E+1,q=G-2,Z=L-2;I.fillRect(_,J,q,Z,N),I.hline(_,J,Q,q),I.vline(_,J,Q,Z),I.hline(_,J+Z-1,$,q),I.vline(_+q-1,J,$,Z),this.b12?.centreString(_+(q/2|0)+1,J+(Z/2|0)+1+4,H,0),this.b12?.centreString(_+(q/2|0),J+(Z/2|0)+4,H,16777215)}getBlendedGroundColour(){let T=this.mapWidth,E=this.mapHeight,G=new e(E,0);for(let L=5;L<T-5;L++){let Q=this.floort1[L+5],N=this.floort1[L-5];for(let $=0;$<E;$++)G[$]+=this.floorcol1[Q[$]]-this.floorcol1[N[$]];if(L>10&&L<T-10){let $=0,H=0,_=0;for(let J=5;J<E-5;J++){let q=G[J+5],Z=G[J-5];if($+=(q>>20)-(Z>>20),H+=(q>>10&1023)-(Z>>10&1023),_+=(q&1023)-(Z&1023),_>0)this.blendedGroundColour[L][J]=this.getRgb($/8533,H/8533,_/8533)}}}}loadUnderlay(T){while(T.available>0){let E=T.g1()*64-this.mapOriginX,G=T.g1()*64-this.mapOriginZ;if(E>0&&G>0&&E+64<this.mapWidth&&G+64<this.mapHeight)for(let L=0;L<64;L++){let Q=this.mapHeight-G-1;for(let N=-64;N<0;N++)this.floort1[E+L][Q--]=T.g1()}else T.pos+=4096}}loadOverlay(T){while(T.available>0){let E=T.g1()*64-this.mapOriginX,G=T.g1()*64-this.mapOriginZ;if(E>0&&G>0&&E+64<this.mapWidth&&G+64<this.mapHeight)for(let L=0;L<64;L++){let Q=this.mapHeight-G-1;for(let N=-64;N<0;N++){let $=T.g1();if($===0)this.floort2[L+E][Q--]=0;else this.floorsr[L+E][Q]=T.g1(),this.floort2[L+E][Q--]=this.floorcol2[$]}}else for(let L=-4096;L<0;L++)if(T.g1()!=0)T.g1()}}loadLoc(T){while(T.available>0){let E=T.g1()*64-this.mapOriginX,G=T.g1()*64-this.mapOriginZ;if(E>0&&G>0&&E+64<this.mapWidth&&G+64<this.mapHeight)for(let L=0;L<64;L++){let Q=this.mapHeight-G-1;for(let N=-64;N<0;N++)while(!0){let $=T.g1();if($===0){Q--;break}if($<29)this.locWall[L+E][Q]=$;else if($<160)this.locMapscene[L+E][Q]=$-28;else this.locMapfunction[L+E][Q]=$-159,this.activeMapFunctions[this.activeMapFunctionCount]=$-160,this.activeMapFunctionX[this.activeMapFunctionCount]=L+E,this.activeMapFunctionZ[this.activeMapFunctionCount]=Q,this.activeMapFunctionCount++}}else for(let L=0;L<64;L++){let Q=0;for(let N=-64;N<0;N++)do Q=T.g1();while(Q!=0)}}}loadObj(T){while(T.available>0){let E=T.g1()*64-this.mapOriginX,G=T.g1()*64-this.mapOriginZ;if(E>0&&G>0&&E+64<this.mapWidth&&G+64<this.mapHeight)for(let L=0;L<64;L++){let Q=this.mapHeight-G-1;for(let N=-64;N<0;N++)this.objPos[L+E][Q--]=T.g1()==1}else T.pos+=4096}}loadNpc(T){while(T.available>0){let E=T.g1()*64-this.mapOriginX,G=T.g1()*64-this.mapOriginZ;if(E>0&&G>0&&E+64<this.mapWidth&&G+64<this.mapHeight)for(let L=0;L<64;L++){let Q=this.mapHeight-G-1;for(let N=-64;N<0;N++)this.npcPos[L+E][Q--]=T.g1()==1}else T.pos+=4096}}loadMulti(T){while(T.available>0){let E=T.g1()*64-this.mapOriginX,G=T.g1()*64-this.mapOriginZ;if(E>0&&G>0&&E+64<this.mapWidth&&G+64<this.mapHeight)for(let L=0;L<64;L++){let Q=this.mapHeight-G-1;for(let N=-64;N<0;N++)this.multiPos[L+E][Q--]=T.g1()==1}else T.pos+=4096}}loadFree(T){while(T.available>0){let E=T.g1()*64-this.mapOriginX,G=T.g1()*64-this.mapOriginZ;if(E>0&&G>0&&E+64<this.mapWidth&&G+64<this.mapHeight)for(let L=0;L<64;L++){let Q=this.mapHeight-G-1;for(let N=-64;N<0;N++)this.freePos[L+E][Q--]=T.g1()==1}else T.pos+=4096}}getRgb(T,E,G){let L=G,Q=G,N=G;if(E!==0){let J;if(G<0.5)J=G*(E+1);else J=G+E-G*E;let q=G*2-J,Z=T+0.3333333333333333;if(Z>1)Z--;let R=T-0.3333333333333333;if(R<0)R++;if(Z*6<1)L=q+(J-q)*6*Z;else if(Z*2<1)L=J;else if(Z*3<2)L=q+(J-q)*(0.6666666666666666-Z)*6;else L=q;if(T*6<1)Q=q+(J-q)*6*T;else if(T*2<1)Q=J;else if(T*3<2)Q=q+(J-q)*(0.6666666666666666-T)*6;else Q=q;if(R*6<1)N=q+(J-q)*6*R;else if(R*2<1)N=J;else if(R*3<2)N=q+(J-q)*(0.6666666666666666-R)*6;else N=q}let $=L*256|0,H=Q*256|0,_=N*256|0;return($<<16)+(H<<8)+_}renderWorldMap(T,E,G,L,Q,N,$,H){let _=G-T,J=L-E,q=($-Q<<16)/_|0,Z=(H-N<<16)/J|0;for(let M=0;M<_;M++){let F=q*M>>16,k=q*(M+1)>>16,j=k-F;if(j<=0)continue;F+=Q,k+=Q;let z=this.blendedGroundColour[M+T],v=this.floort2[M+T],K=this.floorsr[M+T];for(let V=0;V<J;V++){let U=Z*V>>16,O=Z*(V+1)>>16,n=O-U;if(n<=0)continue;U+=N,O+=N;let b=v[V+E];if(b===0)I.fillRect(F,U,k-F,O-U,z[V+E]);else{let o=K[V+E],X=o&252;if(X==0||j<=1||n<=1)I.fillRect(F,U,j,n,b);else this.drawOverlayShape(I.pixels,U*I.width+F,z[V+E],b,j,n,X>>2,o&3)}}}if(G-T>$-Q)return;let R=0;for(let M=0;M<_;M++){let F=q*M>>16,k=q*(M+1)>>16,j=k-F;if(j<=0)continue;let z=this.locWall[M+T],v=this.locMapscene[M+T],K=this.locMapfunction[M+T];for(let V=0;V<J;V++){let U=Z*V>>16,O=Z*(V+1)>>16,n=O-U;if(n<=0)continue;let b=z[V+E]&255;if(b!=0){let u;if(j==1)u=F;else u=k-1;let S;if(n==1)S=U;else S=O-1;let Y=13421772;if(b>=5&&b<=8||b>=13&&b<=16||b>=21&&b<=24)Y=13369344,b-=4;if(b==27||b==28)Y=13369344,b-=2;if(b==1)I.vline(F,U,Y,n);else if(b==2)I.hline(F,U,Y,j);else if(b==3)I.vline(u,U,Y,n);else if(b==4)I.hline(F,S,Y,j);else if(b==9)I.vline(F,U,16777215,n),I.hline(F,U,Y,j);else if(b==10)I.vline(u,U,16777215,n),I.hline(F,U,Y,j);else if(b==11)I.vline(u,U,16777215,n),I.hline(F,S,Y,j);else if(b==12)I.vline(F,U,16777215,n),I.hline(F,S,Y,j);else if(b==17)I.hline(F,U,Y,1);else if(b==18)I.hline(u,U,Y,1);else if(b==19)I.hline(u,S,Y,1);else if(b==20)I.hline(F,S,Y,1);else if(b==25)for(let g=0;g<n;g++)I.hline(F+g,S-g,Y,1);else if(b==26)for(let g=0;g<n;g++)I.hline(F+g,U+g,Y,1)}let o=v[V+E];if(o!=0)this.mapscene[o-1].scalePlotSprite(F-(j/2|0),U-(n/2|0),j*2,n*2);let X=K[V+E];if(X!=0)this.visibleMapFunctions[R]=X-1,this.visibleMapFunctionsX[R]=F+(j/2|0),this.visibleMapFunctionsY[R]=U+(n/2|0),R++}}for(let M=0;M<R;M++)this.mapfunction[this.visibleMapFunctions[M]].plotSprite(this.visibleMapFunctionsX[M]-7,this.visibleMapFunctionsY[M]-7);if(a.shouldDrawFreemap)for(let M=0;M<_;M++){let F=q*M>>16,k=q*(M+1)>>16,j=k-F;if(j<=0)continue;F+=Q,k+=Q;let z=this.freePos[M+T];for(let v=0;v<J;v++){let K=Z*v>>16,V=Z*(v+1)>>16,U=V-K;if(U<=0)continue;if(K+=N,V+=N,z[v+E])I.fillRectTrans(F,K,j,U,65280,96)}}if(a.shouldDrawMultimap)for(let M=0;M<_;M++){let F=q*M>>16,k=q*(M+1)>>16,j=k-F;if(j<=0)continue;F+=Q,k+=Q;let z=this.multiPos[M+T];for(let v=0;v<J;v++){let K=Z*v>>16,V=Z*(v+1)>>16,U=V-K;if(U<=0)continue;if(K+=N,V+=N,z[v+E])I.fillRectTrans(F,K,j,U,16711680,96)}}if(a.shouldDrawItems)for(let M=0;M<_;M++){let F=q*M>>16,k=q*(M+1)>>16;if(k-F<=0)continue;F+=Q,k+=Q;for(let z=0;z<J;z++){let v=Z*z>>16,K=Z*(z+1)>>16;if(K-v<=0)continue;if(v+=N,K+=N,this.objPos[M+T][z+E])this.mapdot0?.plotSprite(F,v)}}if(a.shouldDrawNpcs)for(let M=0;M<_;M++){let F=q*M>>16,k=q*(M+1)>>16;if(k-F<=0)continue;F+=Q,k+=Q;for(let z=0;z<J;z++){let v=Z*z>>16,K=Z*(z+1)>>16;if(K-v<=0)continue;if(v+=N,K+=N,this.npcPos[M+T][z+E])this.mapdot1?.plotSprite(F,v)}}if(this.flashTimer>0){for(let M=0;M<R;M++)if(this.visibleMapFunctions[M]==this.currentKey){if(this.mapfunction[this.visibleMapFunctions[M]].plotSprite(this.visibleMapFunctionsX[M]-7,this.visibleMapFunctionsY[M]-7),this.flashTimer%10<5)I.fillCircle(this.visibleMapFunctionsX[M],this.visibleMapFunctionsY[M],15,16776960,128),I.fillCircle(this.visibleMapFunctionsX[M],this.visibleMapFunctionsY[M],7,16777215,256)}}if(this.zoom==this.targetZoom&&a.shouldDrawLabels)for(let M=0;M<this.mapLabelCount;M++){let F=this.mapLabelX[M],k=this.mapLabelY[M];F-=this.mapOriginX,k=this.mapOriginZ+this.mapHeight-k;let j=Q+($-Q)*(F-T)/(G-T)|0,z=N+(H-N)*(k-E)/(L-E)|0,v=this.mapLabelSize[M],K=16777215,V=null;if(v==0){if(this.zoom==3)V=this.f11;else if(this.zoom==4)V=this.f12;else if(this.zoom==6)V=this.f14;else if(this.zoom==8)V=this.f17}else if(v==1){if(this.zoom==3)V=this.f14;else if(this.zoom==4)V=this.f17;else if(this.zoom==6)V=this.f19;else if(this.zoom==8)V=this.f22}else if(v==2){if(K=16755200,this.zoom==3)V=this.f19;else if(this.zoom==4)V=this.f22;else if(this.zoom==6)V=this.f26;else if(this.zoom==8)V=this.f30}if(V!==null){let U=this.mapLabel[M],O=1;for(let n=0;n<U.length;n++)if(U[n]==="/")O++;z-=V.getHeight()*(O-1)/2|0,z+=V.getYOffset()/2|0;while(!0){let n=U.indexOf("/");if(n===-1){V.centreString(U,j,z,K,!0);break}let b=U.substring(0,n);V.centreString(b,j,z,K,!0),z+=V.getHeight(),U=U.substring(n+1)}}}if(a.shouldDrawBorders)for(let M=this.mapOriginX/64;M<(this.mapOriginX+this.mapWidth)/64;M++)for(let F=this.mapOriginZ/64;F<(this.mapOriginZ+this.mapHeight)/64;F++){let k=M*64,j=F*64;k-=this.mapOriginX,j=this.mapOriginZ+this.mapHeight-j;let z=Q+($-Q)*(k-T)/(G-T)|0,v=N+(H-N)*(j-64-E)/(L-E)|0,K=Q+($-Q)*(k+64-T)/(G-T)|0,V=N+(H-N)*(j-E)/(L-E)|0;if(z>=$||v>=H||K<=0||V<=0)continue;if(I.drawRect(z,v,K-z,V-v,16777215),this.b12?.drawStringRight(K-5,V-5,M+"_"+F,16777215,!1),M==33&&F>=71&&F<=73)this.b12?.centreString((K+z)/2|0,(V+v)/2|0,"u_pass",16711680);else if(M>=32&&M<=34&&F>=70&&F<=74)this.b12?.centreString((K+z)/2|0,(V+v)/2|0,"u_pass",16776960)}}drawOverlayShape(T,E,G,L,Q,N,$,H){let _=I.width-Q;if($==9)$=1,H=H+1&3;else if($==10)$=1,H=H+3&3;else if($==11)$=8,H=H+3&3;if($==1){if(H==0)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q<=J)T[E++]=L;else T[E++]=G;E+=_}else if(H==1)for(let J=N-1;J>=0;J--){for(let q=0;q<Q;q++)if(q<=J)T[E++]=L;else T[E++]=G;E+=_}else if(H==2)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q>=J)T[E++]=L;else T[E++]=G;E+=_}else if(H==3)for(let J=N-1;J>=0;J--){for(let q=0;q<Q;q++)if(q>=J)T[E++]=L;else T[E++]=G;E+=_}}else if($==2){if(H==0)for(let J=N-1;J>=0;J--){for(let q=0;q<Q;q++)if(q<=J>>1)T[E++]=L;else T[E++]=G;E+=_}else if(H==1)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q>=J<<1)T[E++]=L;else T[E++]=G;E+=_}else if(H==2)for(let J=0;J<N;J++){for(let q=Q-1;q>=0;q--)if(q<=J>>1)T[E++]=L;else T[E++]=G;E+=_}else if(H==3)for(let J=N-1;J>=0;J--){for(let q=Q-1;q>=0;q--)if(q>=J<<1)T[E++]=L;else T[E++]=G;E+=_}}else if($==3){if(H==0)for(let J=N-1;J>=0;J--){for(let q=Q-1;q>=0;q--)if(q<=J>>1)T[E++]=L;else T[E++]=G;E+=_}else if(H==1)for(let J=N-1;J>=0;J--){for(let q=0;q<Q;q++)if(q>=J<<1)T[E++]=L;else T[E++]=G;E+=_}else if(H==2)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q<=J>>1)T[E++]=L;else T[E++]=G;E+=_}else if(H==3)for(let J=0;J<N;J++){for(let q=Q-1;q>=0;q--)if(q>=J<<1)T[E++]=L;else T[E++]=G;E+=_}}else if($==4){if(H==0)for(let J=N-1;J>=0;J--){for(let q=0;q<Q;q++)if(q>=J>>1)T[E++]=L;else T[E++]=G;E+=_}else if(H==1)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q<=J<<1)T[E++]=L;else T[E++]=G;E+=_}else if(H==2)for(let J=0;J<N;J++){for(let q=Q-1;q>=0;q--)if(q>=J>>1)T[E++]=L;else T[E++]=G;E+=_}else if(H==3)for(let J=N-1;J>=0;J--){for(let q=Q-1;q>=0;q--)if(q<=J<<1)T[E++]=L;else T[E++]=G;E+=_}}else if($==5){if(H==0)for(let J=N-1;J>=0;J--){for(let q=Q-1;q>=0;q--)if(q>=J>>1)T[E++]=L;else T[E++]=G;E+=_}else if(H==1)for(let J=N-1;J>=0;J--){for(let q=0;q<Q;q++)if(q<=J<<1)T[E++]=L;else T[E++]=G;E+=_}else if(H==2)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q>=J>>1)T[E++]=L;else T[E++]=G;E+=_}else if(H==3)for(let J=0;J<N;J++){for(let q=Q-1;q>=0;q--)if(q<=J<<1)T[E++]=L;else T[E++]=G;E+=_}}else if($==6){if(H==0)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q<=(Q/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==1)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(J<=(N/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==2)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q>=(Q/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==3)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(J>=(N/2|0))T[E++]=L;else T[E++]=G;E+=_}}else if($==7){if(H==0)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q<=J-(N/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==1)for(let J=N-1;J>=0;J--){for(let q=0;q<Q;q++)if(q<=J-(N/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==2)for(let J=N-1;J>=0;J--){for(let q=Q-1;q>=0;q--)if(q<=J-(N/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==3)for(let J=0;J<N;J++){for(let q=Q-1;q>=0;q--)if(q<=J-(N/2|0))T[E++]=L;else T[E++]=G;E+=_}}else if($==8){if(H==0)for(let J=0;J<N;J++){for(let q=0;q<Q;q++)if(q>=J-(N/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==1)for(let J=N-1;J>=0;J--){for(let q=0;q<Q;q++)if(q>=J-(N/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==2)for(let J=N-1;J>=0;J--){for(let q=Q-1;q>=0;q--)if(q>=J-(N/2|0))T[E++]=L;else T[E++]=G;E+=_}else if(H==3)for(let J=0;J<N;J++){for(let q=Q-1;q>=0;q--)if(q>=J-(N/2|0))T[E++]=L;else T[E++]=G;E+=_}}}async reloadMain(){if(this.mapArea===0)return;this.mapStartX=3200,this.mapStartZ=3200,this.mapWidth=1280,this.mapHeight=1216,this.mapOriginX=2304,this.mapOriginZ=2816,this.mapArea=0,this.focusX=this.mapStartX-this.mapOriginX,this.focusZ=this.mapOriginZ+this.mapHeight-this.mapStartZ,this.dragFocusX=-1,this.dragFocusZ=-1,this.redraw=!0,I.cls(),await this.maininit()}async reloadDungeon(){if(this.mapArea===1)return;this.mapStartX=3200,this.mapStartZ=9600,this.mapWidth=1344,this.mapHeight=1216,this.mapOriginX=2240,this.mapOriginZ=9216,this.mapArea=1,this.focusX=this.mapStartX-this.mapOriginX,this.focusZ=this.mapOriginZ+this.mapHeight-this.mapStartZ,this.dragFocusX=-1,this.dragFocusZ=-1,this.redraw=!0,I.cls(),await this.maininit()}async reloadExtra(){if(this.mapArea===2)return;this.mapStartX=2496,this.mapStartZ=4736,this.mapWidth=1344,this.mapHeight=960,this.mapOriginX=1792,this.mapOriginZ=4160,this.mapArea=2,this.focusX=this.mapStartX-this.mapOriginX,this.focusZ=this.mapOriginZ+this.mapHeight-this.mapStartZ,this.dragFocusX=-1,this.dragFocusZ=-1,this.redraw=!0,await this.maininit()}dragging=!1;activePointerId=null;mouseDown(T,E,G){if(this.nextMouseClickX=T,this.nextMouseClickY=E,this.mouseX=T,this.mouseY=E,G.button===2)this.nextMouseClickButton=2,this.mouseButton=2;else this.nextMouseClickButton=1,this.mouseButton=1,h.style.cursor="grabbing",this.dragging=!0}mouseUp(T,E,G){this.dragging=!1,h.style.cursor="grab",this.mouseX=-1,this.mouseY=-1,this.mouseButton=0,this.nextMouseClickX=-1,this.nextMouseClickY=-1,this.nextMouseClickButton=0}pointerDown(T,E,G){this.idleTimer=performance.now(),this.mouseX=T,this.mouseY=E,this.mouseButton=1,this.nextMouseClickX=T,this.nextMouseClickY=E,this.nextMouseClickButton=1}pointerUp(T,E,G){this.mouseX=-1,this.mouseY=-1,this.mouseButton=0,this.nextMouseClickX=-1,this.nextMouseClickY=-1,this.nextMouseClickButton=0}pointerEnter(){}pointerLeave(){}pointerMove(T,E,G){if(!this.dragging)this.mouseX=T,this.mouseY=E}windowMouseUp(T){this.dragging=!1,h.style.cursor="grab",this.mouseX=-1,this.mouseY=-1,this.mouseButton=0,this.nextMouseClickX=-1,this.nextMouseClickY=-1,this.nextMouseClickButton=0}windowMouseMove(T){if(this.dragging){let E=h.getBoundingClientRect(),G=T.clientX-E.left|0,L=T.clientY-E.top|0;this.mouseX=G,this.mouseY=L}}}export{a as MapView};
+// src/datastruct/Linkable.ts
+class Linkable {
+  key = 0n;
+  next = null;
+  prev = null;
+  unlink() {
+    if (this.prev != null) {
+      this.prev.next = this.next;
+      if (this.next) {
+        this.next.prev = this.prev;
+      }
+      this.next = null;
+      this.prev = null;
+    }
+  }
+}
 
-//# debugId=4D4EBC3FEB93A56F64756E2164756E21
+// src/datastruct/DoublyLinkable.ts
+class DoublyLinkable extends Linkable {
+  next2 = null;
+  prev2 = null;
+  unlink2() {
+    if (this.prev2 !== null) {
+      this.prev2.next2 = this.next2;
+      if (this.next2) {
+        this.next2.prev2 = this.prev2;
+      }
+      this.next2 = null;
+      this.prev2 = null;
+    }
+  }
+}
+
+// src/datastruct/LinkList.ts
+class LinkList {
+  sentinel = new Linkable;
+  cursor = null;
+  constructor() {
+    this.sentinel.next = this.sentinel;
+    this.sentinel.prev = this.sentinel;
+  }
+  push(node) {
+    if (node.prev) {
+      node.unlink();
+    }
+    node.prev = this.sentinel.prev;
+    node.next = this.sentinel;
+    if (node.prev) {
+      node.prev.next = node;
+    }
+    node.next.prev = node;
+  }
+  addHead(node) {
+    if (node.prev) {
+      node.unlink();
+    }
+    node.prev = this.sentinel;
+    node.next = this.sentinel.next;
+    node.prev.next = node;
+    if (node.next) {
+      node.next.prev = node;
+    }
+  }
+  pop() {
+    const node = this.sentinel.next;
+    if (node === this.sentinel) {
+      return null;
+    }
+    node?.unlink();
+    return node;
+  }
+  head() {
+    const node = this.sentinel.next;
+    if (node === this.sentinel) {
+      this.cursor = null;
+      return null;
+    }
+    this.cursor = node?.next ?? null;
+    return node;
+  }
+  tail() {
+    const node = this.sentinel.prev;
+    if (node === this.sentinel) {
+      this.cursor = null;
+      return null;
+    }
+    this.cursor = node?.prev ?? null;
+    return node;
+  }
+  next() {
+    const node = this.cursor;
+    if (node === this.sentinel) {
+      this.cursor = null;
+      return null;
+    }
+    this.cursor = node?.next ?? null;
+    return node;
+  }
+  prev() {
+    const node = this.cursor;
+    if (node === this.sentinel) {
+      this.cursor = null;
+      return null;
+    }
+    this.cursor = node?.prev ?? null;
+    return node;
+  }
+  clear() {
+    while (true) {
+      const node = this.sentinel.next;
+      if (node === this.sentinel) {
+        return;
+      }
+      node?.unlink();
+    }
+  }
+}
+
+// src/util/JsUtil.ts
+var sleep = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+var downloadUrl = async (url) => new Uint8Array(await (await fetch(url)).arrayBuffer());
+function bytesToBigInt(bytes) {
+  let result = 0n;
+  for (let index = 0;index < bytes.length; index++) {
+    result = result << 8n | BigInt(bytes[index]);
+  }
+  return result;
+}
+function bigIntToBytes(bigInt) {
+  const bytes = [];
+  while (bigInt > 0n) {
+    bytes.unshift(Number(bigInt & 0xffn));
+    bigInt >>= 8n;
+  }
+  if (bytes[0] & 128) {
+    bytes.unshift(0);
+  }
+  return new Uint8Array(bytes);
+}
+function bigIntModPow(base, exponent, modulus) {
+  let result = 1n;
+  while (exponent > 0n) {
+    if (exponent % 2n === 1n) {
+      result = result * base % modulus;
+    }
+    base = base * base % modulus;
+    exponent >>= 1n;
+  }
+  return result;
+}
+
+// src/io/Packet.ts
+class Packet extends DoublyLinkable {
+  static CRC32_POLYNOMIAL = 3988292384;
+  static crctable = new Int32Array(256);
+  static bitmask = new Uint32Array(33);
+  static cacheMin = new LinkList;
+  static cacheMid = new LinkList;
+  static cacheMax = new LinkList;
+  static cacheMinCount = 0;
+  static cacheMidCount = 0;
+  static cacheMaxCount = 0;
+  static {
+    for (let i = 0;i < 32; i++) {
+      Packet.bitmask[i] = (1 << i) - 1;
+    }
+    Packet.bitmask[32] = 4294967295;
+    for (let i = 0;i < 256; i++) {
+      let remainder = i;
+      for (let bit = 0;bit < 8; bit++) {
+        if ((remainder & 1) === 1) {
+          remainder = remainder >>> 1 ^ Packet.CRC32_POLYNOMIAL;
+        } else {
+          remainder >>>= 1;
+        }
+      }
+      Packet.crctable[i] = remainder;
+    }
+  }
+  static getcrc(src, offset, length) {
+    let crc = 4294967295;
+    for (let i = offset;i < length; i++) {
+      crc = crc >>> 8 ^ this.crctable[(crc ^ src[i]) & 255];
+    }
+    return ~crc;
+  }
+  static checkcrc(src, offset, length, expected = 0) {
+    return Packet.getcrc(src, offset, length) == expected;
+  }
+  view;
+  data;
+  pos = 0;
+  bitPos = 0;
+  random = null;
+  constructor(src) {
+    if (!src) {
+      throw new Error;
+    }
+    super();
+    if (src instanceof Int8Array) {
+      this.data = new Uint8Array(src);
+    } else {
+      this.data = src;
+    }
+    this.view = new DataView(this.data.buffer, this.data.byteOffset, this.data.byteLength);
+  }
+  get length() {
+    return this.view.byteLength;
+  }
+  get available() {
+    return this.view.byteLength - this.pos;
+  }
+  static alloc(type) {
+    let cached = null;
+    if (type === 0 && Packet.cacheMinCount > 0) {
+      Packet.cacheMinCount--;
+      cached = Packet.cacheMin.pop();
+    } else if (type === 1 && Packet.cacheMidCount > 0) {
+      Packet.cacheMidCount--;
+      cached = Packet.cacheMid.pop();
+    } else if (type === 2 && Packet.cacheMaxCount > 0) {
+      Packet.cacheMaxCount--;
+      cached = Packet.cacheMax.pop();
+    }
+    if (cached) {
+      cached.pos = 0;
+      return cached;
+    }
+    if (type === 0) {
+      return new Packet(new Uint8Array(100));
+    } else if (type === 1) {
+      return new Packet(new Uint8Array(5000));
+    } else {
+      return new Packet(new Uint8Array(30000));
+    }
+  }
+  release() {
+    this.pos = 0;
+    if (this.length === 100 && Packet.cacheMinCount < 1000) {
+      Packet.cacheMin.push(this);
+      Packet.cacheMinCount++;
+    } else if (this.length === 5000 && Packet.cacheMidCount < 250) {
+      Packet.cacheMid.push(this);
+      Packet.cacheMidCount++;
+    } else if (this.length === 30000 && Packet.cacheMaxCount < 50) {
+      Packet.cacheMax.push(this);
+      Packet.cacheMaxCount++;
+    }
+  }
+  g1() {
+    return this.view.getUint8(this.pos++);
+  }
+  g1b() {
+    return this.view.getInt8(this.pos++);
+  }
+  g2() {
+    const result = this.view.getUint16(this.pos);
+    this.pos += 2;
+    return result;
+  }
+  g2b() {
+    const result = this.view.getInt16(this.pos);
+    this.pos += 2;
+    return result;
+  }
+  g3() {
+    const result = this.view.getUint8(this.pos++) << 16 | this.view.getUint16(this.pos);
+    this.pos += 2;
+    return result;
+  }
+  g4() {
+    const result = this.view.getInt32(this.pos);
+    this.pos += 4;
+    return result;
+  }
+  g8() {
+    const result = this.view.getBigInt64(this.pos);
+    this.pos += 8;
+    return result;
+  }
+  gsmart() {
+    return this.view.getUint8(this.pos) < 128 ? this.g1() - 64 : this.g2() - 49152;
+  }
+  gsmarts() {
+    return this.view.getUint8(this.pos) < 128 ? this.g1() : this.g2() - 32768;
+  }
+  gjstr() {
+    const view = this.view;
+    const length = view.byteLength;
+    let str = "";
+    let b;
+    while ((b = view.getUint8(this.pos++)) !== 10 && this.pos < length) {
+      str += String.fromCharCode(b);
+    }
+    return str;
+  }
+  gdata(length, offset, dest) {
+    dest.set(this.data.subarray(this.pos, this.pos + length), offset);
+    this.pos += length;
+  }
+  pIsaac(opcode) {
+    this.view.setUint8(this.pos++, opcode + (this.random?.nextInt ?? 0) & 255);
+  }
+  p1(value) {
+    this.view.setUint8(this.pos++, value);
+  }
+  p2(value) {
+    this.view.setUint16(this.pos, value);
+    this.pos += 2;
+  }
+  ip2(value) {
+    this.view.setUint16(this.pos, value, true);
+    this.pos += 2;
+  }
+  p3(value) {
+    this.view.setUint8(this.pos++, value >> 16);
+    this.view.setUint16(this.pos, value);
+    this.pos += 2;
+  }
+  p4(value) {
+    this.view.setInt32(this.pos, value);
+    this.pos += 4;
+  }
+  ip4(value) {
+    this.view.setInt32(this.pos, value, true);
+    this.pos += 4;
+  }
+  p8(value) {
+    this.view.setBigInt64(this.pos, value);
+    this.pos += 8;
+  }
+  pjstr(str) {
+    const view = this.view;
+    const length = str.length;
+    for (let i = 0;i < length; i++) {
+      view.setUint8(this.pos++, str.charCodeAt(i));
+    }
+    view.setUint8(this.pos++, 10);
+  }
+  pdata(src, length, offset) {
+    this.data.set(src.subarray(offset, offset + length), this.pos);
+    this.pos += length - offset;
+  }
+  psize1(size) {
+    this.view.setUint8(this.pos - size - 1, size);
+  }
+  bits() {
+    this.bitPos = this.pos << 3;
+  }
+  bytes() {
+    this.pos = this.bitPos + 7 >>> 3;
+  }
+  gBit(n) {
+    let bytePos = this.bitPos >>> 3;
+    let remaining = 8 - (this.bitPos & 7);
+    let value = 0;
+    this.bitPos += n;
+    for (;n > remaining; remaining = 8) {
+      value += (this.view.getUint8(bytePos++) & Packet.bitmask[remaining]) << n - remaining;
+      n -= remaining;
+    }
+    if (n === remaining) {
+      value += this.view.getUint8(bytePos) & Packet.bitmask[remaining];
+    } else {
+      value += this.view.getUint8(bytePos) >>> remaining - n & Packet.bitmask[n];
+    }
+    return value;
+  }
+  rsaenc(mod, exp) {
+    const length = this.pos;
+    this.pos = 0;
+    const temp = new Uint8Array(length);
+    this.gdata(length, 0, temp);
+    const bigRaw = bytesToBigInt(temp);
+    const bigEnc = bigIntModPow(bigRaw, exp, mod);
+    const rawEnc = bigIntToBytes(bigEnc);
+    this.pos = 0;
+    this.p1(rawEnc.length);
+    this.pdata(rawEnc, rawEnc.length, 0);
+  }
+}
+
+// src/client/InputTracking.ts
+class InputTracking {
+  static active = false;
+  static old = null;
+  static out = null;
+  static lastTime = 0;
+  static trackedCount = 0;
+  static lastMoveTime = 0;
+  static lastX = 0;
+  static lastY = 0;
+  static activate() {
+    this.old = Packet.alloc(1);
+    this.out = null;
+    this.lastTime = performance.now();
+    this.active = true;
+  }
+  static deactivate() {
+    this.active = false;
+    this.old = null;
+    this.out = null;
+  }
+  static flush() {
+    let buffer = null;
+    if (this.out && this.active) {
+      buffer = this.out;
+    }
+    this.out = null;
+    return buffer;
+  }
+  static stop() {
+    let buffer = null;
+    if (this.old && this.old.pos > 0 && this.active) {
+      buffer = this.old;
+    }
+    this.deactivate();
+    return buffer;
+  }
+  static ensureCapacity(n) {
+    if (!this.old) {
+      return;
+    }
+    if (this.old.pos + n >= 500) {
+      const buffer = this.old;
+      this.old = Packet.alloc(1);
+      this.out = buffer;
+    }
+  }
+  static mousePressed(x, y, button, _pointerType) {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active && (x >= 0 && x < 789 && y >= 0 && y < 532)) {
+      return;
+    }
+    this.trackedCount++;
+    const now = performance.now();
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    this.ensureCapacity(5);
+    if (button === 2) {
+      this.old.p1(1);
+    } else {
+      this.old.p1(2);
+    }
+    this.old.p1(delta);
+    this.old.p3(x + (y << 10));
+  }
+  static mouseReleased(button, _pointerType) {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active) {
+      return;
+    }
+    this.trackedCount++;
+    const now = performance.now();
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    this.ensureCapacity(2);
+    if (button === 2) {
+      this.old.p1(3);
+    } else {
+      this.old.p1(4);
+    }
+    this.old.p1(delta);
+  }
+  static mouseMoved(x, y, _pointerType) {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active && (x >= 0 && x < 789 && y >= 0 && y < 532)) {
+      return;
+    }
+    const now = performance.now();
+    if (now - this.lastMoveTime < 50) {
+      return;
+    }
+    this.lastMoveTime = now;
+    this.trackedCount++;
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    if (x - this.lastX < 8 && x - this.lastX >= -8 && y - this.lastY < 8 && y - this.lastY >= -8) {
+      this.ensureCapacity(3);
+      this.old.p1(5);
+      this.old.p1(delta);
+      this.old.p1(x + (y - this.lastY + 8 << 4) + 8 - this.lastX);
+    } else if (x - this.lastX < 128 && x - this.lastX >= -128 && y - this.lastY < 128 && y - this.lastY >= -128) {
+      this.ensureCapacity(4);
+      this.old.p1(6);
+      this.old.p1(delta);
+      this.old.p1(x + 128 - this.lastX);
+      this.old.p1(y + 128 - this.lastY);
+    } else {
+      this.ensureCapacity(5);
+      this.old.p1(7);
+      this.old.p1(delta);
+      this.old.p3(x + (y << 10));
+    }
+    this.lastX = x;
+    this.lastY = y;
+  }
+  static keyPressed(key) {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active) {
+      return;
+    }
+    this.trackedCount++;
+    const now = performance.now();
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    if (key === 1000) {
+      key = 11;
+    } else if (key === 1001) {
+      key = 12;
+    } else if (key === 1002) {
+      key = 14;
+    } else if (key === 1003) {
+      key = 15;
+    } else if (key >= 1008) {
+      key -= 992;
+    }
+    this.ensureCapacity(3);
+    this.old.p1(8);
+    this.old.p1(delta);
+    this.old.p1(key);
+  }
+  static keyReleased(key) {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active) {
+      return;
+    }
+    this.trackedCount++;
+    const now = performance.now();
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    if (key === 1000) {
+      key = 11;
+    } else if (key === 1001) {
+      key = 12;
+    } else if (key === 1002) {
+      key = 14;
+    } else if (key === 1003) {
+      key = 15;
+    } else if (key >= 1008) {
+      key -= 992;
+    }
+    this.ensureCapacity(3);
+    this.old.p1(9);
+    this.old.p1(delta);
+    this.old.p1(key);
+  }
+  static focusGained() {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active) {
+      return;
+    }
+    this.trackedCount++;
+    const now = performance.now();
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    this.ensureCapacity(2);
+    this.old.p1(10);
+    this.old.p1(delta);
+  }
+  static focusLost() {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active) {
+      return;
+    }
+    this.trackedCount++;
+    const now = performance.now();
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    this.ensureCapacity(2);
+    this.old.p1(11);
+    this.old.p1(delta);
+  }
+  static mouseEntered() {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active) {
+      return;
+    }
+    this.trackedCount++;
+    const now = performance.now();
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    this.ensureCapacity(2);
+    this.old.p1(12);
+    this.old.p1(delta);
+  }
+  static mouseExited() {
+    if (!this.old) {
+      return;
+    }
+    if (!this.active) {
+      return;
+    }
+    this.trackedCount++;
+    const now = performance.now();
+    let delta = (now - this.lastTime) / 10 | 0;
+    if (delta > 250) {
+      delta = 250;
+    }
+    this.lastTime = now;
+    this.ensureCapacity(2);
+    this.old.p1(13);
+    this.old.p1(delta);
+  }
+}
+
+// src/client/KeyCodes.ts
+var CanvasEnabledKeys = ["F11", "F12"];
+var KeyCodes = new Map;
+KeyCodes.set("ArrowLeft", { code: 37, ch: 1 });
+KeyCodes.set("ArrowRight", { code: 39, ch: 2 });
+KeyCodes.set("ArrowUp", { code: 38, ch: 3 });
+KeyCodes.set("ArrowDown", { code: 40, ch: 4 });
+KeyCodes.set("Control", { code: 17, ch: 5 });
+KeyCodes.set("Shift", { code: 16, ch: 6 });
+KeyCodes.set("Alt", { code: 18, ch: 7 });
+KeyCodes.set("Backspace", { code: 8, ch: 8 });
+KeyCodes.set("Tab", { code: 9, ch: 9 });
+KeyCodes.set("Enter", { code: 10, ch: 10 });
+KeyCodes.set("Escape", { code: 27, ch: 27 });
+KeyCodes.set(" ", { code: 32, ch: 32 });
+KeyCodes.set("Delete", { code: 127, ch: 127 });
+KeyCodes.set("Home", { code: 36, ch: 1000 });
+KeyCodes.set("End", { code: 35, ch: 1001 });
+KeyCodes.set("PageUp", { code: 33, ch: 1002 });
+KeyCodes.set("PageDown", { code: 34, ch: 1003 });
+KeyCodes.set("F1", { code: 112, ch: 1008 });
+KeyCodes.set("F2", { code: 113, ch: 1009 });
+KeyCodes.set("F3", { code: 114, ch: 1010 });
+KeyCodes.set("F4", { code: 115, ch: 1011 });
+KeyCodes.set("F5", { code: 116, ch: 1012 });
+KeyCodes.set("F6", { code: 117, ch: 1013 });
+KeyCodes.set("F7", { code: 118, ch: 1014 });
+KeyCodes.set("F8", { code: 119, ch: 1015 });
+KeyCodes.set("F9", { code: 120, ch: 1016 });
+KeyCodes.set("F10", { code: 121, ch: 1017 });
+KeyCodes.set("F11", { code: 122, ch: 1018 });
+KeyCodes.set("F12", { code: 123, ch: 1019 });
+KeyCodes.set("CapsLock", { code: 20, ch: 65535 });
+KeyCodes.set("Meta", { code: 524, ch: 65535 });
+KeyCodes.set("Insert", { code: 155, ch: 65535 });
+KeyCodes.set("`", { code: 192, ch: 96 });
+KeyCodes.set("~", { code: 192, ch: 126 });
+KeyCodes.set("!", { code: 49, ch: 33 });
+KeyCodes.set("@", { code: 50, ch: 64 });
+KeyCodes.set("#", { code: 51, ch: 35 });
+KeyCodes.set("£", { code: 51, ch: 163 });
+KeyCodes.set("$", { code: 52, ch: 36 });
+KeyCodes.set("%", { code: 53, ch: 37 });
+KeyCodes.set("^", { code: 54, ch: 94 });
+KeyCodes.set("&", { code: 55, ch: 38 });
+KeyCodes.set("*", { code: 56, ch: 42 });
+KeyCodes.set("(", { code: 57, ch: 40 });
+KeyCodes.set(")", { code: 48, ch: 41 });
+KeyCodes.set("-", { code: 45, ch: 45 });
+KeyCodes.set("_", { code: 45, ch: 95 });
+KeyCodes.set("=", { code: 61, ch: 61 });
+KeyCodes.set("+", { code: 61, ch: 43 });
+KeyCodes.set("[", { code: 91, ch: 91 });
+KeyCodes.set("{", { code: 91, ch: 123 });
+KeyCodes.set("]", { code: 93, ch: 93 });
+KeyCodes.set("}", { code: 93, ch: 125 });
+KeyCodes.set("\\", { code: 92, ch: 92 });
+KeyCodes.set("|", { code: 92, ch: 124 });
+KeyCodes.set(";", { code: 59, ch: 59 });
+KeyCodes.set(":", { code: 59, ch: 58 });
+KeyCodes.set("'", { code: 222, ch: 39 });
+KeyCodes.set('"', { code: 222, ch: 34 });
+KeyCodes.set(",", { code: 44, ch: 44 });
+KeyCodes.set("<", { code: 44, ch: 60 });
+KeyCodes.set(".", { code: 46, ch: 46 });
+KeyCodes.set(">", { code: 46, ch: 62 });
+KeyCodes.set("/", { code: 47, ch: 47 });
+KeyCodes.set("?", { code: 47, ch: 63 });
+KeyCodes.set("0", { code: 48, ch: 48 });
+KeyCodes.set("1", { code: 49, ch: 49 });
+KeyCodes.set("2", { code: 50, ch: 50 });
+KeyCodes.set("3", { code: 51, ch: 51 });
+KeyCodes.set("4", { code: 52, ch: 52 });
+KeyCodes.set("5", { code: 53, ch: 53 });
+KeyCodes.set("6", { code: 54, ch: 54 });
+KeyCodes.set("7", { code: 55, ch: 55 });
+KeyCodes.set("8", { code: 56, ch: 56 });
+KeyCodes.set("9", { code: 57, ch: 57 });
+KeyCodes.set("a", { code: 65, ch: 97 });
+KeyCodes.set("b", { code: 66, ch: 98 });
+KeyCodes.set("c", { code: 67, ch: 99 });
+KeyCodes.set("d", { code: 68, ch: 100 });
+KeyCodes.set("e", { code: 69, ch: 101 });
+KeyCodes.set("f", { code: 70, ch: 102 });
+KeyCodes.set("g", { code: 71, ch: 103 });
+KeyCodes.set("h", { code: 72, ch: 104 });
+KeyCodes.set("i", { code: 73, ch: 105 });
+KeyCodes.set("j", { code: 74, ch: 106 });
+KeyCodes.set("k", { code: 75, ch: 107 });
+KeyCodes.set("l", { code: 76, ch: 108 });
+KeyCodes.set("m", { code: 77, ch: 109 });
+KeyCodes.set("n", { code: 78, ch: 110 });
+KeyCodes.set("o", { code: 79, ch: 111 });
+KeyCodes.set("p", { code: 80, ch: 112 });
+KeyCodes.set("q", { code: 81, ch: 113 });
+KeyCodes.set("r", { code: 82, ch: 114 });
+KeyCodes.set("s", { code: 83, ch: 115 });
+KeyCodes.set("t", { code: 84, ch: 116 });
+KeyCodes.set("u", { code: 85, ch: 117 });
+KeyCodes.set("v", { code: 86, ch: 118 });
+KeyCodes.set("w", { code: 87, ch: 119 });
+KeyCodes.set("x", { code: 88, ch: 120 });
+KeyCodes.set("y", { code: 89, ch: 121 });
+KeyCodes.set("z", { code: 90, ch: 122 });
+KeyCodes.set("A", { code: 65, ch: 65 });
+KeyCodes.set("B", { code: 66, ch: 66 });
+KeyCodes.set("C", { code: 67, ch: 67 });
+KeyCodes.set("D", { code: 68, ch: 68 });
+KeyCodes.set("E", { code: 69, ch: 69 });
+KeyCodes.set("F", { code: 70, ch: 70 });
+KeyCodes.set("G", { code: 71, ch: 71 });
+KeyCodes.set("H", { code: 72, ch: 72 });
+KeyCodes.set("I", { code: 73, ch: 73 });
+KeyCodes.set("J", { code: 74, ch: 74 });
+KeyCodes.set("K", { code: 75, ch: 75 });
+KeyCodes.set("L", { code: 76, ch: 76 });
+KeyCodes.set("M", { code: 77, ch: 77 });
+KeyCodes.set("N", { code: 78, ch: 78 });
+KeyCodes.set("O", { code: 79, ch: 79 });
+KeyCodes.set("P", { code: 80, ch: 80 });
+KeyCodes.set("Q", { code: 81, ch: 81 });
+KeyCodes.set("R", { code: 82, ch: 82 });
+KeyCodes.set("S", { code: 83, ch: 83 });
+KeyCodes.set("T", { code: 84, ch: 84 });
+KeyCodes.set("U", { code: 85, ch: 85 });
+KeyCodes.set("V", { code: 86, ch: 86 });
+KeyCodes.set("W", { code: 87, ch: 87 });
+KeyCodes.set("X", { code: 88, ch: 88 });
+KeyCodes.set("Y", { code: 89, ch: 89 });
+KeyCodes.set("Z", { code: 90, ch: 90 });
+
+// src/graphics/Canvas.ts
+var canvas = document.getElementById("canvas");
+var canvas2d = canvas?.getContext("2d", { willReadFrequently: true });
+var jpegCanvas = document.createElement("canvas");
+var jpegImg = document.createElement("img");
+var jpeg2d = jpegCanvas.getContext("2d", { willReadFrequently: true });
+function saveDataURL(dataURL, filename) {
+  const link = document.createElement("a");
+  link.href = dataURL;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// src/graphics/Pix2D.ts
+class Pix2D extends DoublyLinkable {
+  static pixels = new Int32Array;
+  static width = 0;
+  static height = 0;
+  static clipMinX = 0;
+  static clipMaxX = 0;
+  static clipMinY = 0;
+  static clipMaxY = 0;
+  static sizeX = 0;
+  static maxX = 0;
+  static maxY = 0;
+  static setPixels(pixels, width, height) {
+    this.pixels = pixels;
+    this.width = width;
+    this.height = height;
+    this.setClipping(0, 0, width, height);
+  }
+  static resetClipping() {
+    this.clipMinX = 0;
+    this.clipMinY = 0;
+    this.clipMaxX = this.width;
+    this.clipMaxY = this.height;
+    this.sizeX = this.clipMaxX - 1;
+    this.maxX = this.clipMaxX / 2 | 0;
+  }
+  static setClipping(left, top, right, bottom) {
+    if (left < 0) {
+      left = 0;
+    }
+    if (top < 0) {
+      top = 0;
+    }
+    if (right > this.width) {
+      right = this.width;
+    }
+    if (bottom > this.height) {
+      bottom = this.height;
+    }
+    this.clipMinY = top;
+    this.clipMaxY = bottom;
+    this.clipMinX = left;
+    this.clipMaxX = right;
+    this.sizeX = this.clipMaxX - 1;
+    this.maxX = this.clipMaxX / 2 | 0;
+    this.maxY = this.clipMaxY / 2 | 0;
+  }
+  static cls() {
+    const len = this.width * this.height;
+    for (let i = 0;i < len; i++) {
+      this.pixels[i] = 0;
+    }
+  }
+  static fillRectTrans(x, y, width, height, rgb, alpha) {
+    if (x < this.clipMinX) {
+      width -= this.clipMinX - x;
+      x = this.clipMinX;
+    }
+    if (y < this.clipMinY) {
+      height -= this.clipMinY - y;
+      y = this.clipMinY;
+    }
+    if (x + width > this.clipMaxX) {
+      width = this.clipMaxX - x;
+    }
+    if (y + height > this.clipMaxY) {
+      height = this.clipMaxY - y;
+    }
+    const invAlpha = 256 - alpha;
+    const r0 = (rgb >> 16 & 255) * alpha;
+    const g0 = (rgb >> 8 & 255) * alpha;
+    const b0 = (rgb & 255) * alpha;
+    const step = this.width - width;
+    let offset = x + y * this.width;
+    for (let i = 0;i < height; i++) {
+      for (let j = -width;j < 0; j++) {
+        const r1 = (this.pixels[offset] >> 16 & 255) * invAlpha;
+        const g1 = (this.pixels[offset] >> 8 & 255) * invAlpha;
+        const b1 = (this.pixels[offset] & 255) * invAlpha;
+        const mixed = (r0 + r1 >> 8 << 16) + (g0 + g1 >> 8 << 8) + (b0 + b1 >> 8);
+        this.pixels[offset++] = mixed;
+      }
+      offset += step;
+    }
+  }
+  static fillRect(x, y, width, height, rgb) {
+    if (x < this.clipMinX) {
+      width -= this.clipMinX - x;
+      x = this.clipMinX;
+    }
+    if (y < this.clipMinY) {
+      height -= this.clipMinY - y;
+      y = this.clipMinY;
+    }
+    if (x + width > this.clipMaxX) {
+      width = this.clipMaxX - x;
+    }
+    if (y + height > this.clipMaxY) {
+      height = this.clipMaxY - y;
+    }
+    const step = this.width - width;
+    let offset = x + y * this.width;
+    for (let i = -height;i < 0; i++) {
+      for (let j = -width;j < 0; j++) {
+        this.pixels[offset++] = rgb;
+      }
+      offset += step;
+    }
+  }
+  static drawRect(x, y, w, h, rgb) {
+    this.hline(x, y, rgb, w);
+    this.hline(x, y + h - 1, rgb, w);
+    this.vline(x, y, rgb, h);
+    this.vline(x + w - 1, y, rgb, h);
+  }
+  static drawRectTrans(x, y, w, h, rgb, alpha) {
+    this.hlineTrans(x, y, rgb, w, alpha);
+    this.hlineTrans(x, y + h - 1, rgb, w, alpha);
+    if (h >= 3) {
+      this.vlineTrans(x, y, rgb, h, alpha);
+      this.vlineTrans(x + w - 1, y, rgb, h, alpha);
+    }
+  }
+  static hline(x, y, rgb, width) {
+    if (y < this.clipMinY || y >= this.clipMaxY) {
+      return;
+    }
+    if (x < this.clipMinX) {
+      width -= this.clipMinX - x;
+      x = this.clipMinX;
+    }
+    if (x + width > this.clipMaxX) {
+      width = this.clipMaxX - x;
+    }
+    const off = x + y * this.width;
+    for (let i = 0;i < width; i++) {
+      this.pixels[off + i] = rgb;
+    }
+  }
+  static hlineTrans(x, y, rgb, width, alpha) {
+    if (y < this.clipMinY || y >= this.clipMaxY) {
+      return;
+    }
+    if (x < this.clipMinX) {
+      width -= this.clipMinX - x;
+      x = this.clipMinX;
+    }
+    if (x + width > this.clipMaxX) {
+      width = this.clipMaxX - x;
+    }
+    const invAlpha = 256 - alpha;
+    const r0 = (rgb >> 16 & 255) * alpha;
+    const g0 = (rgb >> 8 & 255) * alpha;
+    const b0 = (rgb & 255) * alpha;
+    const _step = this.width - width;
+    let offset = x + y * this.width;
+    for (let i = 0;i < width; i++) {
+      const r1 = (this.pixels[offset] >> 16 & 255) * invAlpha;
+      const g1 = (this.pixels[offset] >> 8 & 255) * invAlpha;
+      const b1 = (this.pixels[offset] & 255) * invAlpha;
+      const mixed = (r0 + r1 >> 8 << 16) + (g0 + g1 >> 8 << 8) + (b0 + b1 >> 8);
+      this.pixels[offset++] = mixed;
+    }
+  }
+  static vline(x, y, rgb, height) {
+    if (x < this.clipMinX || x >= this.clipMaxX) {
+      return;
+    }
+    if (y < this.clipMinY) {
+      height -= this.clipMinY - y;
+      y = this.clipMinY;
+    }
+    if (y + height > this.clipMaxY) {
+      height = this.clipMaxY - y;
+    }
+    const off = x + y * this.width;
+    for (let i = 0;i < height; i++) {
+      this.pixels[off + i * this.width] = rgb;
+    }
+  }
+  static vlineTrans(x, y, rgb, height, alpha) {
+    if (x < this.clipMinX || x >= this.clipMaxX) {
+      return;
+    }
+    if (y < this.clipMinY) {
+      height -= this.clipMinY - y;
+      y = this.clipMinY;
+    }
+    if (y + height > this.clipMaxY) {
+      height = this.clipMaxY - y;
+    }
+    const invAlpha = 256 - alpha;
+    const r0 = (rgb >> 16 & 255) * alpha;
+    const g0 = (rgb >> 8 & 255) * alpha;
+    const b0 = (rgb & 255) * alpha;
+    let offset = x + y * this.width;
+    for (let i = 0;i < height; i++) {
+      const r1 = (this.pixels[offset] >> 16 & 255) * invAlpha;
+      const g1 = (this.pixels[offset] >> 8 & 255) * invAlpha;
+      const b1 = (this.pixels[offset] & 255) * invAlpha;
+      const mixed = (r0 + r1 >> 8 << 16) + (g0 + g1 >> 8 << 8) + (b0 + b1 >> 8);
+      this.pixels[offset] = mixed;
+      offset += this.width;
+    }
+  }
+  static fillCircle(xCenter, yCenter, yRadius, rgb, alpha) {
+    const invAlpha = 256 - alpha;
+    const r0 = (rgb >> 16 & 255) * alpha;
+    const g0 = (rgb >> 8 & 255) * alpha;
+    const b0 = (rgb & 255) * alpha;
+    let yStart = yCenter - yRadius;
+    if (yStart < 0) {
+      yStart = 0;
+    }
+    let yEnd = yCenter + yRadius;
+    if (yEnd >= this.height) {
+      yEnd = this.height - 1;
+    }
+    for (let y = yStart;y <= yEnd; y++) {
+      const midpoint = y - yCenter;
+      const xRadius = Math.sqrt(yRadius * yRadius - midpoint * midpoint) | 0;
+      let xStart = xCenter - xRadius;
+      if (xStart < 0) {
+        xStart = 0;
+      }
+      let xEnd = xCenter + xRadius;
+      if (xEnd >= this.width) {
+        xEnd = this.width - 1;
+      }
+      let offset = xStart + y * this.width;
+      for (let x = xStart;x <= xEnd; x++) {
+        const r1 = (this.pixels[offset] >> 16 & 255) * invAlpha;
+        const g1 = (this.pixels[offset] >> 8 & 255) * invAlpha;
+        const b1 = (this.pixels[offset] & 255) * invAlpha;
+        const mixed = (r0 + r1 >> 8 << 16) + (g0 + g1 >> 8 << 8) + (b0 + b1 >> 8);
+        this.pixels[offset++] = mixed;
+      }
+    }
+  }
+}
+
+// src/graphics/Pix8.ts
+class Pix8 extends Pix2D {
+  owi;
+  ohi;
+  bpal;
+  xof;
+  yof;
+  wi;
+  hi;
+  data;
+  constructor(width, height, palette) {
+    super();
+    this.data = new Int8Array(width * height);
+    this.wi = this.owi = width;
+    this.hi = this.ohi = height;
+    this.xof = this.yof = 0;
+    this.bpal = palette;
+  }
+  static load(jag, name, sprite = 0) {
+    const dat = new Packet(jag.read(name + ".dat"));
+    const index = new Packet(jag.read("index.dat"));
+    index.pos = dat.g2();
+    const owi = index.g2();
+    const ohi = index.g2();
+    const bpalCount = index.g1();
+    const bpal = new Int32Array(bpalCount);
+    for (let i = 0;i < bpalCount - 1; i++) {
+      bpal[i + 1] = index.g3();
+    }
+    for (let i = 0;i < sprite; i++) {
+      index.pos += 2;
+      dat.pos += index.g2() * index.g2();
+      index.pos += 1;
+    }
+    if (dat.pos > dat.length || index.pos > index.length) {
+      throw new Error;
+    }
+    const xof = index.g1();
+    const yof = index.g1();
+    const wi = index.g2();
+    const hi = index.g2();
+    const image = new Pix8(wi, hi, bpal);
+    image.xof = xof;
+    image.yof = yof;
+    image.owi = owi;
+    image.ohi = ohi;
+    const encoding = index.g1();
+    if (encoding === 0) {
+      for (let i = 0;i < image.wi * image.hi; i++) {
+        image.data[i] = dat.g1b();
+      }
+    } else if (encoding === 1) {
+      for (let x = 0;x < image.wi; x++) {
+        for (let y = 0;y < image.hi; y++) {
+          image.data[x + y * image.wi] = dat.g1b();
+        }
+      }
+    }
+    return image;
+  }
+  halveSize() {
+    this.owi |= 0;
+    this.ohi |= 0;
+    this.owi /= 2;
+    this.ohi /= 2;
+    this.owi |= 0;
+    this.ohi |= 0;
+    const pixels = new Int8Array(this.owi * this.ohi);
+    let off = 0;
+    for (let y = 0;y < this.hi; y++) {
+      for (let x = 0;x < this.wi; x++) {
+        pixels[(x + this.xof >> 1) + (y + this.yof >> 1) * this.owi] = this.data[off++];
+      }
+    }
+    this.data = pixels;
+    this.wi = this.owi;
+    this.hi = this.ohi;
+    this.xof = 0;
+    this.yof = 0;
+  }
+  trim() {
+    if (this.wi === this.owi && this.hi === this.ohi) {
+      return;
+    }
+    const pixels = new Int8Array(this.owi * this.ohi);
+    let off = 0;
+    for (let y = 0;y < this.hi; y++) {
+      for (let x = 0;x < this.wi; x++) {
+        pixels[x + this.xof + (y + this.yof) * this.owi] = this.data[off++];
+      }
+    }
+    this.data = pixels;
+    this.wi = this.owi;
+    this.hi = this.ohi;
+    this.xof = 0;
+    this.yof = 0;
+  }
+  hflip() {
+    const pixels = this.data;
+    const width = this.wi;
+    const height = this.hi;
+    for (let y = 0;y < height; y++) {
+      const div = width / 2 | 0;
+      for (let x = 0;x < div; x++) {
+        const off1 = x + y * width;
+        const off2 = width - x - 1 + y * width;
+        const tmp = pixels[off1];
+        pixels[off1] = pixels[off2];
+        pixels[off2] = tmp;
+      }
+    }
+  }
+  vflip() {
+    const pixels = this.data;
+    const width = this.wi;
+    const height = this.hi;
+    for (let y = 0;y < (height / 2 | 0); y++) {
+      for (let x = 0;x < width; x++) {
+        const off1 = x + y * width;
+        const off2 = x + (height - y - 1) * width;
+        const tmp = pixels[off1];
+        pixels[off1] = pixels[off2];
+        pixels[off2] = tmp;
+      }
+    }
+  }
+  rgbAdjust(r, g, b) {
+    for (let i = 0;i < this.bpal.length; i++) {
+      let red = this.bpal[i] >> 16 & 255;
+      red += r;
+      if (red < 0) {
+        red = 0;
+      } else if (red > 255) {
+        red = 255;
+      }
+      let green = this.bpal[i] >> 8 & 255;
+      green += g;
+      if (green < 0) {
+        green = 0;
+      } else if (green > 255) {
+        green = 255;
+      }
+      let blue = this.bpal[i] & 255;
+      blue += b;
+      if (blue < 0) {
+        blue = 0;
+      } else if (blue > 255) {
+        blue = 255;
+      }
+      this.bpal[i] = (red << 16) + (green << 8) + blue;
+    }
+  }
+  plotSprite(x, y) {
+    x |= 0;
+    y |= 0;
+    x += this.xof;
+    y += this.yof;
+    let dstOff = x + y * Pix2D.width;
+    let srcOff = 0;
+    let h = this.hi;
+    let w = this.wi;
+    let dstStep = Pix2D.width - w;
+    let srcStep = 0;
+    if (y < Pix2D.clipMinY) {
+      const cutoff = Pix2D.clipMinY - y;
+      h -= cutoff;
+      y = Pix2D.clipMinY;
+      srcOff += cutoff * w;
+      dstOff += cutoff * Pix2D.width;
+    }
+    if (y + h > Pix2D.clipMaxY) {
+      h -= y + h - Pix2D.clipMaxY;
+    }
+    if (x < Pix2D.clipMinX) {
+      const cutoff = Pix2D.clipMinX - x;
+      w -= cutoff;
+      x = Pix2D.clipMinX;
+      srcOff += cutoff;
+      dstOff += cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (x + w > Pix2D.clipMaxX) {
+      const cutoff = x + w - Pix2D.clipMaxX;
+      w -= cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (w > 0 && h > 0) {
+      this.plot(w, h, this.data, srcOff, srcStep, Pix2D.pixels, dstOff, dstStep);
+    }
+  }
+  plot(w, h, src, srcOff, srcStep, dst, dstOff, dstStep) {
+    const qw = -(w >> 2);
+    w = -(w & 3);
+    for (let y = -h;y < 0; y++) {
+      for (let x = qw;x < 0; x++) {
+        let palIndex = src[srcOff++];
+        if (palIndex === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = this.bpal[palIndex & 255];
+        }
+        palIndex = src[srcOff++];
+        if (palIndex === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = this.bpal[palIndex & 255];
+        }
+        palIndex = src[srcOff++];
+        if (palIndex === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = this.bpal[palIndex & 255];
+        }
+        palIndex = src[srcOff++];
+        if (palIndex === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = this.bpal[palIndex & 255];
+        }
+      }
+      for (let x = w;x < 0; x++) {
+        const palIndex = src[srcOff++];
+        if (palIndex === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = this.bpal[palIndex & 255];
+        }
+      }
+      dstOff += dstStep;
+      srcOff += srcStep;
+    }
+  }
+  scalePlotSprite(arg0, arg1, arg2, arg3) {
+    try {
+      const local2 = this.wi;
+      const local5 = this.hi;
+      let local7 = 0;
+      let local9 = 0;
+      const _local15 = (local2 << 16) / arg2 | 0;
+      const _local21 = (local5 << 16) / arg3 | 0;
+      const local24 = this.owi;
+      const local27 = this.ohi;
+      const local33 = (local24 << 16) / arg2 | 0;
+      const local39 = (local27 << 16) / arg3 | 0;
+      arg0 = arg0 + (this.xof * arg2 + local24 - 1) / local24 | 0;
+      arg1 = arg1 + (this.yof * arg3 + local27 - 1) / local27 | 0;
+      if (this.xof * arg2 % local24 != 0) {
+        local7 = (local24 - this.xof * arg2 % local24 << 16) / arg2 | 0;
+      }
+      if (this.yof * arg3 % local27 != 0) {
+        local9 = (local27 - this.yof * arg3 % local27 << 16) / arg3 | 0;
+      }
+      arg2 = arg2 * (this.wi - (local7 >> 16)) / local24 | 0;
+      arg3 = arg3 * (this.hi - (local9 >> 16)) / local27 | 0;
+      let local133 = arg0 + arg1 * Pix2D.width;
+      let local137 = Pix2D.width - arg2;
+      let local144;
+      if (arg1 < Pix2D.clipMinY) {
+        local144 = Pix2D.clipMinY - arg1;
+        arg3 -= local144;
+        arg1 = 0;
+        local133 += local144 * Pix2D.width;
+        local9 += local39 * local144;
+      }
+      if (arg1 + arg3 > Pix2D.clipMaxY) {
+        arg3 -= arg1 + arg3 - Pix2D.clipMaxY;
+      }
+      if (arg0 < Pix2D.clipMinX) {
+        local144 = Pix2D.clipMinX - arg0;
+        arg2 -= local144;
+        arg0 = 0;
+        local133 += local144;
+        local7 += local33 * local144;
+        local137 += local144;
+      }
+      if (arg0 + arg2 > Pix2D.clipMaxX) {
+        local144 = arg0 + arg2 - Pix2D.clipMaxX;
+        arg2 -= local144;
+        local137 += local144;
+      }
+      this.plotScale(Pix2D.pixels, this.data, this.bpal, local7, local9, local133, local137, arg2, arg3, local33, local39, local2);
+    } catch (_e) {
+      console.log("error in sprite clipping routine");
+    }
+  }
+  plotScale(dst, src, bpal, offW, offH, dstOff, dstStep, w, h, scaleCropWidth, scaleCropHeight, arg11) {
+    try {
+      const lastOffW = offW;
+      for (let y = -h;y < 0; y++) {
+        const offY = (offH >> 16) * arg11;
+        for (let x = -w;x < 0; x++) {
+          const rgb = src[(offW >> 16) + offY];
+          if (rgb == 0) {
+            dstOff++;
+          } else {
+            dst[dstOff++] = bpal[rgb & 255];
+          }
+          offW += scaleCropWidth;
+        }
+        offH += scaleCropHeight;
+        offW = lastOffW;
+        dstOff += dstStep;
+      }
+    } catch (_e) {
+      console.log("error in plot_scale");
+    }
+  }
+}
+
+// src/util/Arrays.ts
+class TypedArray1d extends Array {
+  constructor(length, defaultValue) {
+    super(length);
+    for (let l = 0;l < length; l++) {
+      this[l] = defaultValue;
+    }
+  }
+}
+
+class TypedArray2d extends Array {
+  constructor(length, width, defaultValue) {
+    super(length);
+    for (let l = 0;l < length; l++) {
+      this[l] = new Array(width);
+      for (let w = 0;w < width; w++) {
+        this[l][w] = defaultValue;
+      }
+    }
+  }
+}
+class Int32Array2d extends Array {
+  constructor(length, width) {
+    super(length);
+    for (let l = 0;l < length; l++) {
+      this[l] = new Int32Array(width);
+    }
+  }
+}
+
+// src/dash3d/Pix3D.ts
+class Pix3D extends Pix2D {
+  static lowMem = false;
+  static lowDetail = true;
+  static divTable = new Int32Array(512);
+  static divTable2 = new Int32Array(2048);
+  static sinTable = new Int32Array(2048);
+  static cosTable = new Int32Array(2048);
+  static colourTable = new Int32Array(65536);
+  static textures = new TypedArray1d(50, null);
+  static textureTranslucent = new TypedArray1d(50, false);
+  static averageTextureRgb = new Int32Array(50);
+  static activeTexels = new TypedArray1d(50, null);
+  static textureCycle = new Int32Array(50);
+  static texPal = new TypedArray1d(50, null);
+  static textureCount = 0;
+  static originX = 0;
+  static originY = 0;
+  static texelPool = null;
+  static poolSize = 0;
+  static opaque = false;
+  static cycle = 0;
+  static scanline = new Int32Array;
+  static hclip = false;
+  static trans = 0;
+  static {
+    for (let i = 1;i < 512; i++) {
+      this.divTable[i] = 32768 / i | 0;
+    }
+    for (let i = 1;i < 2048; i++) {
+      this.divTable2[i] = 65536 / i | 0;
+    }
+    for (let i = 0;i < 2048; i++) {
+      this.sinTable[i] = Math.sin(i * 0.0030679615757712823) * 65536 | 0;
+      this.cosTable[i] = Math.cos(i * 0.0030679615757712823) * 65536 | 0;
+    }
+  }
+  static setRenderClipping() {
+    this.scanline = new Int32Array(Pix2D.height);
+    for (let y = 0;y < Pix2D.height; y++) {
+      this.scanline[y] = Pix2D.width * y;
+    }
+    this.originX = Pix2D.width / 2 | 0;
+    this.originY = Pix2D.height / 2 | 0;
+  }
+  static setClipping(width, height) {
+    this.scanline = new Int32Array(height);
+    for (let y = 0;y < height; y++) {
+      this.scanline[y] = width * y;
+    }
+    this.originX = width / 2 | 0;
+    this.originY = height / 2 | 0;
+  }
+  static clearTexels() {
+    this.texelPool = null;
+    this.activeTexels.fill(null);
+  }
+  static initPool(size) {
+    if (this.texelPool) {
+      return;
+    }
+    this.poolSize = size;
+    if (this.lowMem) {
+      this.texelPool = new Int32Array2d(size, 16384);
+    } else {
+      this.texelPool = new Int32Array2d(size, 65536);
+    }
+    this.activeTexels.fill(null);
+  }
+  static unpackTextures(textures) {
+    this.textureCount = 0;
+    for (let i = 0;i < 50; i++) {
+      try {
+        this.textures[i] = Pix8.load(textures, i.toString());
+        if (this.lowMem && this.textures[i]?.owi === 128) {
+          this.textures[i]?.halveSize();
+        } else {
+          this.textures[i]?.trim();
+        }
+        this.textureCount++;
+      } catch (_e) {}
+    }
+  }
+  static getAverageTextureRgb(id) {
+    if (this.averageTextureRgb[id] !== 0) {
+      return this.averageTextureRgb[id];
+    }
+    const palette = this.texPal[id];
+    if (!palette) {
+      return 0;
+    }
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    const length = palette.length;
+    for (let i = 0;i < length; i++) {
+      r += palette[i] >> 16 & 255;
+      g += palette[i] >> 8 & 255;
+      b += palette[i] & 255;
+    }
+    let rgb = ((r / length | 0) << 16) + ((g / length | 0) << 8) + (b / length | 0);
+    rgb = this.gammaCorrect(rgb, 1.4);
+    if (rgb === 0) {
+      rgb = 1;
+    }
+    this.averageTextureRgb[id] = rgb;
+    return rgb;
+  }
+  static pushTexture(id) {
+    if (this.activeTexels[id] && this.texelPool) {
+      this.texelPool[this.poolSize++] = this.activeTexels[id];
+      this.activeTexels[id] = null;
+    }
+  }
+  static getTexels(id) {
+    this.textureCycle[id] = this.cycle++;
+    if (this.activeTexels[id]) {
+      return this.activeTexels[id];
+    }
+    let texels;
+    if (this.poolSize > 0 && this.texelPool) {
+      texels = this.texelPool[--this.poolSize];
+      this.texelPool[this.poolSize] = null;
+    } else {
+      let cycle = 0;
+      let selected = -1;
+      for (let t = 0;t < this.textureCount; t++) {
+        if (this.activeTexels[t] && (this.textureCycle[t] < cycle || selected === -1)) {
+          cycle = this.textureCycle[t];
+          selected = t;
+        }
+      }
+      texels = this.activeTexels[selected];
+      this.activeTexels[selected] = null;
+    }
+    this.activeTexels[id] = texels;
+    const texture = this.textures[id];
+    const palette = this.texPal[id];
+    if (!texels || !texture || !palette) {
+      return null;
+    }
+    if (this.lowMem) {
+      this.textureTranslucent[id] = false;
+      for (let i = 0;i < 4096; i++) {
+        const rgb = texels[i] = palette[texture.data[i]] & 16316671;
+        if (rgb === 0) {
+          this.textureTranslucent[id] = true;
+        }
+        texels[i + 4096] = rgb - (rgb >>> 3) & 16316671;
+        texels[i + 8192] = rgb - (rgb >>> 2) & 16316671;
+        texels[i + 12288] = rgb - (rgb >>> 2) - (rgb >>> 3) & 16316671;
+      }
+    } else {
+      if (texture.wi === 64) {
+        for (let y = 0;y < 128; y++) {
+          for (let x = 0;x < 128; x++) {
+            texels[x + (y << 7 | 0)] = palette[texture.data[(x >> 1) + (y >> 1 << 6 | 0)]];
+          }
+        }
+      } else {
+        for (let i = 0;i < 16384; i++) {
+          texels[i] = palette[texture.data[i]];
+        }
+      }
+      this.textureTranslucent[id] = false;
+      for (let i = 0;i < 16384; i++) {
+        texels[i] &= 16316671;
+        const rgb = texels[i];
+        if (rgb === 0) {
+          this.textureTranslucent[id] = true;
+        }
+        texels[i + 16384] = rgb - (rgb >>> 3) & 16316671;
+        texels[i + 32768] = rgb - (rgb >>> 2) & 16316671;
+        texels[i + 49152] = rgb - (rgb >>> 2) - (rgb >>> 3) & 16316671;
+      }
+    }
+    return texels;
+  }
+  static initColourTable(brightness) {
+    const randomBrightness = brightness + Math.random() * 0.03 - 0.015;
+    let offset = 0;
+    for (let y = 0;y < 512; y++) {
+      const hue = (y / 8 | 0) / 64 + 0.0078125;
+      const saturation = (y & 7) / 8 + 0.0625;
+      for (let x = 0;x < 128; x++) {
+        const lightness = x / 128;
+        let r = lightness;
+        let g = lightness;
+        let b = lightness;
+        if (saturation !== 0) {
+          let q;
+          if (lightness < 0.5) {
+            q = lightness * (saturation + 1);
+          } else {
+            q = lightness + saturation - lightness * saturation;
+          }
+          const p = lightness * 2 - q;
+          let t = hue + 0.3333333333333333;
+          if (t > 1) {
+            t--;
+          }
+          let d11 = hue - 0.3333333333333333;
+          if (d11 < 0) {
+            d11++;
+          }
+          if (t * 6 < 1) {
+            r = p + (q - p) * 6 * t;
+          } else if (t * 2 < 1) {
+            r = q;
+          } else if (t * 3 < 2) {
+            r = p + (q - p) * (0.6666666666666666 - t) * 6;
+          } else {
+            r = p;
+          }
+          if (hue * 6 < 1) {
+            g = p + (q - p) * 6 * hue;
+          } else if (hue * 2 < 1) {
+            g = q;
+          } else if (hue * 3 < 2) {
+            g = p + (q - p) * (0.6666666666666666 - hue) * 6;
+          } else {
+            g = p;
+          }
+          if (d11 * 6 < 1) {
+            b = p + (q - p) * 6 * d11;
+          } else if (d11 * 2 < 1) {
+            b = q;
+          } else if (d11 * 3 < 2) {
+            b = p + (q - p) * (0.6666666666666666 - d11) * 6;
+          } else {
+            b = p;
+          }
+        }
+        const intR = r * 256 | 0;
+        const intG = g * 256 | 0;
+        const intB = b * 256 | 0;
+        const rgb = (intR << 16) + (intG << 8) + intB;
+        this.colourTable[offset++] = this.gammaCorrect(rgb, randomBrightness);
+      }
+    }
+    for (let id = 0;id < 50; id++) {
+      const texture = this.textures[id];
+      if (!texture) {
+        continue;
+      }
+      const palette = texture.bpal;
+      this.texPal[id] = new Int32Array(palette.length);
+      for (let i = 0;i < palette.length; i++) {
+        const texturePalette = this.texPal[id];
+        if (!texturePalette) {
+          continue;
+        }
+        texturePalette[i] = this.gammaCorrect(palette[i], randomBrightness);
+      }
+    }
+    for (let id = 0;id < 50; id++) {
+      this.pushTexture(id);
+    }
+  }
+  static gammaCorrect(rgb, gamma) {
+    const r = (rgb >> 16) / 256;
+    const g = (rgb >> 8 & 255) / 256;
+    const b = (rgb & 255) / 256;
+    const powR = Math.pow(r, gamma);
+    const powG = Math.pow(g, gamma);
+    const powB = Math.pow(b, gamma);
+    const intR = powR * 256 | 0;
+    const intG = powG * 256 | 0;
+    const intB = powB * 256 | 0;
+    return (intR << 16) + (intG << 8) + intB;
+  }
+  static gouraudTriangle(xA, xB, xC, yA, yB, yC, colourA, colourB, colourC) {
+    let xStepAB = 0;
+    let colourStepAB = 0;
+    if (yB !== yA) {
+      xStepAB = (xB - xA << 16) / (yB - yA) | 0;
+      colourStepAB = (colourB - colourA << 15) / (yB - yA) | 0;
+    }
+    let xStepBC = 0;
+    let colourStepBC = 0;
+    if (yC !== yB) {
+      xStepBC = (xC - xB << 16) / (yC - yB) | 0;
+      colourStepBC = (colourC - colourB << 15) / (yC - yB) | 0;
+    }
+    let xStepAC = 0;
+    let colourStepAC = 0;
+    if (yC !== yA) {
+      xStepAC = (xA - xC << 16) / (yA - yC) | 0;
+      colourStepAC = (colourA - colourC << 15) / (yA - yC) | 0;
+    }
+    if (yA <= yB && yA <= yC) {
+      if (yA >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yB > Pix2D.clipMaxY) {
+        yB = Pix2D.clipMaxY;
+      }
+      if (yC > Pix2D.clipMaxY) {
+        yC = Pix2D.clipMaxY;
+      }
+      if (yB < yC) {
+        xC = xA <<= 16;
+        colourC = colourA <<= 15;
+        if (yA < 0) {
+          xC -= xStepAC * yA;
+          xA -= xStepAB * yA;
+          colourC -= colourStepAC * yA;
+          colourA -= colourStepAB * yA;
+          yA = 0;
+        }
+        xB <<= 16;
+        colourB <<= 15;
+        if (yB < 0) {
+          xB -= xStepBC * yB;
+          colourB -= colourStepBC * yB;
+          yB = 0;
+        }
+        if (yA !== yB && xStepAC < xStepAB || yA === yB && xStepAC > xStepBC) {
+          yC -= yB;
+          yB -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.gouraudRaster(xC >> 16, xB >> 16, colourC >> 7, colourB >> 7, Pix2D.pixels, yA, 0);
+                xC += xStepAC;
+                xB += xStepBC;
+                colourC += colourStepAC;
+                colourB += colourStepBC;
+                yA += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xC >> 16, xA >> 16, colourC >> 7, colourA >> 7, Pix2D.pixels, yA, 0);
+            xC += xStepAC;
+            xA += xStepAB;
+            colourC += colourStepAC;
+            colourA += colourStepAB;
+            yA += Pix2D.width;
+          }
+        } else {
+          yC -= yB;
+          yB -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.gouraudRaster(xB >> 16, xC >> 16, colourB >> 7, colourC >> 7, Pix2D.pixels, yA, 0);
+                xC += xStepAC;
+                xB += xStepBC;
+                colourC += colourStepAC;
+                colourB += colourStepBC;
+                yA += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xA >> 16, xC >> 16, colourA >> 7, colourC >> 7, Pix2D.pixels, yA, 0);
+            xC += xStepAC;
+            xA += xStepAB;
+            colourC += colourStepAC;
+            colourA += colourStepAB;
+            yA += Pix2D.width;
+          }
+        }
+      } else {
+        xB = xA <<= 16;
+        colourB = colourA <<= 15;
+        if (yA < 0) {
+          xB -= xStepAC * yA;
+          xA -= xStepAB * yA;
+          colourB -= colourStepAC * yA;
+          colourA -= colourStepAB * yA;
+          yA = 0;
+        }
+        xC <<= 16;
+        colourC <<= 15;
+        if (yC < 0) {
+          xC -= xStepBC * yC;
+          colourC -= colourStepBC * yC;
+          yC = 0;
+        }
+        if (yA !== yC && xStepAC < xStepAB || yA === yC && xStepBC > xStepAB) {
+          yB -= yC;
+          yC -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.gouraudRaster(xC >> 16, xA >> 16, colourC >> 7, colourA >> 7, Pix2D.pixels, yA, 0);
+                xC += xStepBC;
+                xA += xStepAB;
+                colourC += colourStepBC;
+                colourA += colourStepAB;
+                yA += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xB >> 16, xA >> 16, colourB >> 7, colourA >> 7, Pix2D.pixels, yA, 0);
+            xB += xStepAC;
+            xA += xStepAB;
+            colourB += colourStepAC;
+            colourA += colourStepAB;
+            yA += Pix2D.width;
+          }
+        } else {
+          yB -= yC;
+          yC -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.gouraudRaster(xA >> 16, xC >> 16, colourA >> 7, colourC >> 7, Pix2D.pixels, yA, 0);
+                xC += xStepBC;
+                xA += xStepAB;
+                colourC += colourStepBC;
+                colourA += colourStepAB;
+                yA += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xA >> 16, xB >> 16, colourA >> 7, colourB >> 7, Pix2D.pixels, yA, 0);
+            xB += xStepAC;
+            xA += xStepAB;
+            colourB += colourStepAC;
+            colourA += colourStepAB;
+            yA += Pix2D.width;
+          }
+        }
+      }
+    } else if (yB <= yC) {
+      if (yB >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yC > Pix2D.clipMaxY) {
+        yC = Pix2D.clipMaxY;
+      }
+      if (yA > Pix2D.clipMaxY) {
+        yA = Pix2D.clipMaxY;
+      }
+      if (yC < yA) {
+        xA = xB <<= 16;
+        colourA = colourB <<= 15;
+        if (yB < 0) {
+          xA -= xStepAB * yB;
+          xB -= xStepBC * yB;
+          colourA -= colourStepAB * yB;
+          colourB -= colourStepBC * yB;
+          yB = 0;
+        }
+        xC <<= 16;
+        colourC <<= 15;
+        if (yC < 0) {
+          xC -= xStepAC * yC;
+          colourC -= colourStepAC * yC;
+          yC = 0;
+        }
+        if (yB !== yC && xStepAB < xStepBC || yB === yC && xStepAB > xStepAC) {
+          yA -= yC;
+          yC -= yB;
+          yB = this.scanline[yB];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.gouraudRaster(xA >> 16, xC >> 16, colourA >> 7, colourC >> 7, Pix2D.pixels, yB, 0);
+                xA += xStepAB;
+                xC += xStepAC;
+                colourA += colourStepAB;
+                colourC += colourStepAC;
+                yB += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xA >> 16, xB >> 16, colourA >> 7, colourB >> 7, Pix2D.pixels, yB, 0);
+            xA += xStepAB;
+            xB += xStepBC;
+            colourA += colourStepAB;
+            colourB += colourStepBC;
+            yB += Pix2D.width;
+          }
+        } else {
+          yA -= yC;
+          yC -= yB;
+          yB = this.scanline[yB];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.gouraudRaster(xC >> 16, xA >> 16, colourC >> 7, colourA >> 7, Pix2D.pixels, yB, 0);
+                xA += xStepAB;
+                xC += xStepAC;
+                colourA += colourStepAB;
+                colourC += colourStepAC;
+                yB += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xB >> 16, xA >> 16, colourB >> 7, colourA >> 7, Pix2D.pixels, yB, 0);
+            xA += xStepAB;
+            xB += xStepBC;
+            colourA += colourStepAB;
+            colourB += colourStepBC;
+            yB += Pix2D.width;
+          }
+        }
+      } else {
+        xC = xB <<= 16;
+        colourC = colourB <<= 15;
+        if (yB < 0) {
+          xC -= xStepAB * yB;
+          xB -= xStepBC * yB;
+          colourC -= colourStepAB * yB;
+          colourB -= colourStepBC * yB;
+          yB = 0;
+        }
+        xA <<= 16;
+        colourA <<= 15;
+        if (yA < 0) {
+          xA -= xStepAC * yA;
+          colourA -= colourStepAC * yA;
+          yA = 0;
+        }
+        yC -= yA;
+        yA -= yB;
+        yB = this.scanline[yB];
+        if (xStepAB < xStepBC) {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.gouraudRaster(xA >> 16, xB >> 16, colourA >> 7, colourB >> 7, Pix2D.pixels, yB, 0);
+                xA += xStepAC;
+                xB += xStepBC;
+                colourA += colourStepAC;
+                colourB += colourStepBC;
+                yB += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xC >> 16, xB >> 16, colourC >> 7, colourB >> 7, Pix2D.pixels, yB, 0);
+            xC += xStepAB;
+            xB += xStepBC;
+            colourC += colourStepAB;
+            colourB += colourStepBC;
+            yB += Pix2D.width;
+          }
+        } else {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.gouraudRaster(xB >> 16, xA >> 16, colourB >> 7, colourA >> 7, Pix2D.pixels, yB, 0);
+                xA += xStepAC;
+                xB += xStepBC;
+                colourA += colourStepAC;
+                colourB += colourStepBC;
+                yB += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xB >> 16, xC >> 16, colourB >> 7, colourC >> 7, Pix2D.pixels, yB, 0);
+            xC += xStepAB;
+            xB += xStepBC;
+            colourC += colourStepAB;
+            colourB += colourStepBC;
+            yB += Pix2D.width;
+          }
+        }
+      }
+    } else {
+      if (yC >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yA > Pix2D.clipMaxY) {
+        yA = Pix2D.clipMaxY;
+      }
+      if (yB > Pix2D.clipMaxY) {
+        yB = Pix2D.clipMaxY;
+      }
+      if (yA < yB) {
+        xB = xC <<= 16;
+        colourB = colourC <<= 15;
+        if (yC < 0) {
+          xB -= xStepBC * yC;
+          xC -= xStepAC * yC;
+          colourB -= colourStepBC * yC;
+          colourC -= colourStepAC * yC;
+          yC = 0;
+        }
+        xA <<= 16;
+        colourA <<= 15;
+        if (yA < 0) {
+          xA -= xStepAB * yA;
+          colourA -= colourStepAB * yA;
+          yA = 0;
+        }
+        yB -= yA;
+        yA -= yC;
+        yC = this.scanline[yC];
+        if (xStepBC < xStepAC) {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.gouraudRaster(xB >> 16, xA >> 16, colourB >> 7, colourA >> 7, Pix2D.pixels, yC, 0);
+                xB += xStepBC;
+                xA += xStepAB;
+                colourB += colourStepBC;
+                colourA += colourStepAB;
+                yC += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xB >> 16, xC >> 16, colourB >> 7, colourC >> 7, Pix2D.pixels, yC, 0);
+            xB += xStepBC;
+            xC += xStepAC;
+            colourB += colourStepBC;
+            colourC += colourStepAC;
+            yC += Pix2D.width;
+          }
+        } else {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.gouraudRaster(xA >> 16, xB >> 16, colourA >> 7, colourB >> 7, Pix2D.pixels, yC, 0);
+                xB += xStepBC;
+                xA += xStepAB;
+                colourB += colourStepBC;
+                colourA += colourStepAB;
+                yC += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xC >> 16, xB >> 16, colourC >> 7, colourB >> 7, Pix2D.pixels, yC, 0);
+            xB += xStepBC;
+            xC += xStepAC;
+            colourB += colourStepBC;
+            colourC += colourStepAC;
+            yC += Pix2D.width;
+          }
+        }
+      } else {
+        xA = xC <<= 16;
+        colourA = colourC <<= 15;
+        if (yC < 0) {
+          xA -= xStepBC * yC;
+          xC -= xStepAC * yC;
+          colourA -= colourStepBC * yC;
+          colourC -= colourStepAC * yC;
+          yC = 0;
+        }
+        xB <<= 16;
+        colourB <<= 15;
+        if (yB < 0) {
+          xB -= xStepAB * yB;
+          colourB -= colourStepAB * yB;
+          yB = 0;
+        }
+        yA -= yB;
+        yB -= yC;
+        yC = this.scanline[yC];
+        if (xStepBC < xStepAC) {
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.gouraudRaster(xB >> 16, xC >> 16, colourB >> 7, colourC >> 7, Pix2D.pixels, yC, 0);
+                xB += xStepAB;
+                xC += xStepAC;
+                colourB += colourStepAB;
+                colourC += colourStepAC;
+                yC += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xA >> 16, xC >> 16, colourA >> 7, colourC >> 7, Pix2D.pixels, yC, 0);
+            xA += xStepBC;
+            xC += xStepAC;
+            colourA += colourStepBC;
+            colourC += colourStepAC;
+            yC += Pix2D.width;
+          }
+        } else {
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.gouraudRaster(xC >> 16, xB >> 16, colourC >> 7, colourB >> 7, Pix2D.pixels, yC, 0);
+                xB += xStepAB;
+                xC += xStepAC;
+                colourB += colourStepAB;
+                colourC += colourStepAC;
+                yC += Pix2D.width;
+              }
+            }
+            this.gouraudRaster(xC >> 16, xA >> 16, colourC >> 7, colourA >> 7, Pix2D.pixels, yC, 0);
+            xA += xStepBC;
+            xC += xStepAC;
+            colourA += colourStepBC;
+            colourC += colourStepAC;
+            yC += Pix2D.width;
+          }
+        }
+      }
+    }
+  }
+  static gouraudRaster(xA, xB, colourA, colourB, dst, off, len) {
+    let rgb;
+    if (this.lowDetail) {
+      let colourStep;
+      if (this.hclip) {
+        if (xB - xA > 3) {
+          colourStep = (colourB - colourA) / (xB - xA) | 0;
+        } else {
+          colourStep = 0;
+        }
+        if (xB > Pix2D.sizeX) {
+          xB = Pix2D.sizeX;
+        }
+        if (xA < 0) {
+          colourA -= xA * colourStep;
+          xA = 0;
+        }
+        if (xA >= xB) {
+          return;
+        }
+        off += xA;
+        len = xB - xA >> 2;
+        colourStep <<= 2;
+      } else if (xA < xB) {
+        off += xA;
+        len = xB - xA >> 2;
+        if (len > 0) {
+          colourStep = (colourB - colourA) * this.divTable[len] >> 15;
+        } else {
+          colourStep = 0;
+        }
+      } else {
+        return;
+      }
+      if (this.trans === 0) {
+        while (true) {
+          len--;
+          if (len < 0) {
+            len = xB - xA & 3;
+            if (len > 0) {
+              rgb = this.colourTable[colourA >> 8];
+              do {
+                dst[off++] = rgb;
+                len--;
+              } while (len > 0);
+              return;
+            }
+            break;
+          }
+          rgb = this.colourTable[colourA >> 8];
+          colourA += colourStep;
+          dst[off++] = rgb;
+          dst[off++] = rgb;
+          dst[off++] = rgb;
+          dst[off++] = rgb;
+        }
+      } else {
+        const alpha = this.trans;
+        const invAlpha = 256 - this.trans;
+        while (true) {
+          len--;
+          if (len < 0) {
+            len = xB - xA & 3;
+            if (len > 0) {
+              rgb = this.colourTable[colourA >> 8];
+              rgb = ((rgb & 16711935) * invAlpha >> 8 & 16711935) + ((rgb & 65280) * invAlpha >> 8 & 65280);
+              do {
+                dst[off++] = rgb + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+                len--;
+              } while (len > 0);
+            }
+            break;
+          }
+          rgb = this.colourTable[colourA >> 8];
+          colourA += colourStep;
+          rgb = ((rgb & 16711935) * invAlpha >> 8 & 16711935) + ((rgb & 65280) * invAlpha >> 8 & 65280);
+          dst[off++] = rgb + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+          dst[off++] = rgb + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+          dst[off++] = rgb + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+          dst[off++] = rgb + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+        }
+      }
+    } else if (xA < xB) {
+      const colourStep = (colourB - colourA) / (xB - xA) | 0;
+      if (this.hclip) {
+        if (xB > Pix2D.sizeX) {
+          xB = Pix2D.sizeX;
+        }
+        if (xA < 0) {
+          colourA -= xA * colourStep;
+          xA = 0;
+        }
+        if (xA >= xB) {
+          return;
+        }
+      }
+      off += xA;
+      len = xB - xA;
+      if (this.trans === 0) {
+        do {
+          dst[off++] = this.colourTable[colourA >> 8];
+          colourA += colourStep;
+          len--;
+        } while (len > 0);
+      } else {
+        const alpha = this.trans;
+        const invAlpha = 256 - this.trans;
+        do {
+          rgb = this.colourTable[colourA >> 8];
+          colourA += colourStep;
+          rgb = ((rgb & 16711935) * invAlpha >> 8 & 16711935) + ((rgb & 65280) * invAlpha >> 8 & 65280);
+          dst[off++] = rgb + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+          len--;
+        } while (len > 0);
+      }
+    }
+  }
+  static flatTriangle(xA, xB, xC, yA, yB, yC, colour) {
+    let xStepAB = 0;
+    if (yB !== yA) {
+      xStepAB = (xB - xA << 16) / (yB - yA) | 0;
+    }
+    let xStepBC = 0;
+    if (yC !== yB) {
+      xStepBC = (xC - xB << 16) / (yC - yB) | 0;
+    }
+    let xStepAC = 0;
+    if (yC !== yA) {
+      xStepAC = (xA - xC << 16) / (yA - yC) | 0;
+    }
+    if (yA <= yB && yA <= yC) {
+      if (yA >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yB > Pix2D.clipMaxY) {
+        yB = Pix2D.clipMaxY;
+      }
+      if (yC > Pix2D.clipMaxY) {
+        yC = Pix2D.clipMaxY;
+      }
+      if (yB < yC) {
+        xC = xA <<= 16;
+        if (yA < 0) {
+          xC -= xStepAC * yA;
+          xA -= xStepAB * yA;
+          yA = 0;
+        }
+        xB <<= 16;
+        if (yB < 0) {
+          xB -= xStepBC * yB;
+          yB = 0;
+        }
+        if (yA !== yB && xStepAC < xStepAB || yA === yB && xStepAC > xStepBC) {
+          yC -= yB;
+          yB -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.flatRaster(xC >> 16, xB >> 16, Pix2D.pixels, yA, colour);
+                xC += xStepAC;
+                xB += xStepBC;
+                yA += Pix2D.width;
+              }
+            }
+            this.flatRaster(xC >> 16, xA >> 16, Pix2D.pixels, yA, colour);
+            xC += xStepAC;
+            xA += xStepAB;
+            yA += Pix2D.width;
+          }
+        } else {
+          yC -= yB;
+          yB -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.flatRaster(xB >> 16, xC >> 16, Pix2D.pixels, yA, colour);
+                xC += xStepAC;
+                xB += xStepBC;
+                yA += Pix2D.width;
+              }
+            }
+            this.flatRaster(xA >> 16, xC >> 16, Pix2D.pixels, yA, colour);
+            xC += xStepAC;
+            xA += xStepAB;
+            yA += Pix2D.width;
+          }
+        }
+      } else {
+        xB = xA <<= 16;
+        if (yA < 0) {
+          xB -= xStepAC * yA;
+          xA -= xStepAB * yA;
+          yA = 0;
+        }
+        xC <<= 16;
+        if (yC < 0) {
+          xC -= xStepBC * yC;
+          yC = 0;
+        }
+        if (yA !== yC && xStepAC < xStepAB || yA === yC && xStepBC > xStepAB) {
+          yB -= yC;
+          yC -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.flatRaster(xC >> 16, xA >> 16, Pix2D.pixels, yA, colour);
+                xC += xStepBC;
+                xA += xStepAB;
+                yA += Pix2D.width;
+              }
+            }
+            this.flatRaster(xB >> 16, xA >> 16, Pix2D.pixels, yA, colour);
+            xB += xStepAC;
+            xA += xStepAB;
+            yA += Pix2D.width;
+          }
+        } else {
+          yB -= yC;
+          yC -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.flatRaster(xA >> 16, xC >> 16, Pix2D.pixels, yA, colour);
+                xC += xStepBC;
+                xA += xStepAB;
+                yA += Pix2D.width;
+              }
+            }
+            this.flatRaster(xA >> 16, xB >> 16, Pix2D.pixels, yA, colour);
+            xB += xStepAC;
+            xA += xStepAB;
+            yA += Pix2D.width;
+          }
+        }
+      }
+    } else if (yB <= yC) {
+      if (yB >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yC > Pix2D.clipMaxY) {
+        yC = Pix2D.clipMaxY;
+      }
+      if (yA > Pix2D.clipMaxY) {
+        yA = Pix2D.clipMaxY;
+      }
+      if (yC < yA) {
+        xA = xB <<= 16;
+        if (yB < 0) {
+          xA -= xStepAB * yB;
+          xB -= xStepBC * yB;
+          yB = 0;
+        }
+        xC <<= 16;
+        if (yC < 0) {
+          xC -= xStepAC * yC;
+          yC = 0;
+        }
+        if (yB !== yC && xStepAB < xStepBC || yB === yC && xStepAB > xStepAC) {
+          yA -= yC;
+          yC -= yB;
+          yB = this.scanline[yB];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.flatRaster(xA >> 16, xC >> 16, Pix2D.pixels, yB, colour);
+                xA += xStepAB;
+                xC += xStepAC;
+                yB += Pix2D.width;
+              }
+            }
+            this.flatRaster(xA >> 16, xB >> 16, Pix2D.pixels, yB, colour);
+            xA += xStepAB;
+            xB += xStepBC;
+            yB += Pix2D.width;
+          }
+        } else {
+          yA -= yC;
+          yC -= yB;
+          yB = this.scanline[yB];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.flatRaster(xC >> 16, xA >> 16, Pix2D.pixels, yB, colour);
+                xA += xStepAB;
+                xC += xStepAC;
+                yB += Pix2D.width;
+              }
+            }
+            this.flatRaster(xB >> 16, xA >> 16, Pix2D.pixels, yB, colour);
+            xA += xStepAB;
+            xB += xStepBC;
+            yB += Pix2D.width;
+          }
+        }
+      } else {
+        xC = xB <<= 16;
+        if (yB < 0) {
+          xC -= xStepAB * yB;
+          xB -= xStepBC * yB;
+          yB = 0;
+        }
+        xA <<= 16;
+        if (yA < 0) {
+          xA -= xStepAC * yA;
+          yA = 0;
+        }
+        yC -= yA;
+        yA -= yB;
+        yB = this.scanline[yB];
+        if (xStepAB < xStepBC) {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.flatRaster(xA >> 16, xB >> 16, Pix2D.pixels, yB, colour);
+                xA += xStepAC;
+                xB += xStepBC;
+                yB += Pix2D.width;
+              }
+            }
+            this.flatRaster(xC >> 16, xB >> 16, Pix2D.pixels, yB, colour);
+            xC += xStepAB;
+            xB += xStepBC;
+            yB += Pix2D.width;
+          }
+        } else {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.flatRaster(xB >> 16, xA >> 16, Pix2D.pixels, yB, colour);
+                xA += xStepAC;
+                xB += xStepBC;
+                yB += Pix2D.width;
+              }
+            }
+            this.flatRaster(xB >> 16, xC >> 16, Pix2D.pixels, yB, colour);
+            xC += xStepAB;
+            xB += xStepBC;
+            yB += Pix2D.width;
+          }
+        }
+      }
+    } else {
+      if (yC >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yA > Pix2D.clipMaxY) {
+        yA = Pix2D.clipMaxY;
+      }
+      if (yB > Pix2D.clipMaxY) {
+        yB = Pix2D.clipMaxY;
+      }
+      if (yA < yB) {
+        xB = xC <<= 16;
+        if (yC < 0) {
+          xB -= xStepBC * yC;
+          xC -= xStepAC * yC;
+          yC = 0;
+        }
+        xA <<= 16;
+        if (yA < 0) {
+          xA -= xStepAB * yA;
+          yA = 0;
+        }
+        yB -= yA;
+        yA -= yC;
+        yC = this.scanline[yC];
+        if (xStepBC < xStepAC) {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.flatRaster(xB >> 16, xA >> 16, Pix2D.pixels, yC, colour);
+                xB += xStepBC;
+                xA += xStepAB;
+                yC += Pix2D.width;
+              }
+            }
+            this.flatRaster(xB >> 16, xC >> 16, Pix2D.pixels, yC, colour);
+            xB += xStepBC;
+            xC += xStepAC;
+            yC += Pix2D.width;
+          }
+        } else {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.flatRaster(xA >> 16, xB >> 16, Pix2D.pixels, yC, colour);
+                xB += xStepBC;
+                xA += xStepAB;
+                yC += Pix2D.width;
+              }
+            }
+            this.flatRaster(xC >> 16, xB >> 16, Pix2D.pixels, yC, colour);
+            xB += xStepBC;
+            xC += xStepAC;
+            yC += Pix2D.width;
+          }
+        }
+      } else {
+        xA = xC <<= 16;
+        if (yC < 0) {
+          xA -= xStepBC * yC;
+          xC -= xStepAC * yC;
+          yC = 0;
+        }
+        xB <<= 16;
+        if (yB < 0) {
+          xB -= xStepAB * yB;
+          yB = 0;
+        }
+        yA -= yB;
+        yB -= yC;
+        yC = this.scanline[yC];
+        if (xStepBC < xStepAC) {
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.flatRaster(xB >> 16, xC >> 16, Pix2D.pixels, yC, colour);
+                xB += xStepAB;
+                xC += xStepAC;
+                yC += Pix2D.width;
+              }
+            }
+            this.flatRaster(xA >> 16, xC >> 16, Pix2D.pixels, yC, colour);
+            xA += xStepBC;
+            xC += xStepAC;
+            yC += Pix2D.width;
+          }
+        } else {
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.flatRaster(xC >> 16, xB >> 16, Pix2D.pixels, yC, colour);
+                xB += xStepAB;
+                xC += xStepAC;
+                yC += Pix2D.width;
+              }
+            }
+            this.flatRaster(xC >> 16, xA >> 16, Pix2D.pixels, yC, colour);
+            xA += xStepBC;
+            xC += xStepAC;
+            yC += Pix2D.width;
+          }
+        }
+      }
+    }
+  }
+  static flatRaster(xA, xB, dst, off, colour) {
+    if (this.hclip) {
+      if (xB > Pix2D.sizeX) {
+        xB = Pix2D.sizeX;
+      }
+      if (xA < 0) {
+        xA = 0;
+      }
+    }
+    if (xA >= xB) {
+      return;
+    }
+    off += xA;
+    let len = xB - xA >> 2;
+    if (this.trans === 0) {
+      while (true) {
+        len--;
+        if (len < 0) {
+          len = xB - xA & 3;
+          while (true) {
+            len--;
+            if (len < 0) {
+              return;
+            }
+            dst[off++] = colour;
+          }
+        }
+        dst[off++] = colour;
+        dst[off++] = colour;
+        dst[off++] = colour;
+        dst[off++] = colour;
+      }
+    } else {
+      const alpha = this.trans;
+      const invAlpha = 256 - this.trans;
+      colour = ((colour & 16711935) * invAlpha >> 8 & 16711935) + ((colour & 65280) * invAlpha >> 8 & 65280);
+      while (true) {
+        len--;
+        if (len < 0) {
+          len = xB - xA & 3;
+          while (true) {
+            len--;
+            if (len < 0) {
+              return;
+            }
+            dst[off++] = colour + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+          }
+        }
+        dst[off++] = colour + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+        dst[off++] = colour + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+        dst[off++] = colour + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+        dst[off++] = colour + ((dst[off] & 16711935) * alpha >> 8 & 16711935) + ((dst[off] & 65280) * alpha >> 8 & 65280);
+      }
+    }
+  }
+  static textureTriangle(xA, xB, xC, yA, yB, yC, shadeA, shadeB, shadeC, originX, originY, originZ, txB, txC, tyB, tyC, tzB, tzC, texture) {
+    const texels = this.getTexels(texture);
+    this.opaque = !this.textureTranslucent[texture];
+    const verticalX = originX - txB;
+    const verticalY = originY - tyB;
+    const verticalZ = originZ - tzB;
+    const horizontalX = txC - originX;
+    const horizontalY = tyC - originY;
+    const horizontalZ = tzC - originZ;
+    let u = horizontalX * originY - horizontalY * originX << 14;
+    const uStride = horizontalY * originZ - horizontalZ * originY << 8;
+    const uStepVertical = horizontalZ * originX - horizontalX * originZ << 5;
+    let v = verticalX * originY - verticalY * originX << 14;
+    const vStride = verticalY * originZ - verticalZ * originY << 8;
+    const vStepVertical = verticalZ * originX - verticalX * originZ << 5;
+    let w = verticalY * horizontalX - verticalX * horizontalY << 14;
+    const wStride = verticalZ * horizontalY - verticalY * horizontalZ << 8;
+    const wStepVertical = verticalX * horizontalZ - verticalZ * horizontalX << 5;
+    let xStepAB = 0;
+    let shadeStepAB = 0;
+    if (yB !== yA) {
+      xStepAB = (xB - xA << 16) / (yB - yA) | 0;
+      shadeStepAB = (shadeB - shadeA << 16) / (yB - yA) | 0;
+    }
+    let xStepBC = 0;
+    let shadeStepBC = 0;
+    if (yC !== yB) {
+      xStepBC = (xC - xB << 16) / (yC - yB) | 0;
+      shadeStepBC = (shadeC - shadeB << 16) / (yC - yB) | 0;
+    }
+    let xStepAC = 0;
+    let shadeStepAC = 0;
+    if (yC !== yA) {
+      xStepAC = (xA - xC << 16) / (yA - yC) | 0;
+      shadeStepAC = (shadeA - shadeC << 16) / (yA - yC) | 0;
+    }
+    if (yA <= yB && yA <= yC) {
+      if (yA >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yB > Pix2D.clipMaxY) {
+        yB = Pix2D.clipMaxY;
+      }
+      if (yC > Pix2D.clipMaxY) {
+        yC = Pix2D.clipMaxY;
+      }
+      if (yB < yC) {
+        xC = xA <<= 16;
+        shadeC = shadeA <<= 16;
+        if (yA < 0) {
+          xC -= xStepAC * yA;
+          xA -= xStepAB * yA;
+          shadeC -= shadeStepAC * yA;
+          shadeA -= shadeStepAB * yA;
+          yA = 0;
+        }
+        xB <<= 16;
+        shadeB <<= 16;
+        if (yB < 0) {
+          xB -= xStepBC * yB;
+          shadeB -= shadeStepBC * yB;
+          yB = 0;
+        }
+        const dy = yA - this.originY;
+        u += uStepVertical * dy;
+        v += vStepVertical * dy;
+        w += wStepVertical * dy;
+        u |= 0;
+        v |= 0;
+        w |= 0;
+        if (yA !== yB && xStepAC < xStepAB || yA === yB && xStepAC > xStepBC) {
+          yC -= yB;
+          yB -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.textureRaster(xC >> 16, xB >> 16, Pix2D.pixels, yA, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeC >> 8, shadeB >> 8);
+                xC += xStepAC;
+                xB += xStepBC;
+                shadeC += shadeStepAC;
+                shadeB += shadeStepBC;
+                yA += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xC >> 16, xA >> 16, Pix2D.pixels, yA, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeC >> 8, shadeA >> 8);
+            xC += xStepAC;
+            xA += xStepAB;
+            shadeC += shadeStepAC;
+            shadeA += shadeStepAB;
+            yA += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        } else {
+          yC -= yB;
+          yB -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.textureRaster(xB >> 16, xC >> 16, Pix2D.pixels, yA, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeB >> 8, shadeC >> 8);
+                xC += xStepAC;
+                xB += xStepBC;
+                shadeC += shadeStepAC;
+                shadeB += shadeStepBC;
+                yA += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xA >> 16, xC >> 16, Pix2D.pixels, yA, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeA >> 8, shadeC >> 8);
+            xC += xStepAC;
+            xA += xStepAB;
+            shadeC += shadeStepAC;
+            shadeA += shadeStepAB;
+            yA += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        }
+      } else {
+        xB = xA <<= 16;
+        shadeB = shadeA <<= 16;
+        if (yA < 0) {
+          xB -= xStepAC * yA;
+          xA -= xStepAB * yA;
+          shadeB -= shadeStepAC * yA;
+          shadeA -= shadeStepAB * yA;
+          yA = 0;
+        }
+        xC <<= 16;
+        shadeC <<= 16;
+        if (yC < 0) {
+          xC -= xStepBC * yC;
+          shadeC -= shadeStepBC * yC;
+          yC = 0;
+        }
+        const dy = yA - this.originY;
+        u += uStepVertical * dy;
+        v += vStepVertical * dy;
+        w += wStepVertical * dy;
+        u |= 0;
+        v |= 0;
+        w |= 0;
+        if ((yA === yC || xStepAC >= xStepAB) && (yA !== yC || xStepBC <= xStepAB)) {
+          yB -= yC;
+          yC -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.textureRaster(xA >> 16, xC >> 16, Pix2D.pixels, yA, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeA >> 8, shadeC >> 8);
+                xC += xStepBC;
+                xA += xStepAB;
+                shadeC += shadeStepBC;
+                shadeA += shadeStepAB;
+                yA += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xA >> 16, xB >> 16, Pix2D.pixels, yA, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeA >> 8, shadeB >> 8);
+            xB += xStepAC;
+            xA += xStepAB;
+            shadeB += shadeStepAC;
+            shadeA += shadeStepAB;
+            yA += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        } else {
+          yB -= yC;
+          yC -= yA;
+          yA = this.scanline[yA];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.textureRaster(xC >> 16, xA >> 16, Pix2D.pixels, yA, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeC >> 8, shadeA >> 8);
+                xC += xStepBC;
+                xA += xStepAB;
+                shadeC += shadeStepBC;
+                shadeA += shadeStepAB;
+                yA += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xB >> 16, xA >> 16, Pix2D.pixels, yA, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeB >> 8, shadeA >> 8);
+            xB += xStepAC;
+            xA += xStepAB;
+            shadeB += shadeStepAC;
+            shadeA += shadeStepAB;
+            yA += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        }
+      }
+    } else if (yB <= yC) {
+      if (yB >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yC > Pix2D.clipMaxY) {
+        yC = Pix2D.clipMaxY;
+      }
+      if (yA > Pix2D.clipMaxY) {
+        yA = Pix2D.clipMaxY;
+      }
+      if (yC < yA) {
+        xA = xB <<= 16;
+        shadeA = shadeB <<= 16;
+        if (yB < 0) {
+          xA -= xStepAB * yB;
+          xB -= xStepBC * yB;
+          shadeA -= shadeStepAB * yB;
+          shadeB -= shadeStepBC * yB;
+          yB = 0;
+        }
+        xC <<= 16;
+        shadeC <<= 16;
+        if (yC < 0) {
+          xC -= xStepAC * yC;
+          shadeC -= shadeStepAC * yC;
+          yC = 0;
+        }
+        const dy = yB - this.originY;
+        u += uStepVertical * dy;
+        v += vStepVertical * dy;
+        w += wStepVertical * dy;
+        u |= 0;
+        v |= 0;
+        w |= 0;
+        if (yB !== yC && xStepAB < xStepBC || yB === yC && xStepAB > xStepAC) {
+          yA -= yC;
+          yC -= yB;
+          yB = this.scanline[yB];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.textureRaster(xA >> 16, xC >> 16, Pix2D.pixels, yB, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeA >> 8, shadeC >> 8);
+                xA += xStepAB;
+                xC += xStepAC;
+                shadeA += shadeStepAB;
+                shadeC += shadeStepAC;
+                yB += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xA >> 16, xB >> 16, Pix2D.pixels, yB, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeA >> 8, shadeB >> 8);
+            xA += xStepAB;
+            xB += xStepBC;
+            shadeA += shadeStepAB;
+            shadeB += shadeStepBC;
+            yB += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        } else {
+          yA -= yC;
+          yC -= yB;
+          yB = this.scanline[yB];
+          while (true) {
+            yC--;
+            if (yC < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.textureRaster(xC >> 16, xA >> 16, Pix2D.pixels, yB, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeC >> 8, shadeA >> 8);
+                xA += xStepAB;
+                xC += xStepAC;
+                shadeA += shadeStepAB;
+                shadeC += shadeStepAC;
+                yB += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xB >> 16, xA >> 16, Pix2D.pixels, yB, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeB >> 8, shadeA >> 8);
+            xA += xStepAB;
+            xB += xStepBC;
+            shadeA += shadeStepAB;
+            shadeB += shadeStepBC;
+            yB += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        }
+      } else {
+        xC = xB <<= 16;
+        shadeC = shadeB <<= 16;
+        if (yB < 0) {
+          xC -= xStepAB * yB;
+          xB -= xStepBC * yB;
+          shadeC -= shadeStepAB * yB;
+          shadeB -= shadeStepBC * yB;
+          yB = 0;
+        }
+        xA <<= 16;
+        shadeA <<= 16;
+        if (yA < 0) {
+          xA -= xStepAC * yA;
+          shadeA -= shadeStepAC * yA;
+          yA = 0;
+        }
+        const dy = yB - this.originY;
+        u += uStepVertical * dy;
+        v += vStepVertical * dy;
+        w += wStepVertical * dy;
+        u |= 0;
+        v |= 0;
+        w |= 0;
+        yC -= yA;
+        yA -= yB;
+        yB = this.scanline[yB];
+        if (xStepAB < xStepBC) {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.textureRaster(xA >> 16, xB >> 16, Pix2D.pixels, yB, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeA >> 8, shadeB >> 8);
+                xA += xStepAC;
+                xB += xStepBC;
+                shadeA += shadeStepAC;
+                shadeB += shadeStepBC;
+                yB += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xC >> 16, xB >> 16, Pix2D.pixels, yB, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeC >> 8, shadeB >> 8);
+            xC += xStepAB;
+            xB += xStepBC;
+            shadeC += shadeStepAB;
+            shadeB += shadeStepBC;
+            yB += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        } else {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yC--;
+                if (yC < 0) {
+                  return;
+                }
+                this.textureRaster(xB >> 16, xA >> 16, Pix2D.pixels, yB, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeB >> 8, shadeA >> 8);
+                xA += xStepAC;
+                xB += xStepBC;
+                shadeA += shadeStepAC;
+                shadeB += shadeStepBC;
+                yB += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xB >> 16, xC >> 16, Pix2D.pixels, yB, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeB >> 8, shadeC >> 8);
+            xC += xStepAB;
+            xB += xStepBC;
+            shadeC += shadeStepAB;
+            shadeB += shadeStepBC;
+            yB += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        }
+      }
+    } else {
+      if (yC >= Pix2D.clipMaxY) {
+        return;
+      }
+      if (yA > Pix2D.clipMaxY) {
+        yA = Pix2D.clipMaxY;
+      }
+      if (yB > Pix2D.clipMaxY) {
+        yB = Pix2D.clipMaxY;
+      }
+      if (yA < yB) {
+        xB = xC <<= 16;
+        shadeB = shadeC <<= 16;
+        if (yC < 0) {
+          xB -= xStepBC * yC;
+          xC -= xStepAC * yC;
+          shadeB -= shadeStepBC * yC;
+          shadeC -= shadeStepAC * yC;
+          yC = 0;
+        }
+        xA <<= 16;
+        shadeA <<= 16;
+        if (yA < 0) {
+          xA -= xStepAB * yA;
+          shadeA -= shadeStepAB * yA;
+          yA = 0;
+        }
+        const dy = yC - this.originY;
+        u += uStepVertical * dy;
+        v += vStepVertical * dy;
+        w += wStepVertical * dy;
+        u |= 0;
+        v |= 0;
+        w |= 0;
+        yB -= yA;
+        yA -= yC;
+        yC = this.scanline[yC];
+        if (xStepBC < xStepAC) {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.textureRaster(xB >> 16, xA >> 16, Pix2D.pixels, yC, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeB >> 8, shadeA >> 8);
+                xB += xStepBC;
+                xA += xStepAB;
+                shadeB += shadeStepBC;
+                shadeA += shadeStepAB;
+                yC += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xB >> 16, xC >> 16, Pix2D.pixels, yC, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeB >> 8, shadeC >> 8);
+            xB += xStepBC;
+            xC += xStepAC;
+            shadeB += shadeStepBC;
+            shadeC += shadeStepAC;
+            yC += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        } else {
+          while (true) {
+            yA--;
+            if (yA < 0) {
+              while (true) {
+                yB--;
+                if (yB < 0) {
+                  return;
+                }
+                this.textureRaster(xA >> 16, xB >> 16, Pix2D.pixels, yC, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeA >> 8, shadeB >> 8);
+                xB += xStepBC;
+                xA += xStepAB;
+                shadeB += shadeStepBC;
+                shadeA += shadeStepAB;
+                yC += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xC >> 16, xB >> 16, Pix2D.pixels, yC, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeC >> 8, shadeB >> 8);
+            xB += xStepBC;
+            xC += xStepAC;
+            shadeB += shadeStepBC;
+            shadeC += shadeStepAC;
+            yC += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        }
+      } else {
+        xA = xC <<= 16;
+        shadeA = shadeC <<= 16;
+        if (yC < 0) {
+          xA -= xStepBC * yC;
+          xC -= xStepAC * yC;
+          shadeA -= shadeStepBC * yC;
+          shadeC -= shadeStepAC * yC;
+          yC = 0;
+        }
+        xB <<= 16;
+        shadeB <<= 16;
+        if (yB < 0) {
+          xB -= xStepAB * yB;
+          shadeB -= shadeStepAB * yB;
+          yB = 0;
+        }
+        const dy = yC - this.originY;
+        u += uStepVertical * dy;
+        v += vStepVertical * dy;
+        w += wStepVertical * dy;
+        u |= 0;
+        v |= 0;
+        w |= 0;
+        yA -= yB;
+        yB -= yC;
+        yC = this.scanline[yC];
+        if (xStepBC < xStepAC) {
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.textureRaster(xB >> 16, xC >> 16, Pix2D.pixels, yC, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeB >> 8, shadeC >> 8);
+                xB += xStepAB;
+                xC += xStepAC;
+                shadeB += shadeStepAB;
+                shadeC += shadeStepAC;
+                yC += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xA >> 16, xC >> 16, Pix2D.pixels, yC, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeA >> 8, shadeC >> 8);
+            xA += xStepBC;
+            xC += xStepAC;
+            shadeA += shadeStepBC;
+            shadeC += shadeStepAC;
+            yC += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        } else {
+          while (true) {
+            yB--;
+            if (yB < 0) {
+              while (true) {
+                yA--;
+                if (yA < 0) {
+                  return;
+                }
+                this.textureRaster(xC >> 16, xB >> 16, Pix2D.pixels, yC, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeC >> 8, shadeB >> 8);
+                xB += xStepAB;
+                xC += xStepAC;
+                shadeB += shadeStepAB;
+                shadeC += shadeStepAC;
+                yC += Pix2D.width;
+                u += uStepVertical;
+                v += vStepVertical;
+                w += wStepVertical;
+                u |= 0;
+                v |= 0;
+                w |= 0;
+              }
+            }
+            this.textureRaster(xC >> 16, xA >> 16, Pix2D.pixels, yC, texels, 0, 0, u, v, w, uStride, vStride, wStride, shadeC >> 8, shadeA >> 8);
+            xA += xStepBC;
+            xC += xStepAC;
+            shadeA += shadeStepBC;
+            shadeC += shadeStepAC;
+            yC += Pix2D.width;
+            u += uStepVertical;
+            v += vStepVertical;
+            w += wStepVertical;
+            u |= 0;
+            v |= 0;
+            w |= 0;
+          }
+        }
+      }
+    }
+  }
+  static textureRaster(xA, xB, dst, off, texels, curU, curV, u, v, w, uStride, vStride, wStride, shadeA, shadeB) {
+    if (!texels) {
+      return;
+    }
+    if (xA >= xB) {
+      return;
+    }
+    let shadeStrides;
+    let strides;
+    if (this.hclip) {
+      shadeStrides = (shadeB - shadeA) / (xB - xA) | 0;
+      if (xB > Pix2D.sizeX) {
+        xB = Pix2D.sizeX;
+      }
+      if (xA < 0) {
+        shadeA -= xA * shadeStrides;
+        xA = 0;
+      }
+      if (xA >= xB) {
+        return;
+      }
+      strides = xB - xA >> 3;
+      shadeStrides <<= 12;
+    } else {
+      if (xB - xA > 7) {
+        strides = xB - xA >> 3;
+        shadeStrides = (shadeB - shadeA) * this.divTable[strides] >> 6;
+      } else {
+        strides = 0;
+        shadeStrides = 0;
+      }
+    }
+    shadeA <<= 9;
+    off += xA;
+    let nextU;
+    let nextV;
+    let curW;
+    let dx;
+    let stepU;
+    let stepV;
+    let shadeShift;
+    if (this.lowMem) {
+      nextU = 0;
+      nextV = 0;
+      dx = xA - this.originX;
+      u = u + (uStride >> 3) * dx;
+      v = v + (vStride >> 3) * dx;
+      w = w + (wStride >> 3) * dx;
+      u |= 0;
+      v |= 0;
+      w |= 0;
+      curW = w >> 12;
+      if (curW !== 0) {
+        curU = u / curW | 0;
+        curV = v / curW | 0;
+        if (curU < 0) {
+          curU = 0;
+        } else if (curU > 4032) {
+          curU = 4032;
+        }
+      }
+      u = u + uStride;
+      v = v + vStride;
+      w = w + wStride;
+      u |= 0;
+      v |= 0;
+      w |= 0;
+      curW = w >> 12;
+      if (curW !== 0) {
+        nextU = u / curW | 0;
+        nextV = v / curW | 0;
+        if (nextU < 7) {
+          nextU = 7;
+        } else if (nextU > 4032) {
+          nextU = 4032;
+        }
+      }
+      stepU = nextU - curU >> 3;
+      stepV = nextV - curV >> 3;
+      curU += shadeA >> 3 & 786432;
+      shadeShift = shadeA >> 23;
+      if (this.opaque) {
+        while (strides-- > 0) {
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU = nextU;
+          curV = nextV;
+          u += uStride;
+          v += vStride;
+          w += wStride;
+          u |= 0;
+          v |= 0;
+          w |= 0;
+          curW = w >> 12;
+          if (curW !== 0) {
+            nextU = u / curW | 0;
+            nextV = v / curW | 0;
+            if (nextU < 7) {
+              nextU = 7;
+            } else if (nextU > 4032) {
+              nextU = 4032;
+            }
+          }
+          stepU = nextU - curU >> 3;
+          stepV = nextV - curV >> 3;
+          shadeA += shadeStrides;
+          curU += shadeA >> 3 & 786432;
+          shadeShift = shadeA >> 23;
+        }
+        strides = xB - xA & 7;
+        while (strides-- > 0) {
+          dst[off++] = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+        }
+      } else {
+        while (strides-- > 0) {
+          let rgb;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU = nextU;
+          curV = nextV;
+          u += uStride;
+          v += vStride;
+          w += wStride;
+          u |= 0;
+          v |= 0;
+          w |= 0;
+          curW = w >> 12;
+          if (curW !== 0) {
+            nextU = u / curW | 0;
+            nextV = v / curW | 0;
+            if (nextU < 7) {
+              nextU = 7;
+            } else if (nextU > 4032) {
+              nextU = 4032;
+            }
+          }
+          stepU = nextU - curU >> 3;
+          stepV = nextV - curV >> 3;
+          shadeA += shadeStrides;
+          curU += shadeA >> 3 & 786432;
+          shadeShift = shadeA >> 23;
+        }
+        strides = xB - xA & 7;
+        while (strides-- > 0) {
+          let rgb;
+          if ((rgb = texels[(curV & 4032) + (curU >> 6)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+        }
+      }
+    } else {
+      nextU = 0;
+      nextV = 0;
+      dx = xA - this.originX;
+      u = u + (uStride >> 3) * dx;
+      v = v + (vStride >> 3) * dx;
+      w = w + (wStride >> 3) * dx;
+      u |= 0;
+      v |= 0;
+      w |= 0;
+      curW = w >> 14;
+      if (curW !== 0) {
+        curU = u / curW | 0;
+        curV = v / curW | 0;
+        if (curU < 0) {
+          curU = 0;
+        } else if (curU > 16256) {
+          curU = 16256;
+        }
+      }
+      u = u + uStride;
+      v = v + vStride;
+      w = w + wStride;
+      u |= 0;
+      v |= 0;
+      w |= 0;
+      curW = w >> 14;
+      if (curW !== 0) {
+        nextU = u / curW | 0;
+        nextV = v / curW | 0;
+        if (nextU < 7) {
+          nextU = 7;
+        } else if (nextU > 16256) {
+          nextU = 16256;
+        }
+      }
+      stepU = nextU - curU >> 3;
+      stepV = nextV - curV >> 3;
+      curU += shadeA & 6291456;
+      shadeShift = shadeA >> 23;
+      if (this.opaque) {
+        while (strides-- > 0) {
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU = nextU;
+          curV = nextV;
+          u += uStride;
+          v += vStride;
+          w += wStride;
+          u |= 0;
+          v |= 0;
+          w |= 0;
+          curW = w >> 14;
+          if (curW !== 0) {
+            nextU = u / curW | 0;
+            nextV = v / curW | 0;
+            if (nextU < 7) {
+              nextU = 7;
+            } else if (nextU > 16256) {
+              nextU = 16256;
+            }
+          }
+          stepU = nextU - curU >> 3;
+          stepV = nextV - curV >> 3;
+          shadeA += shadeStrides;
+          curU += shadeA & 6291456;
+          shadeShift = shadeA >> 23;
+        }
+        strides = xB - xA & 7;
+        while (strides-- > 0) {
+          dst[off++] = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift;
+          curU += stepU;
+          curV += stepV;
+        }
+      } else {
+        while (strides-- > 0 && texels) {
+          let rgb;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU = nextU;
+          curV = nextV;
+          u += uStride;
+          v += vStride;
+          w += wStride;
+          u |= 0;
+          v |= 0;
+          w |= 0;
+          curW = w >> 14;
+          if (curW !== 0) {
+            nextU = u / curW | 0;
+            nextV = v / curW | 0;
+            if (nextU < 7) {
+              nextU = 7;
+            } else if (nextU > 16256) {
+              nextU = 16256;
+            }
+          }
+          stepU = nextU - curU >> 3;
+          stepV = nextV - curV >> 3;
+          shadeA += shadeStrides;
+          curU += shadeA & 6291456;
+          shadeShift = shadeA >> 23;
+        }
+        strides = xB - xA & 7;
+        while (strides-- > 0 && texels) {
+          let rgb;
+          if ((rgb = texels[(curV & 16256) + (curU >> 7)] >>> shadeShift) !== 0) {
+            dst[off] = rgb;
+          }
+          off++;
+          curU += stepU;
+          curV += stepV;
+        }
+      }
+    }
+  }
+}
+
+// src/graphics/PixMap.ts
+class PixMap {
+  data;
+  width;
+  height;
+  ctx;
+  paint;
+  img;
+  constructor(width, height, ctx = canvas2d) {
+    this.width = width;
+    this.height = height;
+    this.data = new Int32Array(width * height);
+    this.ctx = ctx;
+    this.img = this.ctx.getImageData(0, 0, width, height);
+    this.paint = new Uint32Array(this.img.data.buffer);
+    this.bind();
+  }
+  bind() {
+    Pix2D.setPixels(this.data, this.width, this.height);
+  }
+  draw(x, y) {
+    this.prepareCanvas();
+    this.ctx.putImageData(this.img, x, y);
+  }
+  prepareCanvas() {
+    for (let i = 0;i < this.data.length; i++) {
+      const pixel = this.data[i];
+      this.paint[i] = pixel >> 16 & 255 | (pixel >> 8 & 255) << 8 | (pixel & 255) << 16 | 4278190080;
+    }
+  }
+}
+
+// src/client/GameShell.ts
+class GameShell {
+  state = 0;
+  deltime = 20;
+  mindel = 1;
+  otim = new Array(10);
+  fps = 0;
+  debug = false;
+  drawArea = null;
+  redrawScreen = true;
+  focus = true;
+  idleTimer = performance.now();
+  mouseButton = 0;
+  mouseX = -1;
+  mouseY = -1;
+  nextMouseClickButton = 0;
+  nextMouseClickX = -1;
+  nextMouseClickY = -1;
+  mouseClickButton = 0;
+  mouseClickX = -1;
+  mouseClickY = -1;
+  nextMouseClickTime = 0;
+  mouseClickTime = 0;
+  keyHeld = [];
+  keyQueue = [];
+  keyQueueReadPos = 0;
+  keyQueueWritePos = 0;
+  resizeToFit = false;
+  tfps = 50;
+  async maininit() {}
+  async mainloop() {}
+  async maindraw() {}
+  refresh() {}
+  constructor(resizetoFit = false) {
+    canvas.tabIndex = -1;
+    canvas2d.fillStyle = "black";
+    canvas2d.fillRect(0, 0, canvas.width, canvas.height);
+    this.resizeToFit = resizetoFit;
+    if (this.resizeToFit) {
+      this.resize(window.innerWidth, window.innerHeight);
+    } else {
+      this.resize(canvas.width, canvas.height);
+    }
+  }
+  get sWid() {
+    return canvas.width;
+  }
+  get sHei() {
+    return canvas.height;
+  }
+  resize(width, height) {
+    canvas.width = width;
+    canvas.height = height;
+    this.drawArea = new PixMap(width, height);
+    Pix3D.setRenderClipping();
+  }
+  async run() {
+    canvas.addEventListener("resize", () => {
+      if (this.resizeToFit) {
+        this.resize(window.innerWidth, window.innerHeight);
+      }
+    }, false);
+    canvas.onfocus = this.onfocus.bind(this);
+    canvas.onblur = this.onblur.bind(this);
+    canvas.onkeydown = this.onkeydown.bind(this);
+    canvas.onkeyup = this.onkeyup.bind(this);
+    canvas.onmousedown = this.onmousedown.bind(this);
+    canvas.onpointerdown = this.onpointerdown.bind(this);
+    canvas.onmouseup = this.onmouseup.bind(this);
+    canvas.onpointerup = this.onpointerup.bind(this);
+    canvas.onpointerenter = this.onpointerenter.bind(this);
+    canvas.onpointerleave = this.onpointerleave.bind(this);
+    canvas.onpointermove = this.onpointermove.bind(this);
+    window.onmouseup = this.windowMouseUp.bind(this);
+    window.onmousemove = this.windowMouseMove.bind(this);
+    if (this.isTouchDevice) {
+      if (this.hasTouchEvents) {
+        canvas.ontouchstart = this.ontouchstart.bind(this);
+      } else {
+        canvas.style.touchAction = "none";
+      }
+    }
+    canvas.oncontextmenu = (e) => {
+      e.preventDefault();
+    };
+    window.oncontextmenu = (e) => {
+      e.preventDefault();
+    };
+    await this.drawProgress(0, "Loading...");
+    await this.maininit();
+    let ntime = 0;
+    let opos = 0;
+    let ratio = 256;
+    let delta = 1;
+    let count = 0;
+    for (let i = 0;i < 10; i++) {
+      this.otim[i] = performance.now();
+    }
+    while (this.state >= 0) {
+      if (this.state > 0) {
+        this.state--;
+        if (this.state === 0) {
+          this.shutdown();
+          return;
+        }
+      }
+      const lastRatio = ratio;
+      const lastDelta = delta;
+      ratio = 300;
+      delta = 1;
+      ntime = performance.now();
+      const otim = this.otim[opos];
+      if (otim === 0) {
+        ratio = lastRatio;
+        delta = lastDelta;
+      } else if (ntime > otim) {
+        ratio = this.deltime * 2560 / (ntime - otim) | 0;
+      }
+      if (ratio < 25) {
+        ratio = 25;
+      } else if (ratio > 256) {
+        ratio = 256;
+        delta = this.deltime - (ntime - otim) / 10 | 0;
+      }
+      this.otim[opos] = ntime;
+      opos = (opos + 1) % 10;
+      if (delta > 1) {
+        for (let i = 0;i < 10; i++) {
+          if (this.otim[i] !== 0) {
+            this.otim[i] += delta;
+          }
+        }
+      }
+      if (delta < this.mindel) {
+        delta = this.mindel;
+      }
+      await sleep(delta);
+      while (count < 256) {
+        this.mouseClickButton = this.nextMouseClickButton;
+        this.mouseClickX = this.nextMouseClickX;
+        this.mouseClickY = this.nextMouseClickY;
+        this.mouseClickTime = this.nextMouseClickTime;
+        this.nextMouseClickButton = 0;
+        await this.mainloop();
+        count += ratio;
+      }
+      count &= 255;
+      if (this.deltime > 0) {
+        this.fps = ratio * 1000 / (this.deltime * 256) | 0;
+      }
+      await this.maindraw();
+      if (this.tfps < 50) {
+        const tfps = 1000 / this.tfps - (performance.now() - ntime);
+        if (tfps > 0) {
+          await sleep(tfps);
+        }
+      }
+      if (this.debug) {
+        console.log("ntime:" + ntime);
+        for (let i = 0;i < 10; i++) {
+          const o = (opos - i - 1 + 20) % 10;
+          console.log("otim" + o + ":" + this.otim[o]);
+        }
+        console.log("fps:" + this.fps + " ratio:" + ratio + " count:" + count);
+        console.log("del:" + delta + " deltime:" + this.deltime + " mindel:" + this.mindel);
+        console.log("opos:" + opos);
+        this.debug = false;
+      }
+    }
+    if (this.state === -1) {
+      this.shutdown();
+    }
+  }
+  shutdown() {
+    this.state = -2;
+  }
+  setFramerate(rate) {
+    this.deltime = 1000 / rate | 0;
+  }
+  setTargetedFramerate(rate) {
+    this.tfps = Math.max(Math.min(50, rate | 0), 0);
+  }
+  start() {
+    if (this.state >= 0) {
+      this.state = 0;
+    }
+  }
+  stop() {
+    if (this.state >= 0) {
+      this.state = 4000 / this.deltime | 0;
+    }
+  }
+  async drawProgress(progress, message) {
+    const width = this.sWid;
+    const height = this.sHei;
+    if (this.redrawScreen) {
+      canvas2d.fillStyle = "black";
+      canvas2d.fillRect(0, 0, width, height);
+      this.redrawScreen = false;
+    }
+    const y = height / 2 - 18;
+    canvas2d.strokeStyle = "rgb(140, 17, 17)";
+    canvas2d.strokeRect((width / 2 | 0) - 152, y, 304, 34);
+    canvas2d.fillStyle = "rgb(140, 17, 17)";
+    canvas2d.fillRect((width / 2 | 0) - 150, y + 2, progress * 3, 30);
+    canvas2d.fillStyle = "black";
+    canvas2d.fillRect((width / 2 | 0) - 150 + progress * 3, y + 2, 300 - progress * 3, 30);
+    canvas2d.font = "bold 13px helvetica, sans-serif";
+    canvas2d.textAlign = "center";
+    canvas2d.fillStyle = "white";
+    canvas2d.fillText(message, width / 2 | 0, y + 22);
+    await sleep(5);
+  }
+  onmousedown(e) {
+    if (e.clientX < 0 || e.clientY < 0) {
+      return;
+    }
+    const { x, y } = this.getMousePos(e);
+    this.mouseDown(x, y, e);
+  }
+  mouseDown(x, y, e) {
+    this.idleTimer = performance.now();
+    this.nextMouseClickX = x;
+    this.nextMouseClickY = y;
+    this.nextMouseClickTime = performance.now();
+    this.mouseX = x;
+    this.mouseY = y;
+    if (e.button === 2) {
+      this.nextMouseClickButton = 2;
+      this.mouseButton = 2;
+    } else if (e.button === 1) {
+      this.nextMouseClickButton = 4;
+      this.mouseButton = 4;
+    } else {
+      this.nextMouseClickButton = 1;
+      this.mouseButton = 1;
+    }
+    if (InputTracking.active) {
+      InputTracking.mousePressed(x, y, e.button, "mouse");
+    }
+  }
+  onpointerdown(e) {
+    if (e.clientX < 0 || e.clientY < 0) {
+      return;
+    }
+    const { x, y } = this.getMousePos(e);
+    this.pointerDown(x, y, e);
+  }
+  pointerDown(_x, _y, _e) {}
+  onmouseup(e) {
+    const { x, y } = this.getMousePos(e);
+    this.mouseUp(x, y, e);
+  }
+  mouseUp(x, y, e) {
+    this.idleTimer = performance.now();
+    this.mouseButton = 0;
+    if (InputTracking.active) {
+      InputTracking.mouseReleased(e.button, "mouse");
+    }
+    this.mouseX = x;
+    this.mouseY = y;
+  }
+  onpointerup(e) {
+    const { x, y } = this.getMousePos(e);
+    this.pointerUp(x, y, e);
+  }
+  pointerUp(_x, _y, _e) {}
+  onpointerenter(e) {
+    if (e.clientX < 0 || e.clientY < 0) {
+      return;
+    }
+    const { x, y } = this.getMousePos(e);
+    this.pointerEnter(x, y, e);
+  }
+  pointerEnter(x, y, _e) {
+    this.mouseX = x;
+    this.mouseY = y;
+    if (InputTracking.active) {
+      InputTracking.mouseEntered();
+    }
+  }
+  onpointerleave(e) {
+    this.pointerLeave(e);
+  }
+  pointerLeave(_e) {
+    this.idleTimer = performance.now();
+    this.mouseX = -1;
+    this.mouseY = -1;
+    if (InputTracking.active) {
+      InputTracking.mouseExited();
+    }
+    this.nextMouseClickX = -1;
+    this.nextMouseClickY = -1;
+    this.nextMouseClickButton = 0;
+    this.mouseButton = 0;
+  }
+  onpointermove(e) {
+    if (e.clientX < 0 || e.clientY < 0) {
+      return;
+    }
+    const { x, y } = this.getMousePos(e);
+    this.pointerMove(x, y, e);
+  }
+  pointerMove(x, y, e) {
+    this.idleTimer = performance.now();
+    this.mouseX = x;
+    this.mouseY = y;
+    if (InputTracking.active) {
+      InputTracking.mouseMoved(x, y, e.pointerType);
+    }
+  }
+  windowMouseUp(e) {}
+  windowMouseMove(e) {}
+  ontouchstart(e) {
+    this.touchStart(e);
+  }
+  touchStart(e) {
+    if (e.touches.length < 2) {
+      e.preventDefault();
+    }
+  }
+  onkeydown(e) {
+    this.idleTimer = performance.now();
+    const keyCode = KeyCodes.get(e.key);
+    if (!keyCode || e.code.length === 0 && !e.isTrusted) {
+      return;
+    }
+    let ch = keyCode.ch;
+    if (e.ctrlKey) {
+      if (ch >= 65 && ch <= 93 || ch == 95) {
+        ch -= 65 - 1;
+      } else if (ch >= 97 && ch <= 122) {
+        ch -= 97 - 1;
+      }
+    }
+    if (ch > 0 && ch < 128) {
+      this.keyHeld[ch] = 1;
+    }
+    if (ch > 4) {
+      this.keyQueue[this.keyQueueWritePos] = ch;
+      this.keyQueueWritePos = this.keyQueueWritePos + 1 & 127;
+    }
+    if (InputTracking.active) {
+      InputTracking.keyPressed(ch);
+    }
+    if (!CanvasEnabledKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  }
+  onkeyup(e) {
+    this.idleTimer = performance.now();
+    const keyCode = KeyCodes.get(e.key);
+    if (!keyCode || e.code.length === 0 && !e.isTrusted) {
+      return;
+    }
+    let ch = keyCode.ch;
+    if (e.ctrlKey) {
+      if (ch >= 65 && ch <= 93 || ch == 95) {
+        ch -= 65 - 1;
+      } else if (ch >= 97 && ch <= 122) {
+        ch -= 97 - 1;
+      }
+    }
+    if (ch > 0 && ch < 128) {
+      this.keyHeld[ch] = 0;
+    }
+    if (InputTracking.active) {
+      InputTracking.keyReleased(ch);
+    }
+    if (!CanvasEnabledKeys.includes(e.key)) {
+      e.preventDefault();
+    }
+  }
+  pollKey() {
+    let key = -1;
+    if (this.keyQueueWritePos !== this.keyQueueReadPos) {
+      key = this.keyQueue[this.keyQueueReadPos];
+      this.keyQueueReadPos = this.keyQueueReadPos + 1 & 127;
+    }
+    return key;
+  }
+  onfocus(_e) {
+    this.focus = true;
+    this.redrawScreen = true;
+    this.refresh();
+    if (InputTracking.active) {
+      InputTracking.focusGained();
+    }
+  }
+  onblur(_e) {
+    this.focus = false;
+    for (let i = 0;i < 128; i++) {
+      this.keyHeld[i] = 0;
+    }
+    if (InputTracking.active) {
+      InputTracking.focusLost();
+    }
+  }
+  get hasTouchEvents() {
+    return "ontouchstart" in window;
+  }
+  get isTouchDevice() {
+    return this.hasTouchEvents || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+  }
+  get isMobile() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone|Mobile/i.test(navigator.userAgent)) {
+      return true;
+    }
+    return this.isTouchDevice;
+  }
+  isFullScreen() {
+    return document.fullscreenElement !== null;
+  }
+  getMousePos(e) {
+    const fixedWidth = this.sWid;
+    const fixedHeight = this.sHei;
+    const canvasBounds = canvas.getBoundingClientRect();
+    const clickLocWithinCanvas = {
+      x: e.clientX - canvasBounds.left,
+      y: e.clientY - canvasBounds.top
+    };
+    let x = 0;
+    let y = 0;
+    if (this.isFullScreen()) {
+      const gameAspectRatio = fixedWidth / fixedHeight;
+      const ourAspectRatio = window.innerWidth / window.innerHeight;
+      const wider = ourAspectRatio >= gameAspectRatio;
+      let trueCanvasWidth = 0;
+      let trueCanvasHeight = 0;
+      let offsetX = 0;
+      let offsetY = 0;
+      if (wider) {
+        trueCanvasWidth = window.innerHeight * gameAspectRatio;
+        trueCanvasHeight = window.innerHeight;
+        offsetX = (window.innerWidth - trueCanvasWidth) / 2;
+      } else {
+        trueCanvasWidth = window.innerWidth;
+        trueCanvasHeight = window.innerWidth / gameAspectRatio;
+        offsetY = (window.innerHeight - trueCanvasHeight) / 2;
+      }
+      const scaleX = fixedWidth / trueCanvasWidth;
+      const scaleY = fixedHeight / trueCanvasHeight;
+      x = (clickLocWithinCanvas.x - offsetX) * scaleX | 0;
+      y = (clickLocWithinCanvas.y - offsetY) * scaleY | 0;
+    } else {
+      const scaleX = canvas.width / canvasBounds.width;
+      const scaleY = canvas.height / canvasBounds.height;
+      x = clickLocWithinCanvas.x * scaleX | 0;
+      y = clickLocWithinCanvas.y * scaleY | 0;
+    }
+    if (x < 0) {
+      x = 0;
+    }
+    if (x > fixedWidth) {
+      x = fixedWidth;
+    }
+    if (y < 0) {
+      y = 0;
+    }
+    if (y > fixedHeight) {
+      y = fixedHeight;
+    }
+    return { x, y };
+  }
+}
+
+// src/graphics/Jpeg.ts
+async function decodeJpeg(data) {
+  if (data[0] !== 255) {
+    data[0] = 255;
+  }
+  URL.revokeObjectURL(jpegImg.src);
+  jpegImg.src = URL.createObjectURL(new Blob([data], { type: "image/jpeg" }));
+  await new Promise((resolve) => jpegImg.onload = () => resolve());
+  jpeg2d.clearRect(0, 0, jpegCanvas.width, jpegCanvas.height);
+  const width = jpegImg.naturalWidth;
+  const height = jpegImg.naturalHeight;
+  jpegCanvas.width = width;
+  jpegCanvas.height = height;
+  jpeg2d.drawImage(jpegImg, 0, 0);
+  return jpeg2d.getImageData(0, 0, width, height);
+}
+
+// src/graphics/Pix32.ts
+class Pix32 extends Pix2D {
+  data;
+  owi;
+  ohi;
+  xof;
+  yof;
+  wi;
+  hi;
+  constructor(width, height) {
+    super();
+    this.data = new Int32Array(width * height);
+    this.wi = this.owi = width;
+    this.hi = this.ohi = height;
+    this.xof = this.yof = 0;
+  }
+  static async loadJpeg(archive, name) {
+    const dat = archive.read(name + ".dat");
+    if (!dat) {
+      throw new Error;
+    }
+    const jpeg = await decodeJpeg(dat);
+    const image = new Pix32(jpeg.width, jpeg.height);
+    const data = new Uint32Array(jpeg.data.buffer);
+    for (let i = 0;i < image.data.length; i++) {
+      const pixel = data[i];
+      image.data[i] = (pixel >> 24 & 255) << 24 | (pixel & 255) << 16 | (pixel >> 8 & 255) << 8 | pixel >> 16 & 255;
+    }
+    return image;
+  }
+  static load(jag, name, sprite = 0) {
+    const dat = new Packet(jag.read(name + ".dat"));
+    const index = new Packet(jag.read("index.dat"));
+    index.pos = dat.g2();
+    const owi = index.g2();
+    const ohi = index.g2();
+    const bpalCount = index.g1();
+    const bpal = new Int32Array(bpalCount);
+    for (let i = 0;i < bpalCount - 1; i++) {
+      bpal[i + 1] = index.g3();
+      if (bpal[i + 1] === 0) {
+        bpal[i + 1] = 1;
+      }
+    }
+    for (let i = 0;i < sprite; i++) {
+      index.pos += 2;
+      dat.pos += index.g2() * index.g2();
+      index.pos += 1;
+    }
+    if (dat.pos > dat.length || index.pos > index.length) {
+      throw new Error;
+    }
+    const xof = index.g1();
+    const yof = index.g1();
+    const wi = index.g2();
+    const hi = index.g2();
+    const image = new Pix32(wi, hi);
+    image.xof = xof;
+    image.yof = yof;
+    image.owi = owi;
+    image.ohi = ohi;
+    const encoding = index.g1();
+    if (encoding === 0) {
+      for (let i = 0;i < image.wi * image.hi; i++) {
+        image.data[i] = bpal[dat.g1()];
+      }
+    } else if (encoding === 1) {
+      for (let x = 0;x < image.wi; x++) {
+        for (let y = 0;y < image.hi; y++) {
+          image.data[x + y * image.wi] = bpal[dat.g1()];
+        }
+      }
+    }
+    return image;
+  }
+  setPixels() {
+    Pix2D.setPixels(this.data, this.wi, this.hi);
+  }
+  rgbAdjust(r, g, b) {
+    for (let i = 0;i < this.data.length; i++) {
+      const rgb = this.data[i];
+      if (rgb !== 0) {
+        let red = rgb >> 16 & 255;
+        red += r;
+        if (red < 1) {
+          red = 1;
+        } else if (red > 255) {
+          red = 255;
+        }
+        let green = rgb >> 8 & 255;
+        green += g;
+        if (green < 1) {
+          green = 1;
+        } else if (green > 255) {
+          green = 255;
+        }
+        let blue = rgb & 255;
+        blue += b;
+        if (blue < 1) {
+          blue = 1;
+        } else if (blue > 255) {
+          blue = 255;
+        }
+        this.data[i] = (red << 16) + (green << 8) + blue;
+      }
+    }
+  }
+  trim() {
+    const pixels = new Int32Array(this.owi * this.ohi);
+    for (let y = 0;y < this.hi; y++) {
+      for (let x = 0;x < this.wi; x++) {
+        pixels[(this.yof + y) * this.owi + this.xof + x] = this.data[this.wi * y + x];
+      }
+    }
+    this.data = pixels;
+    this.wi = this.owi;
+    this.hi = this.ohi;
+    this.xof = 0;
+    this.yof = 0;
+  }
+  quickPlotSprite(x, y) {
+    x |= 0;
+    y |= 0;
+    x += this.xof;
+    y += this.yof;
+    let dstOff = x + y * Pix2D.width;
+    let srcOff = 0;
+    let h = this.hi;
+    let w = this.wi;
+    let dstStep = Pix2D.width - w;
+    let srcStep = 0;
+    if (y < Pix2D.clipMinY) {
+      const cutoff = Pix2D.clipMinY - y;
+      h -= cutoff;
+      y = Pix2D.clipMinY;
+      srcOff += cutoff * w;
+      dstOff += cutoff * Pix2D.width;
+    }
+    if (y + h > Pix2D.clipMaxY) {
+      h -= y + h - Pix2D.clipMaxY;
+    }
+    if (x < Pix2D.clipMinX) {
+      const cutoff = Pix2D.clipMinX - x;
+      w -= cutoff;
+      x = Pix2D.clipMinX;
+      srcOff += cutoff;
+      dstOff += cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (x + w > Pix2D.clipMaxX) {
+      const cutoff = x + w - Pix2D.clipMaxX;
+      w -= cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (w > 0 && h > 0) {
+      this.plotQuick(w, h, this.data, srcOff, srcStep, Pix2D.pixels, dstOff, dstStep);
+    }
+  }
+  plotQuick(w, h, src, srcOff, srcStep, dst, dstOff, dstStep) {
+    const qw = -(w >> 2);
+    w = -(w & 3);
+    for (let y = -h;y < 0; y++) {
+      for (let x = qw;x < 0; x++) {
+        dst[dstOff++] = src[srcOff++];
+        dst[dstOff++] = src[srcOff++];
+        dst[dstOff++] = src[srcOff++];
+        dst[dstOff++] = src[srcOff++];
+      }
+      for (let x = w;x < 0; x++) {
+        dst[dstOff++] = src[srcOff++];
+      }
+      dstOff += dstStep;
+      srcOff += srcStep;
+    }
+  }
+  plotSprite(x, y) {
+    x |= 0;
+    y |= 0;
+    x += this.xof;
+    y += this.yof;
+    let dstOff = x + y * Pix2D.width;
+    let srcOff = 0;
+    let h = this.hi;
+    let w = this.wi;
+    let dstStep = Pix2D.width - w;
+    let srcStep = 0;
+    if (y < Pix2D.clipMinY) {
+      const cutoff = Pix2D.clipMinY - y;
+      h -= cutoff;
+      y = Pix2D.clipMinY;
+      srcOff += cutoff * w;
+      dstOff += cutoff * Pix2D.width;
+    }
+    if (y + h > Pix2D.clipMaxY) {
+      h -= y + h - Pix2D.clipMaxY;
+    }
+    if (x < Pix2D.clipMinX) {
+      const cutoff = Pix2D.clipMinX - x;
+      w -= cutoff;
+      x = Pix2D.clipMinX;
+      srcOff += cutoff;
+      dstOff += cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (x + w > Pix2D.clipMaxX) {
+      const cutoff = x + w - Pix2D.clipMaxX;
+      w -= cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (w > 0 && h > 0) {
+      this.plot(w, h, this.data, srcOff, srcStep, Pix2D.pixels, dstOff, dstStep);
+    }
+  }
+  plot(w, h, src, srcOff, srcStep, dst, dstOff, dstStep) {
+    const qw = -(w >> 2);
+    w = -(w & 3);
+    for (let y = -h;y < 0; y++) {
+      for (let x = qw;x < 0; x++) {
+        let rgb = src[srcOff++];
+        if (rgb === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        rgb = src[srcOff++];
+        if (rgb === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        rgb = src[srcOff++];
+        if (rgb === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        rgb = src[srcOff++];
+        if (rgb === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+      }
+      for (let x = w;x < 0; x++) {
+        const rgb = src[srcOff++];
+        if (rgb === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+      }
+      dstOff += dstStep;
+      srcOff += srcStep;
+    }
+  }
+  transPlotSprite(alpha, x, y) {
+    x |= 0;
+    y |= 0;
+    x += this.xof;
+    y += this.yof;
+    let dstStep = x + y * Pix2D.width;
+    let srcStep = 0;
+    let h = this.hi;
+    let w = this.wi;
+    let dstOff = Pix2D.width - w;
+    let srcOff = 0;
+    if (y < Pix2D.clipMinY) {
+      const cutoff = Pix2D.clipMinY - y;
+      h -= cutoff;
+      y = Pix2D.clipMinY;
+      srcStep += cutoff * w;
+      dstStep += cutoff * Pix2D.width;
+    }
+    if (y + h > Pix2D.clipMaxY) {
+      h -= y + h - Pix2D.clipMaxY;
+    }
+    if (x < Pix2D.clipMinX) {
+      const cutoff = Pix2D.clipMinX - x;
+      w -= cutoff;
+      x = Pix2D.clipMinX;
+      srcStep += cutoff;
+      dstStep += cutoff;
+      srcOff += cutoff;
+      dstOff += cutoff;
+    }
+    if (x + w > Pix2D.clipMaxX) {
+      const cutoff = x + w - Pix2D.clipMaxX;
+      w -= cutoff;
+      srcOff += cutoff;
+      dstOff += cutoff;
+    }
+    if (w > 0 && h > 0) {
+      this.tranSprite(w, h, this.data, srcStep, srcOff, Pix2D.pixels, dstStep, dstOff, alpha);
+    }
+  }
+  tranSprite(w, h, src, srcOff, srcStep, dst, dstOff, dstStep, alpha) {
+    const invAlpha = 256 - alpha;
+    for (let y = -h;y < 0; y++) {
+      for (let x = -w;x < 0; x++) {
+        const rgb = src[srcOff++];
+        if (rgb === 0) {
+          dstOff++;
+        } else {
+          const dstRgb = dst[dstOff];
+          dst[dstOff++] = ((rgb & 16711935) * alpha + (dstRgb & 16711935) * invAlpha & 4278255360) + ((rgb & 65280) * alpha + (dstRgb & 65280) * invAlpha & 16711680) >> 8;
+        }
+      }
+      dstOff += dstStep;
+      srcOff += srcStep;
+    }
+  }
+  hflip() {
+    const pixels = this.data;
+    const width = this.wi;
+    const height = this.hi;
+    for (let y = 0;y < height; y++) {
+      const div = width / 2 | 0;
+      for (let x = 0;x < div; x++) {
+        const off1 = x + y * width;
+        const off2 = width - x - 1 + y * width;
+        const tmp = pixels[off1];
+        pixels[off1] = pixels[off2];
+        pixels[off2] = tmp;
+      }
+    }
+  }
+  vflip() {
+    const pixels = this.data;
+    const width = this.wi;
+    const height = this.hi;
+    for (let y = 0;y < (height / 2 | 0); y++) {
+      for (let x = 0;x < width; x++) {
+        const off1 = x + y * width;
+        const off2 = x + (height - y - 1) * width;
+        const tmp = pixels[off1];
+        pixels[off1] = pixels[off2];
+        pixels[off2] = tmp;
+      }
+    }
+  }
+  scanlineRotatePlotSprite(x, y, w, h, lineStart, lineWidth, anchorX, anchorY, theta, zoom) {
+    x |= 0;
+    y |= 0;
+    w |= 0;
+    h |= 0;
+    try {
+      const centerX = -w / 2 | 0;
+      const centerY = -h / 2 | 0;
+      const sin = Math.sin(theta / 326.11) * 65536 | 0;
+      const cos = Math.cos(theta / 326.11) * 65536 | 0;
+      const sinZoom = sin * zoom >> 8;
+      const cosZoom = cos * zoom >> 8;
+      let leftX = (anchorX << 16) + centerY * sinZoom + centerX * cosZoom;
+      let leftY = (anchorY << 16) + (centerY * cosZoom - centerX * sinZoom);
+      let leftOff = x + y * Pix2D.width;
+      for (let i = 0;i < h; i++) {
+        const dstOff = lineStart[i];
+        let dstX = leftOff + dstOff;
+        let srcX = leftX + cosZoom * dstOff;
+        let srcY = leftY - sinZoom * dstOff;
+        for (let j = -lineWidth[i];j < 0; j++) {
+          Pix2D.pixels[dstX++] = this.data[(srcX >> 16) + (srcY >> 16) * this.wi];
+          srcX += cosZoom;
+          srcY -= sinZoom;
+        }
+        leftX += sinZoom;
+        leftY += cosZoom;
+        leftOff += Pix2D.width;
+      }
+    } catch (_e) {}
+  }
+  rotatePlotSprite(y, theta, zoom, anchorX, anchorY, w, h, x) {
+    x |= 0;
+    y |= 0;
+    w |= 0;
+    h |= 0;
+    try {
+      const centerX = -w / 2 | 0;
+      const centerY = -h / 2 | 0;
+      const sin = Math.sin(theta) * 65536 | 0;
+      const cos = Math.cos(theta) * 65536 | 0;
+      const sinZoom = sin * zoom >> 8;
+      const cosZoom = cos * zoom >> 8;
+      let leftX = (anchorX << 16) + (centerY * sinZoom + centerX * cosZoom);
+      let leftY = (anchorY << 16) + (centerY * cosZoom - centerX * sinZoom);
+      let leftOff = x + y * Pix2D.width;
+      for (let i = 0;i < h; i++) {
+        let dstX = leftOff;
+        let srcX = leftX;
+        let srcY = leftY;
+        for (let j = -w;j < 0; j++) {
+          const rgb = this.data[(srcX >> 16) + (srcY >> 16) * this.owi];
+          if (rgb == 0) {
+            dstX++;
+          } else {
+            Pix2D.pixels[dstX++] = rgb;
+          }
+          srcX += cosZoom;
+          srcY -= sinZoom;
+        }
+        leftX += sinZoom;
+        leftY += cosZoom;
+        leftOff += Pix2D.width;
+      }
+    } catch (_e) {}
+  }
+  scanlinePlotSprite(x, y, mask) {
+    x |= 0;
+    y |= 0;
+    x += this.xof;
+    y += this.yof;
+    let dstStep = x + y * Pix2D.width;
+    let srcStep = 0;
+    let h = this.hi;
+    let w = this.wi;
+    let dstOff = Pix2D.width - w;
+    let srcOff = 0;
+    if (y < Pix2D.clipMinY) {
+      const cutoff = Pix2D.clipMinY - y;
+      h -= cutoff;
+      y = Pix2D.clipMinY;
+      srcStep += cutoff * w;
+      dstStep += cutoff * Pix2D.width;
+    }
+    if (y + h > Pix2D.clipMaxY) {
+      h -= y + h - Pix2D.clipMaxY;
+    }
+    if (x < Pix2D.clipMinX) {
+      const cutoff = Pix2D.clipMinX - x;
+      w -= cutoff;
+      x = Pix2D.clipMinX;
+      srcStep += cutoff;
+      dstStep += cutoff;
+      srcOff += cutoff;
+      dstOff += cutoff;
+    }
+    if (x + w > Pix2D.clipMaxX) {
+      const cutoff = x + w - Pix2D.clipMaxX;
+      w -= cutoff;
+      srcOff += cutoff;
+      dstOff += cutoff;
+    }
+    if (w > 0 && h > 0) {
+      this.scanlinePlot(w, h, this.data, srcOff, srcStep, Pix2D.pixels, dstStep, dstOff, mask.data);
+    }
+  }
+  scanlinePlot(w, h, src, srcStep, srcOff, dst, dstOff, dstStep, mask) {
+    const qw = -(w >> 2);
+    w = -(w & 3);
+    for (let y = -h;y < 0; y++) {
+      for (let x = qw;x < 0; x++) {
+        let rgb = src[srcOff++];
+        if (rgb !== 0 && mask[dstOff] === 0) {
+          dst[dstOff++] = rgb;
+        } else {
+          dstOff++;
+        }
+        rgb = src[srcOff++];
+        if (rgb !== 0 && mask[dstOff] === 0) {
+          dst[dstOff++] = rgb;
+        } else {
+          dstOff++;
+        }
+        rgb = src[srcOff++];
+        if (rgb !== 0 && mask[dstOff] === 0) {
+          dst[dstOff++] = rgb;
+        } else {
+          dstOff++;
+        }
+        rgb = src[srcOff++];
+        if (rgb !== 0 && mask[dstOff] === 0) {
+          dst[dstOff++] = rgb;
+        } else {
+          dstOff++;
+        }
+      }
+      for (let x = w;x < 0; x++) {
+        const rgb = src[srcOff++];
+        if (rgb !== 0 && mask[dstOff] === 0) {
+          dst[dstOff++] = rgb;
+        } else {
+          dstOff++;
+        }
+      }
+      dstOff += dstStep;
+      srcOff += srcStep;
+    }
+  }
+}
+
+// src/util/JavaRandom.ts
+var p2_16 = 65536;
+var p2_24 = 16777216;
+var p2_27 = 134217728;
+var p2_31 = 2147483648;
+var p2_32 = 4294967296;
+var p2_48 = 281474976710656;
+var p2_53 = Math.pow(2, 53);
+var m2_16 = 65535;
+var [c2, c1, c0] = [5, 57068, 58989];
+var s2 = 0;
+var s1 = 0;
+var s0 = 0;
+function _next() {
+  let carry = 11;
+  let r0 = s0 * c0 + carry;
+  carry = r0 >>> 16;
+  r0 &= m2_16;
+  let r1 = s1 * c0 + s0 * c1 + carry;
+  carry = r1 >>> 16;
+  r1 &= m2_16;
+  let r2 = s2 * c0 + s1 * c1 + s0 * c2 + carry;
+  r2 &= m2_16;
+  [s2, s1, s0] = [r2, r1, r0];
+  return s2 * p2_16 + s1;
+}
+function next_signed(bits) {
+  return _next() >> 32 - bits;
+}
+function next(bits) {
+  return _next() >>> 32 - bits;
+}
+function checkIsPositiveInt(n, r = Number.MAX_SAFE_INTEGER) {
+  if (n < 0 || n > r) {
+    throw RangeError("number must be > 0");
+  }
+}
+
+class JavaRandom {
+  constructor(seedval) {
+    if (typeof seedval === "undefined") {
+      seedval = Math.floor(Math.random() * p2_48);
+    }
+    this.setSeed(seedval);
+  }
+  setSeed(n) {
+    checkIsPositiveInt(n);
+    s0 = n & m2_16 ^ c0;
+    s1 = n / p2_16 & m2_16 ^ c1;
+    s2 = n / p2_32 & m2_16 ^ c2;
+  }
+  nextInt(bound) {
+    if (bound === undefined) {
+      return next_signed(32);
+    }
+    checkIsPositiveInt(bound, 2147483647);
+    if ((bound & -bound) === bound) {
+      const r = next(31) / p2_31;
+      return ~~(bound * r);
+    }
+    let bits, val;
+    do {
+      bits = next(31);
+      val = bits % bound;
+    } while (bits - val + (bound - 1) < 0);
+    return val;
+  }
+  nextLong() {
+    const msb = BigInt(next_signed(32));
+    const lsb = BigInt(next_signed(32));
+    const p2_32n = BigInt(p2_32);
+    return msb * p2_32n + lsb;
+  }
+  nextBoolean() {
+    return next(1) != 0;
+  }
+  nextFloat() {
+    return next(24) / p2_24;
+  }
+  nextDouble() {
+    return (p2_27 * next(26) + next(27)) / p2_53;
+  }
+}
+
+// src/graphics/PixFont.ts
+class PixFont extends DoublyLinkable {
+  static CHARSET = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!"£$%^&*()-_=+[{]};:'@#~,<.>/?\\| `;
+  static CHARCODESET = [];
+  charMask = [];
+  charMaskWidth = new Int32Array(94);
+  charMaskHeight = new Int32Array(94);
+  charOffsetX = new Int32Array(94);
+  charOffsetY = new Int32Array(94);
+  charAdvance = new Int32Array(95);
+  drawWidth = new Int32Array(256);
+  rand = new JavaRandom(Date.now());
+  strikeout = false;
+  height2d = 0;
+  static {
+    const isCapacitor = navigator.userAgent.includes("Capacitor");
+    for (let i = 0;i < 256; i++) {
+      let c = PixFont.CHARSET.indexOf(String.fromCharCode(i));
+      if (isCapacitor) {
+        if (c >= 63) {
+          c--;
+        }
+      }
+      if (c === -1) {
+        c = 74;
+      }
+      PixFont.CHARCODESET[i] = c;
+    }
+  }
+  static fromArchive(archive, name) {
+    const dat = new Packet(archive.read(name + ".dat"));
+    const idx = new Packet(archive.read("index.dat"));
+    idx.pos = dat.g2() + 4;
+    const off = idx.g1();
+    if (off > 0) {
+      idx.pos += (off - 1) * 3;
+    }
+    const font = new PixFont;
+    for (let i = 0;i < 94; i++) {
+      font.charOffsetX[i] = idx.g1();
+      font.charOffsetY[i] = idx.g1();
+      const w = font.charMaskWidth[i] = idx.g2();
+      const h = font.charMaskHeight[i] = idx.g2();
+      const type = idx.g1();
+      const len = w * h;
+      font.charMask[i] = new Int8Array(len);
+      if (type === 0) {
+        for (let j = 0;j < w * h; j++) {
+          font.charMask[i][j] = dat.g1b();
+        }
+      } else if (type === 1) {
+        for (let x = 0;x < w; x++) {
+          for (let y = 0;y < h; y++) {
+            font.charMask[i][x + y * w] = dat.g1b();
+          }
+        }
+      }
+      if (h > font.height2d) {
+        font.height2d = h;
+      }
+      font.charOffsetX[i] = 1;
+      font.charAdvance[i] = w + 2;
+      {
+        let space = 0;
+        for (let y = h / 7 | 0;y < h; y++) {
+          space += font.charMask[i][y * w];
+        }
+        if (space <= (h / 7 | 0)) {
+          font.charAdvance[i]--;
+          font.charOffsetX[i] = 0;
+        }
+      }
+      {
+        let space = 0;
+        for (let y = h / 7 | 0;y < h; y++) {
+          space += font.charMask[i][w + y * w - 1];
+        }
+        if (space <= (h / 7 | 0)) {
+          font.charAdvance[i]--;
+        }
+      }
+    }
+    font.charAdvance[94] = font.charAdvance[8];
+    for (let i = 0;i < 256; i++) {
+      font.drawWidth[i] = font.charAdvance[PixFont.CHARCODESET[i]];
+    }
+    return font;
+  }
+  centreString(x, y, str, rgb) {
+    if (!str) {
+      return;
+    }
+    x |= 0;
+    y |= 0;
+    this.drawString(x - (this.stringWid(str) / 2 | 0), y, str, rgb);
+  }
+  centreStringTag(x, y, str, rgb, shadowed) {
+    x |= 0;
+    y |= 0;
+    this.drawStringTag(x - (this.stringWid(str) / 2 | 0), y, str, rgb, shadowed);
+  }
+  stringWid(str) {
+    if (!str) {
+      return 0;
+    }
+    const length = str.length;
+    let w = 0;
+    for (let i = 0;i < length; i++) {
+      if (str.charAt(i) === "@" && i + 4 < length && str.charAt(i + 4) === "@") {
+        i += 4;
+      } else {
+        w += this.drawWidth[str.charCodeAt(i)];
+      }
+    }
+    return w;
+  }
+  drawString(x, y, str, rgb) {
+    if (!str) {
+      return;
+    }
+    x |= 0;
+    y |= 0;
+    y -= this.height2d;
+    for (let i = 0;i < str.length; i++) {
+      const c = PixFont.CHARCODESET[str.charCodeAt(i)];
+      if (c !== 94) {
+        this.plotLetter(this.charMask[c], x + this.charOffsetX[c], y + this.charOffsetY[c], this.charMaskWidth[c], this.charMaskHeight[c], rgb);
+      }
+      x += this.charAdvance[c];
+    }
+  }
+  centerStringWave(x, y, str, rgb, phase) {
+    if (!str) {
+      return;
+    }
+    x |= 0;
+    y |= 0;
+    x -= this.stringWid(str) / 2 | 0;
+    const offY = y - this.height2d;
+    for (let i = 0;i < str.length; i++) {
+      const c = PixFont.CHARCODESET[str.charCodeAt(i)];
+      if (c != 94) {
+        this.plotLetter(this.charMask[c], x + this.charOffsetX[c], offY + this.charOffsetY[c] + (Math.sin(i / 2 + phase / 5) * 5 | 0), this.charMaskWidth[c], this.charMaskHeight[c], rgb);
+      }
+      x += this.charAdvance[c];
+    }
+  }
+  drawStringTag(x, y, str, rgb, shadowed) {
+    x |= 0;
+    y |= 0;
+    this.strikeout = false;
+    const startX = x;
+    const length = str.length;
+    y -= this.height2d;
+    for (let i = 0;i < length; i++) {
+      if (str.charAt(i) === "@" && i + 4 < length && str.charAt(i + 4) === "@") {
+        const tag = this.evaluateTag(str.substring(i + 1, i + 4));
+        if (tag !== -1) {
+          rgb = tag;
+        }
+        i += 4;
+      } else {
+        const c = PixFont.CHARCODESET[str.charCodeAt(i)];
+        if (c !== 94) {
+          if (shadowed) {
+            this.plotLetter(this.charMask[c], x + this.charOffsetX[c] + 1, y + this.charOffsetY[c] + 1, this.charMaskWidth[c], this.charMaskHeight[c], 0 /* BLACK */);
+          }
+          this.plotLetter(this.charMask[c], x + this.charOffsetX[c], y + this.charOffsetY[c], this.charMaskWidth[c], this.charMaskHeight[c], rgb);
+        }
+        x += this.charAdvance[c];
+      }
+    }
+    if (this.strikeout) {
+      Pix2D.hline(startX, y + (this.height2d * 0.7 | 0), 8388608 /* DARKRED */, x - startX);
+    }
+  }
+  drawStringAntiMacro(x, y, str, rgb, shadowed, seed) {
+    x |= 0;
+    y |= 0;
+    this.rand.setSeed(seed);
+    const rand = (this.rand.nextInt() & 31) + 192;
+    const offY = y - this.height2d;
+    for (let i = 0;i < str.length; i++) {
+      if (str.charAt(i) === "@" && i + 4 < str.length && str.charAt(i + 4) === "@") {
+        const tag = this.evaluateTag(str.substring(i + 1, i + 4));
+        if (tag !== -1) {
+          rgb = tag;
+        }
+        i += 4;
+      } else {
+        const c = PixFont.CHARCODESET[str.charCodeAt(i)];
+        if (c !== 94) {
+          if (shadowed) {
+            this.plotLetterTrans(x + this.charOffsetX[c] + 1, offY + this.charOffsetY[c] + 1, this.charMaskWidth[c], this.charMaskHeight[c], 0 /* BLACK */, 192, this.charMask[c]);
+          }
+          this.plotLetterTrans(x + this.charOffsetX[c], offY + this.charOffsetY[c], this.charMaskWidth[c], this.charMaskHeight[c], rgb, rand, this.charMask[c]);
+        }
+        x += this.charAdvance[c];
+        if ((this.rand.nextInt() & 3) === 0) {
+          x++;
+        }
+      }
+    }
+  }
+  evaluateTag(tag) {
+    if (tag === "red") {
+      return 16711680 /* RED */;
+    } else if (tag === "gre") {
+      return 65280 /* GREEN */;
+    } else if (tag === "blu") {
+      return 255 /* BLUE */;
+    } else if (tag === "yel") {
+      return 16776960 /* YELLOW */;
+    } else if (tag === "cya") {
+      return 65535 /* CYAN */;
+    } else if (tag === "mag") {
+      return 16711935 /* MAGENTA */;
+    } else if (tag === "whi") {
+      return 16777215 /* WHITE */;
+    } else if (tag === "bla") {
+      return 0 /* BLACK */;
+    } else if (tag === "lre") {
+      return 16748608 /* LIGHTRED */;
+    } else if (tag === "dre") {
+      return 8388608 /* DARKRED */;
+    } else if (tag === "dbl") {
+      return 128 /* DARKBLUE */;
+    } else if (tag === "or1") {
+      return 16756736 /* ORANGE1 */;
+    } else if (tag === "or2") {
+      return 16740352 /* ORANGE2 */;
+    } else if (tag === "or3") {
+      return 16723968 /* ORANGE3 */;
+    } else if (tag === "gr1") {
+      return 12648192 /* GREEN1 */;
+    } else if (tag === "gr2") {
+      return 8453888 /* GREEN2 */;
+    } else if (tag === "gr3") {
+      return 4259584 /* GREEN3 */;
+    } else {
+      if (tag === "str") {
+        this.strikeout = true;
+      }
+      return -1;
+    }
+  }
+  drawStringRight(x, y, str, rgb, shadowed = true) {
+    x |= 0;
+    y |= 0;
+    if (shadowed) {
+      this.drawString(x - this.stringWid(str) + 1, y + 1, str, 0 /* BLACK */);
+    }
+    this.drawString(x - this.stringWid(str), y, str, rgb);
+  }
+  plotLetter(data, x, y, w, h, rgb) {
+    x |= 0;
+    y |= 0;
+    w |= 0;
+    h |= 0;
+    let dstOff = x + y * Pix2D.width;
+    let dstStep = Pix2D.width - w;
+    let srcStep = 0;
+    let srcOff = 0;
+    if (y < Pix2D.clipMinY) {
+      const cutoff = Pix2D.clipMinY - y;
+      h -= cutoff;
+      y = Pix2D.clipMinY;
+      srcOff += cutoff * w;
+      dstOff += cutoff * Pix2D.width;
+    }
+    if (y + h >= Pix2D.clipMaxY) {
+      h -= y + h + 1 - Pix2D.clipMaxY;
+    }
+    if (x < Pix2D.clipMinX) {
+      const cutoff = Pix2D.clipMinX - x;
+      w -= cutoff;
+      x = Pix2D.clipMinX;
+      srcOff += cutoff;
+      dstOff += cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (x + w >= Pix2D.clipMaxX) {
+      const cutoff = x + w + 1 - Pix2D.clipMaxX;
+      w -= cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (w > 0 && h > 0) {
+      this.plot(w, h, data, srcOff, srcStep, Pix2D.pixels, dstOff, dstStep, rgb);
+    }
+  }
+  plot(w, h, src, srcOff, srcStep, dst, dstOff, dstStep, rgb) {
+    w |= 0;
+    h |= 0;
+    const hw = -(w >> 2);
+    w = -(w & 3);
+    for (let y = -h;y < 0; y++) {
+      for (let x = hw;x < 0; x++) {
+        if (src[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        if (src[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        if (src[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        if (src[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+      }
+      for (let x = w;x < 0; x++) {
+        if (src[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+      }
+      dstOff += dstStep;
+      srcOff += srcStep;
+    }
+  }
+  plotLetterTrans(x, y, w, h, rgb, alpha, mask) {
+    x |= 0;
+    y |= 0;
+    w |= 0;
+    h |= 0;
+    let dstOff = x + y * Pix2D.width;
+    let dstStep = Pix2D.width - w;
+    let srcStep = 0;
+    let srcOff = 0;
+    if (y < Pix2D.clipMinY) {
+      const cutoff = Pix2D.clipMinY - y;
+      h -= cutoff;
+      y = Pix2D.clipMinY;
+      srcOff += cutoff * w;
+      dstOff += cutoff * Pix2D.width;
+    }
+    if (y + h >= Pix2D.clipMaxY) {
+      h -= y + h + 1 - Pix2D.clipMaxY;
+    }
+    if (x < Pix2D.clipMinX) {
+      const cutoff = Pix2D.clipMinX - x;
+      w -= cutoff;
+      x = Pix2D.clipMinX;
+      srcOff += cutoff;
+      dstOff += cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (x + w >= Pix2D.clipMaxX) {
+      const cutoff = x + w + 1 - Pix2D.clipMaxX;
+      w -= cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (w > 0 && h > 0) {
+      this.plotTrans(w, h, Pix2D.pixels, dstOff, dstStep, mask, srcOff, srcStep, rgb, alpha);
+    }
+  }
+  plotTrans(w, h, dst, dstOff, dstStep, mask, maskOff, maskStep, rgb, alpha) {
+    w |= 0;
+    h |= 0;
+    const mixed = ((rgb & 16711935) * alpha & 4278255360) + ((rgb & 65280) * alpha & 16711680) >> 8;
+    const invAlpha = 256 - alpha;
+    for (let y = -h;y < 0; y++) {
+      for (let x = -w;x < 0; x++) {
+        if (mask[maskOff++] === 0) {
+          dstOff++;
+        } else {
+          const dstRgb = dst[dstOff];
+          dst[dstOff++] = (((dstRgb & 16711935) * invAlpha & 4278255360) + ((dstRgb & 65280) * invAlpha & 16711680) >> 8) + mixed;
+        }
+      }
+      dstOff += dstStep;
+      maskOff += maskStep;
+    }
+  }
+}
+
+// src/io/BZip2.js
+var crc32Table = [
+  0,
+  79764919,
+  159529838,
+  222504665,
+  319059676,
+  398814059,
+  445009330,
+  507990021,
+  638119352,
+  583659535,
+  797628118,
+  726387553,
+  890018660,
+  835552979,
+  1015980042,
+  944750013,
+  1276238704,
+  1221641927,
+  1167319070,
+  1095957929,
+  1595256236,
+  1540665371,
+  1452775106,
+  1381403509,
+  1780037320,
+  1859660671,
+  1671105958,
+  1733955601,
+  2031960084,
+  2111593891,
+  1889500026,
+  1952343757,
+  2552477408,
+  2632100695,
+  2443283854,
+  2506133561,
+  2334638140,
+  2414271883,
+  2191915858,
+  2254759653,
+  3190512472,
+  3135915759,
+  3081330742,
+  3009969537,
+  2905550212,
+  2850959411,
+  2762807018,
+  2691435357,
+  3560074640,
+  3505614887,
+  3719321342,
+  3648080713,
+  3342211916,
+  3287746299,
+  3467911202,
+  3396681109,
+  4063920168,
+  4143685023,
+  4223187782,
+  4286162673,
+  3779000052,
+  3858754371,
+  3904687514,
+  3967668269,
+  881225847,
+  809987520,
+  1023691545,
+  969234094,
+  662832811,
+  591600412,
+  771767749,
+  717299826,
+  311336399,
+  374308984,
+  453813921,
+  533576470,
+  25881363,
+  88864420,
+  134795389,
+  214552010,
+  2023205639,
+  2086057648,
+  1897238633,
+  1976864222,
+  1804852699,
+  1867694188,
+  1645340341,
+  1724971778,
+  1587496639,
+  1516133128,
+  1461550545,
+  1406951526,
+  1302016099,
+  1230646740,
+  1142491917,
+  1087903418,
+  2896545431,
+  2825181984,
+  2770861561,
+  2716262478,
+  3215044683,
+  3143675388,
+  3055782693,
+  3001194130,
+  2326604591,
+  2389456536,
+  2200899649,
+  2280525302,
+  2578013683,
+  2640855108,
+  2418763421,
+  2498394922,
+  3769900519,
+  3832873040,
+  3912640137,
+  3992402750,
+  4088425275,
+  4151408268,
+  4197601365,
+  4277358050,
+  3334271071,
+  3263032808,
+  3476998961,
+  3422541446,
+  3585640067,
+  3514407732,
+  3694837229,
+  3640369242,
+  1762451694,
+  1842216281,
+  1619975040,
+  1682949687,
+  2047383090,
+  2127137669,
+  1938468188,
+  2001449195,
+  1325665622,
+  1271206113,
+  1183200824,
+  1111960463,
+  1543535498,
+  1489069629,
+  1434599652,
+  1363369299,
+  622672798,
+  568075817,
+  748617968,
+  677256519,
+  907627842,
+  853037301,
+  1067152940,
+  995781531,
+  51762726,
+  131386257,
+  177728840,
+  240578815,
+  269590778,
+  349224269,
+  429104020,
+  491947555,
+  4046411278,
+  4126034873,
+  4172115296,
+  4234965207,
+  3794477266,
+  3874110821,
+  3953728444,
+  4016571915,
+  3609705398,
+  3555108353,
+  3735388376,
+  3664026991,
+  3290680682,
+  3236090077,
+  3449943556,
+  3378572211,
+  3174993278,
+  3120533705,
+  3032266256,
+  2961025959,
+  2923101090,
+  2868635157,
+  2813903052,
+  2742672763,
+  2604032198,
+  2683796849,
+  2461293480,
+  2524268063,
+  2284983834,
+  2364738477,
+  2175806836,
+  2238787779,
+  1569362073,
+  1498123566,
+  1409854455,
+  1355396672,
+  1317987909,
+  1246755826,
+  1192025387,
+  1137557660,
+  2072149281,
+  2135122070,
+  1912620623,
+  1992383480,
+  1753615357,
+  1816598090,
+  1627664531,
+  1707420964,
+  295390185,
+  358241886,
+  404320391,
+  483945776,
+  43990325,
+  106832002,
+  186451547,
+  266083308,
+  932423249,
+  861060070,
+  1041341759,
+  986742920,
+  613929101,
+  542559546,
+  756411363,
+  701822548,
+  3316196985,
+  3244833742,
+  3425377559,
+  3370778784,
+  3601682597,
+  3530312978,
+  3744426955,
+  3689838204,
+  3819031489,
+  3881883254,
+  3928223919,
+  4007849240,
+  4037393693,
+  4100235434,
+  4180117107,
+  4259748804,
+  2310601993,
+  2373574846,
+  2151335527,
+  2231098320,
+  2596047829,
+  2659030626,
+  2470359227,
+  2550115596,
+  2947551409,
+  2876312838,
+  2788305887,
+  2733848168,
+  3165939309,
+  3094707162,
+  3040238851,
+  2985771188
+];
+var masks = [
+  0,
+  1,
+  3,
+  7,
+  15,
+  31,
+  63,
+  127,
+  255,
+  511,
+  1023,
+  2047,
+  4095,
+  8191,
+  16383,
+  32767,
+  65535,
+  131071,
+  262143,
+  524287,
+  1048575,
+  2097151,
+  4194303,
+  8388607,
+  16777215,
+  33554431,
+  67108863,
+  134217727,
+  268435455,
+  536870911,
+  1073741823,
+  -2147483648
+];
+function createOrderedHuffmanTable(lengths) {
+  const z = [];
+  for (let i = 0;i < lengths.length; i += 1) {
+    z.push([i, lengths[i]]);
+  }
+  z.push([lengths.length, -1]);
+  const table = [];
+  let start = z[0][0];
+  let bits = z[0][1];
+  for (let i = 0;i < z.length; i += 1) {
+    const finish = z[i][0];
+    const endbits = z[i][1];
+    if (bits) {
+      for (let code = start;code < finish; code += 1) {
+        table.push({ code, bits, symbol: undefined });
+      }
+    }
+    start = finish;
+    bits = endbits;
+    if (endbits === -1) {
+      break;
+    }
+  }
+  table.sort((a, b) => a.bits - b.bits || a.code - b.code);
+  let tempBits = 0;
+  let symbol = -1;
+  const fastAccess = [];
+  let current;
+  for (let i = 0;i < table.length; i += 1) {
+    const t = table[i];
+    symbol += 1;
+    if (t.bits !== tempBits) {
+      symbol <<= t.bits - tempBits;
+      tempBits = t.bits;
+      current = fastAccess[tempBits] = {};
+    }
+    t.symbol = symbol;
+    current[symbol] = t;
+  }
+  return {
+    table,
+    fastAccess
+  };
+}
+function bwtReverse(src, primary) {
+  if (primary < 0 || primary >= src.length) {
+    throw RangeError("Out of bound");
+  }
+  const unsorted = src.slice();
+  src.sort((a, b) => a - b);
+  const start = {};
+  for (let i2 = src.length - 1;i2 >= 0; i2 -= 1) {
+    start[src[i2]] = i2;
+  }
+  const links = [];
+  for (let i2 = 0;i2 < src.length; i2 += 1) {
+    links.push(start[unsorted[i2]]++);
+  }
+  let i;
+  const first = src[i = primary];
+  const ret = [];
+  for (let j = 1;j < src.length; j += 1) {
+    const x = src[i = links[i]];
+    if (x === undefined) {
+      ret.push(255);
+    } else {
+      ret.push(x);
+    }
+  }
+  ret.push(first);
+  ret.reverse();
+  return ret;
+}
+function bunzip2(bytes, checkMagic = false, checkCRC = false) {
+  let index = 0;
+  let bitfield = 0;
+  let bits = 0;
+  const read = (n) => {
+    if (n >= 32) {
+      const nd = n >> 1;
+      return read(nd) * (1 << nd) + read(n - nd);
+    }
+    while (bits < n) {
+      bitfield = (bitfield << 8) + bytes[index];
+      index += 1;
+      bits += 8;
+    }
+    const m = masks[n];
+    const r = bitfield >> bits - n & m;
+    bits -= n;
+    bitfield &= ~(m << bits);
+    return r;
+  };
+  let blocksize = 1;
+  if (checkMagic) {
+    const magic = read(16);
+    if (magic !== 16986) {
+      throw new Error("Invalid magic");
+    }
+    const method = read(8);
+    if (method !== 104) {
+      throw new Error("Invalid method");
+    }
+    blocksize = read(8);
+    if (blocksize >= 49 && blocksize <= 57) {
+      blocksize -= 48;
+    } else {
+      throw new Error("Invalid blocksize");
+    }
+  }
+  let out = new Uint8Array(bytes.length * 1.5);
+  let outIndex = 0;
+  let newCRC = -1;
+  while (true) {
+    const blocktype = read(48);
+    const crc = read(32) | 0;
+    if (blocktype === 54156738319193) {
+      if (read(1)) {
+        throw new Error("do not support randomised");
+      }
+      const pointer = read(24);
+      const used = [];
+      const usedGroups = read(16);
+      for (let i2 = 1 << 15;i2 > 0; i2 >>= 1) {
+        if (!(usedGroups & i2)) {
+          for (let j = 0;j < 16; j += 1) {
+            used.push(false);
+          }
+          continue;
+        }
+        const usedChars = read(16);
+        for (let j = 1 << 15;j > 0; j >>= 1) {
+          used.push(!!(usedChars & j));
+        }
+      }
+      const groups = read(3);
+      if (groups < 2 || groups > 6) {
+        throw new Error("Invalid number of huffman groups");
+      }
+      const selectorsUsed = read(15);
+      const selectors = [];
+      const mtf = Array.from({ length: groups }, (_, i2) => i2);
+      for (let i2 = 0;i2 < selectorsUsed; i2 += 1) {
+        let c = 0;
+        while (read(1)) {
+          c += 1;
+          if (c >= groups) {
+            throw new Error("MTF table out of range");
+          }
+        }
+        const v = mtf[c];
+        for (let j = c;j > 0; mtf[j] = mtf[--j]) {}
+        selectors.push(v);
+        mtf[0] = v;
+      }
+      const symbolsInUse = used.reduce((a, b) => a + b, 0) + 2;
+      const tables = [];
+      for (let i2 = 0;i2 < groups; i2 += 1) {
+        let length = read(5);
+        const lengths = [];
+        for (let j = 0;j < symbolsInUse; j += 1) {
+          if (length < 0 || length > 20) {
+            throw new Error("Huffman group length outside range");
+          }
+          while (read(1)) {
+            length -= read(1) * 2 - 1;
+          }
+          lengths.push(length);
+        }
+        tables.push(createOrderedHuffmanTable(lengths));
+      }
+      const favourites = [];
+      for (let i2 = 0;i2 < used.length - 1; i2 += 1) {
+        if (used[i2]) {
+          favourites.push(i2);
+        }
+      }
+      let decoded = 0;
+      let selectorPointer = 0;
+      let t;
+      let r;
+      let repeat = 0;
+      let repeatPower = 0;
+      const buffer = [];
+      while (true) {
+        decoded -= 1;
+        if (decoded <= 0) {
+          decoded = 50;
+          if (selectorPointer <= selectors.length) {
+            t = tables[selectors[selectorPointer]];
+            selectorPointer += 1;
+          }
+        }
+        for (const b in t.fastAccess) {
+          if (!Object.prototype.hasOwnProperty.call(t.fastAccess, b)) {
+            continue;
+          }
+          if (bits < b) {
+            bitfield = (bitfield << 8) + bytes[index];
+            index += 1;
+            bits += 8;
+          }
+          r = t.fastAccess[b][bitfield >> bits - b];
+          if (r) {
+            bitfield &= masks[bits -= b];
+            r = r.code;
+            break;
+          }
+        }
+        if (r >= 0 && r <= 1) {
+          if (repeat === 0) {
+            repeatPower = 1;
+          }
+          repeat += repeatPower << r;
+          repeatPower <<= 1;
+          continue;
+        } else {
+          const v = favourites[0];
+          for (;repeat > 0; repeat -= 1) {
+            buffer.push(v);
+          }
+        }
+        if (r === symbolsInUse - 1) {
+          break;
+        } else {
+          const v = favourites[r - 1];
+          for (let j = r - 1;j > 0; favourites[j] = favourites[--j]) {}
+          favourites[0] = v;
+          buffer.push(v);
+        }
+      }
+      const nt = bwtReverse(buffer, pointer);
+      let i = 0;
+      while (i < nt.length) {
+        const c = nt[i];
+        let count = 1;
+        if (i < nt.length - 4 && nt[i + 1] === c && nt[i + 2] === c && nt[i + 3] === c) {
+          count = nt[i + 4] + 4;
+          i += 5;
+        } else {
+          i += 1;
+        }
+        if (outIndex + count >= out.length) {
+          const old = out;
+          out = new Uint8Array(old.length * 2);
+          out.set(old);
+        }
+        for (let j = 0;j < count; j += 1) {
+          if (checkCRC) {
+            newCRC = newCRC << 8 ^ crc32Table[(newCRC >> 24 ^ c) & 255];
+          }
+          out[outIndex] = c;
+          outIndex += 1;
+        }
+      }
+      if (checkCRC) {
+        const calculatedCRC = newCRC ^ -1;
+        if (calculatedCRC !== crc) {
+          throw new Error(`CRC mismatch: ${calculatedCRC} !== ${crc}`);
+        }
+        newCRC = -1;
+      }
+    } else if (blocktype === 25779555029136) {
+      read(bits & 7);
+      break;
+    } else {
+      throw new Error("Invalid bz2 blocktype");
+    }
+  }
+  return out.subarray(0, outIndex);
+}
+
+// src/io/Jagfile.ts
+class Jagfile {
+  static genHash(name) {
+    let hash = 0;
+    name = name.toUpperCase();
+    for (let i = 0;i < name.length; i++) {
+      hash = hash * 61 + name.charCodeAt(i) - 32 | 0;
+    }
+    return hash;
+  }
+  data;
+  unpacked;
+  fileCount;
+  fileHash;
+  fileUnpackedSize;
+  filePackedSize;
+  fileOffset;
+  fileUnpacked = [];
+  constructor(src) {
+    let data = new Packet(new Uint8Array(src));
+    const unpackedSize = data.g3();
+    const packedSize = data.g3();
+    if (unpackedSize === packedSize) {
+      this.data = src;
+      this.unpacked = false;
+    } else {
+      this.data = bunzip2(src.subarray(6));
+      data = new Packet(new Uint8Array(this.data));
+      this.unpacked = true;
+    }
+    this.fileCount = data.g2();
+    this.fileHash = [];
+    this.fileUnpackedSize = [];
+    this.filePackedSize = [];
+    this.fileOffset = [];
+    let offset = data.pos + this.fileCount * 10;
+    for (let i = 0;i < this.fileCount; i++) {
+      this.fileHash.push(data.g4());
+      this.fileUnpackedSize.push(data.g3());
+      this.filePackedSize.push(data.g3());
+      this.fileOffset.push(offset);
+      offset += this.filePackedSize[i];
+    }
+  }
+  read(name) {
+    const hash = Jagfile.genHash(name);
+    const index = this.fileHash.indexOf(hash);
+    if (index === -1) {
+      return null;
+    }
+    return this.readIndex(index);
+  }
+  readIndex(index) {
+    if (index < 0 || index >= this.fileCount) {
+      return null;
+    }
+    if (this.fileUnpacked[index]) {
+      return this.fileUnpacked[index];
+    }
+    const offset = this.fileOffset[index];
+    const length = this.filePackedSize[index];
+    const src = new Uint8Array(this.data.subarray(offset, offset + length));
+    if (this.unpacked) {
+      this.fileUnpacked[index] = src;
+      return src;
+    } else {
+      const data = bunzip2(src);
+      this.fileUnpacked[index] = data;
+      return data;
+    }
+  }
+}
+
+// src/mapview/WorldMapFont.ts
+class WorldMapFont extends Pix2D {
+  static CHARSET = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!"£$%^&*()-_=+[{]};:'@#~,<.>/?\\| `;
+  static fontChar = new TypedArray1d(256, 0);
+  static fonts = "Arial, Helvetica, sans-serif";
+  static {
+    for (let i = 0;i < 256; i++) {
+      let c = WorldMapFont.CHARSET.indexOf(String.fromCharCode(i));
+      if (c === -1) {
+        c = 74;
+      }
+      WorldMapFont.fontChar[i] = c * 9;
+    }
+  }
+  fontCharTrans = false;
+  fontCharPos = 0;
+  fontCharInfo = new Uint8Array(1e5);
+  canvas;
+  ctx;
+  static load(jag, name) {
+    const font = new WorldMapFont;
+    const fm = jag.read(`${name}.dat`);
+    if (!fm) {
+      throw new Error;
+    }
+    font.fontCharTrans = false;
+    font.fontCharInfo = fm;
+    font.fontCharPos = fm.length;
+    return font;
+  }
+  static fromSystem(size, bold) {
+    const font = new WorldMapFont;
+    font.fontCharPos = 855;
+    font.fontCharTrans = false;
+    font.canvas = document.createElement("canvas");
+    font.canvas.width = size + 50;
+    font.canvas.height = size + 50;
+    font.ctx = font.canvas.getContext("2d", { willReadFrequently: true });
+    const style = bold ? "bold" : "";
+    font.ctx.font = `${style} ${size}px ${WorldMapFont.fonts}`;
+    for (let i = 0;i < 95; i++) {
+      font.loadGlyph(WorldMapFont.CHARSET[i], i, false);
+    }
+    if (bold && font.fontCharTrans) {
+      font.ctx.font = `${size}px ${WorldMapFont.fonts}`;
+      for (let i = 0;i < 95; i++) {
+        font.loadGlyph(WorldMapFont.CHARSET[i], i, false);
+      }
+      if (!font.fontCharTrans) {
+        font.fontCharPos = 855;
+        font.fontCharTrans = false;
+        for (let i = 0;i < 95; i++) {
+          font.loadGlyph(WorldMapFont.CHARSET[i], i, true);
+        }
+      }
+    }
+    font.fontCharInfo = font.fontCharInfo.slice(0, font.fontCharPos);
+    return font;
+  }
+  loadGlyph(c, id, offset) {
+    const metrics = this.ctx.measureText(c);
+    let width = Math.ceil(metrics.width);
+    const initialWidth = width;
+    if (offset) {
+      if (c === "/") {
+        offset = false;
+      }
+      if (c === "f" || c === "t" || c === "w" || c === "v" || c === "k" || c === "x" || c === "y" || c === "A" || c === "V" || c === "W") {
+        width++;
+      }
+    }
+    const maxAscent = Math.ceil(metrics.actualBoundingBoxAscent);
+    const maxDescent = Math.ceil(metrics.actualBoundingBoxDescent);
+    const totalDescent = maxAscent + maxDescent;
+    const height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+    this.ctx.fillStyle = "black";
+    this.ctx.fillRect(0, 0, width, height);
+    this.ctx.fillStyle = "white";
+    this.ctx.fillText(c, 0, maxAscent);
+    if (offset) {
+      this.ctx.fillText(c, 1, maxAscent);
+    }
+    const imageData = this.ctx.getImageData(0, 0, width, height);
+    const pixels = imageData.data;
+    let top = totalDescent;
+    let left = width;
+    let bottom = 0;
+    let right = 0;
+    for (let y = 0;y < totalDescent; y++) {
+      for (let x = 0;x < width; x++) {
+        const alpha = pixels[(x + y * width) * 4];
+        if (alpha !== 0) {
+          top = Math.min(top, y);
+          bottom = Math.max(bottom, y + 1);
+          left = Math.min(left, x);
+          right = Math.max(right, x + 1);
+        }
+      }
+    }
+    this.fontCharInfo[id * 9 + 0] = this.fontCharPos >> 14;
+    this.fontCharInfo[id * 9 + 1] = this.fontCharPos >> 7 & 127;
+    this.fontCharInfo[id * 9 + 2] = this.fontCharPos & 127;
+    this.fontCharInfo[id * 9 + 3] = right - left;
+    this.fontCharInfo[id * 9 + 4] = bottom - top;
+    this.fontCharInfo[id * 9 + 5] = left;
+    this.fontCharInfo[id * 9 + 6] = maxAscent - top;
+    this.fontCharInfo[id * 9 + 7] = initialWidth;
+    this.fontCharInfo[id * 9 + 8] = height;
+    for (let y = top;y < bottom; y++) {
+      for (let x = left;x < right; x++) {
+        const alpha = pixels[(x + y * width) * 4] & 255;
+        if (alpha > 30 && alpha < 230) {
+          this.fontCharTrans = true;
+        }
+        this.fontCharInfo[this.fontCharPos++] = alpha;
+      }
+    }
+  }
+  centreString(str, x, y, rgb, shadowed) {
+    this.drawString(str, x - (this.stringWid(str) / 2 | 0), y, rgb, shadowed);
+  }
+  stringWid(str) {
+    const length = str.length;
+    let w = 0;
+    for (let i = 0;i < length; i++) {
+      if (str.charAt(i) === "@" && i + 4 < length && str.charAt(i + 4) === "@") {
+        i += 4;
+      } else if (str.charAt(i) === "~" && i + 4 < length && str.charAt(i + 4) === "~") {
+        i += 4;
+      } else {
+        const c = WorldMapFont.fontChar[str.charCodeAt(i)];
+        w += this.fontCharInfo[c + 7];
+      }
+    }
+    return w;
+  }
+  drawString(str, x, y, rgb, shadowed) {
+    if (this.fontCharTrans || rgb === 0) {
+      shadowed = false;
+    }
+    for (let i = 0;i < str.length; i++) {
+      const c = WorldMapFont.fontChar[str.charCodeAt(i)];
+      if (shadowed) {
+        this.drawChar(c, x + 1, y, 0);
+        this.drawChar(c, x, y + 1, 0);
+      }
+      this.drawChar(c, x, y, rgb);
+      x += this.fontCharInfo[c + 7];
+    }
+  }
+  drawChar(c, x, y, rgb) {
+    const info = this.fontCharInfo;
+    let dx = x + info[c + 5];
+    let dy = y - info[c + 6];
+    let w = info[c + 3];
+    let h = info[c + 4];
+    let srcOff = info[c] << 14 | info[c + 1] << 7 | info[c + 2];
+    let srcStep = 0;
+    let dstOff = dx + dy * Pix2D.width;
+    let dstStep = Pix2D.width - w;
+    if (y < Pix2D.clipMinY) {
+      const cutoff = Pix2D.clipMinY - y;
+      h -= cutoff;
+      y = Pix2D.clipMinY;
+      srcOff += cutoff * w;
+      dstOff += cutoff * Pix2D.width;
+    }
+    if (y + h > Pix2D.clipMaxY) {
+      h -= y + h - Pix2D.clipMaxY;
+    }
+    if (x < Pix2D.clipMinX) {
+      const cutoff = Pix2D.clipMinX - x;
+      w -= cutoff;
+      x = Pix2D.clipMinX;
+      srcOff += cutoff;
+      dstOff += cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (x + w > Pix2D.clipMaxX) {
+      const cutoff = x + w - Pix2D.clipMaxX;
+      w -= cutoff;
+      srcStep += cutoff;
+      dstStep += cutoff;
+    }
+    if (w > 0 && h > 0) {
+      if (this.fontCharTrans) {
+        this.plotLetterTrans(w, h, info, rgb, srcOff, srcStep, Pix2D.pixels, dstOff, dstStep);
+      } else {
+        this.plotLetter(w, h, info, rgb, srcOff, srcStep, Pix2D.pixels, dstOff, dstStep);
+      }
+    }
+  }
+  plotLetter(w, h, mask, rgb, srcOff, srcStep, dst, dstOff, dstStep) {
+    const qw = -(w >> 2);
+    w = -(w & 3);
+    for (let y = -h;y < 0; y++) {
+      for (let x = qw;x < 0; x++) {
+        if (mask[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        if (mask[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        if (mask[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+        if (mask[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+      }
+      for (let x = w;x < 0; x++) {
+        if (mask[srcOff++] === 0) {
+          dstOff++;
+        } else {
+          dst[dstOff++] = rgb;
+        }
+      }
+      dstOff += dstStep;
+      srcOff += srcStep;
+    }
+  }
+  plotLetterTrans(w, h, mask, rgb, srcOff, srcStep, dst, dstOff, dstStep) {
+    for (let y = -h;y < 0; y++) {
+      for (let x = -w;x < 0; x++) {
+        const trans = mask[srcOff++] & 255;
+        if (trans === 0) {
+          dstOff++;
+        } else if (trans >= 230) {
+          dst[dstOff++] = rgb;
+        } else {
+          const dstRgb = dst[dstOff];
+          dst[dstOff++] = ((rgb & 16711935) * trans + (dstRgb & 16711935) * (256 - trans) & 4278255360) + ((rgb & 65280) * trans + (dstRgb & 65280) * (256 - trans) & 16711680) >> 8;
+        }
+      }
+      dstOff += dstStep;
+      srcOff += srcStep;
+    }
+  }
+  getHeight() {
+    return this.fontCharInfo[8] - 1;
+  }
+  getYOffset() {
+    return this.fontCharInfo[6];
+  }
+}
+
+// src/mapview/MapView.ts
+class MapView extends GameShell {
+  static shouldDrawBorders = false;
+  static shouldDrawLabels = true;
+  static shouldDrawNpcs = false;
+  static shouldDrawItems = false;
+  static shouldDrawMultimap = false;
+  static shouldDrawFreemap = false;
+  mapStartX = 50 << 6;
+  mapStartZ = 50 << 6;
+  mapWidth = 20 << 6;
+  mapHeight = 19 << 6;
+  mapOriginX = 36 << 6;
+  mapOriginZ = 44 << 6;
+  mapArea = 0;
+  maxLabelCount = 1000;
+  mapLabelCount = 0;
+  mapLabel = [];
+  mapLabelX = [];
+  mapLabelY = [];
+  mapLabelSize = [];
+  floorcol1 = [0];
+  floorcol2 = [0];
+  floort1 = [];
+  floort2 = [];
+  floorsr = [];
+  locWall = [];
+  locMapscene = [];
+  locMapfunction = [];
+  objPos = [];
+  npcPos = [];
+  multiPos = [];
+  freePos = [];
+  mapscene = [];
+  mapfunction = [];
+  mapdot0 = null;
+  mapdot1 = null;
+  b12 = null;
+  f11 = null;
+  f12 = null;
+  f14 = null;
+  f17 = null;
+  f19 = null;
+  f22 = null;
+  f26 = null;
+  f30 = null;
+  blendedGroundColour = [];
+  redraw = true;
+  redrawTimer = 0;
+  dragFocusX = -1;
+  dragFocusZ = -1;
+  keyX = 5;
+  keyY = 13;
+  keyWidth = 140;
+  keyHeight = 470;
+  showKey = false;
+  keyPage = 0;
+  lastKeyPage = 0;
+  currentKeyHover = -1;
+  lastKeyHover = 0;
+  currentKey = 0;
+  flashTimer = 0;
+  visibleMapFunctionsX = new Int32Array(2000);
+  visibleMapFunctionsY = new Int32Array(2000);
+  visibleMapFunctions = new Int32Array(2000);
+  activeMapFunctionX = new Int32Array(2000);
+  activeMapFunctionZ = new Int32Array(2000);
+  activeMapFunctions = new Int32Array(2000);
+  activeMapFunctionCount = 0;
+  overview = null;
+  overviewHeight = 200;
+  overviewWidth = this.overviewHeight * this.mapWidth / this.mapHeight | 0;
+  overviewX = 635 - this.overviewWidth - 5;
+  overviewY = 503 - this.overviewHeight - 20;
+  showOverview = false;
+  INACTIVE_BORDER_TL = 8943445;
+  INACTIVE = 7824964;
+  INACTIVE_BORDER_BR = 6706483;
+  ACTIVE_BORDER_TL = 11141120;
+  ACTIVE = 10027008;
+  ACTIVE_BORDER_BR = 8912896;
+  zoom = 4;
+  targetZoom = 4;
+  focusX = this.mapStartX - this.mapOriginX;
+  focusZ = this.mapOriginZ + this.mapHeight - this.mapStartZ;
+  keyNames = [
+    "General Store",
+    "Sword Shop",
+    "Magic Shop",
+    "Axe Shop",
+    "Helmet Shop",
+    "Bank",
+    "Quest Start",
+    "Amulet Shop",
+    "Mining Site",
+    "Furnace",
+    "Anvil",
+    "Combat Training",
+    "Dungeon",
+    "Staff Shop",
+    "Platebody Shop",
+    "Platelegs Shop",
+    "Scimitar Shop",
+    "Archery Shop",
+    "Shield Shop",
+    "Altar",
+    "Herbalist",
+    "Jewelery",
+    "Gem Shop",
+    "Crafting Shop",
+    "Candle Shop",
+    "Fishing Shop",
+    "Fishing Spot",
+    "Clothes Shop",
+    "Apothecary",
+    "Silk Trader",
+    "Kebab Seller",
+    "Pub/Bar",
+    "Mace Shop",
+    "Tannery",
+    "Rare Trees",
+    "Spinning Wheel",
+    "Food Shop",
+    "Cookery Shop",
+    "???",
+    "Water Source",
+    "Cooking Range",
+    "Skirt Shop",
+    "Potters Wheel",
+    "Windmill",
+    "Mining Shop",
+    "Chainmail Shop",
+    "Silver Shop",
+    "Fur Trader",
+    "Spice Shop"
+  ];
+  constructor() {
+    super();
+    this.run();
+  }
+  async maininit() {
+    this.keyHeight = this.sHei - this.keyY - 20;
+    this.overviewX = this.sWid - this.overviewWidth - 5;
+    this.overviewY = this.sHei - this.overviewHeight - 20;
+    this.redrawScreen = true;
+    canvas.style.cursor = "grab";
+    const worldmap = await this.loadWorldmap();
+    await this.drawProgress(100, "Please wait... Rendering Map");
+    const labels = new Packet(worldmap.read("labels.dat"));
+    this.mapLabelCount = labels.g2();
+    for (let i = 0;i < this.mapLabelCount; i++) {
+      this.mapLabel[i] = labels.gjstr();
+      this.mapLabelX[i] = labels.g2();
+      this.mapLabelY[i] = labels.g2();
+      this.mapLabelSize[i] = labels.g1();
+    }
+    const floorcol = new Packet(worldmap.read("floorcol.dat"));
+    const floorcolCount = floorcol.g2();
+    for (let i = 0;i < floorcolCount; i++) {
+      this.floorcol1[i + 1] = floorcol.g4();
+      this.floorcol2[i + 1] = floorcol.g4();
+    }
+    const underlay = new Packet(worldmap.read("underlay.dat"));
+    this.floort1 = new TypedArray2d(this.mapWidth, this.mapHeight, 0);
+    this.loadUnderlay(underlay);
+    const overlay = new Packet(worldmap.read("overlay.dat"));
+    this.floort2 = new TypedArray2d(this.mapWidth, this.mapHeight, 0);
+    this.floorsr = new TypedArray2d(this.mapWidth, this.mapHeight, 0);
+    this.loadOverlay(overlay);
+    const loc = new Packet(worldmap.read("loc.dat"));
+    this.locWall = new TypedArray2d(this.mapWidth, this.mapHeight, 0);
+    this.locMapscene = new TypedArray2d(this.mapWidth, this.mapHeight, 0);
+    this.locMapfunction = new TypedArray2d(this.mapWidth, this.mapHeight, 0);
+    this.loadLoc(loc);
+    const obj = new Packet(worldmap.read("obj.dat"));
+    this.objPos = new TypedArray2d(this.mapWidth, this.mapHeight, false);
+    this.loadObj(obj);
+    const npc = new Packet(worldmap.read("npc.dat"));
+    this.npcPos = new TypedArray2d(this.mapWidth, this.mapHeight, false);
+    this.loadNpc(npc);
+    const multi = new Packet(worldmap.read("multi.dat"));
+    this.multiPos = new TypedArray2d(this.mapWidth, this.mapHeight, false);
+    this.loadMulti(multi);
+    const free = new Packet(worldmap.read("free.dat"));
+    this.freePos = new TypedArray2d(this.mapWidth, this.mapHeight, false);
+    this.loadFree(free);
+    try {
+      for (let i = 0;i < 50; i++) {
+        this.mapscene[i] = Pix8.load(worldmap, "mapscene", i);
+      }
+    } catch (_e) {}
+    try {
+      for (let i = 0;i < 50; i++) {
+        this.mapfunction[i] = Pix32.load(worldmap, "mapfunction", i);
+      }
+    } catch (_e) {}
+    this.mapdot0 = Pix32.load(worldmap, "mapdots", 0);
+    this.mapdot1 = Pix32.load(worldmap, "mapdots", 1);
+    this.b12 = PixFont.fromArchive(worldmap, "b12");
+    try {
+      this.f11 = WorldMapFont.load(worldmap, "f11");
+      this.f12 = WorldMapFont.load(worldmap, "f12");
+      this.f14 = WorldMapFont.load(worldmap, "f14");
+      this.f17 = WorldMapFont.load(worldmap, "f17");
+      this.f19 = WorldMapFont.load(worldmap, "f19");
+      this.f22 = WorldMapFont.load(worldmap, "f22");
+      this.f26 = WorldMapFont.load(worldmap, "f26");
+      this.f30 = WorldMapFont.load(worldmap, "f30");
+    } catch (err) {
+      console.error(err);
+      this.f11 = WorldMapFont.fromSystem(11, true);
+      this.f12 = WorldMapFont.fromSystem(12, true);
+      this.f14 = WorldMapFont.fromSystem(14, true);
+      this.f17 = WorldMapFont.fromSystem(17, true);
+      this.f19 = WorldMapFont.fromSystem(19, true);
+      this.f22 = WorldMapFont.fromSystem(22, true);
+      this.f26 = WorldMapFont.fromSystem(26, true);
+      this.f30 = WorldMapFont.fromSystem(30, true);
+    }
+    this.blendedGroundColour = new TypedArray2d(this.mapWidth, this.mapHeight, 0);
+    this.getBlendedGroundColour();
+    this.overview = new Pix32(this.overviewWidth, this.overviewHeight);
+    this.overview.setPixels();
+    this.renderWorldMap(0, 0, this.mapWidth, this.mapHeight, 0, 0, this.overviewWidth, this.overviewHeight);
+    Pix2D.drawRect(0, 0, this.overviewWidth, this.overviewHeight, 0);
+    Pix2D.drawRect(1, 1, this.overviewWidth - 2, this.overviewHeight - 2, this.INACTIVE_BORDER_TL);
+    this.drawArea?.bind();
+  }
+  async maindraw() {
+    if (this.redraw) {
+      this.redraw = false;
+      this.redrawTimer = 0;
+      Pix2D.cls();
+      const left = this.focusX - (this.sWid / this.zoom | 0);
+      const top = this.focusZ - (this.sHei / this.zoom | 0);
+      const right = this.focusX + (this.sWid / this.zoom | 0);
+      const bottom = this.focusZ + (this.sHei / this.zoom | 0);
+      this.renderWorldMap(left, top, right, bottom, 0, 0, this.sWid, this.sHei);
+      if (this.showOverview) {
+        this.overview?.quickPlotSprite(this.overviewX, this.overviewY);
+        Pix2D.fillRectTrans(this.overviewX + this.overviewWidth * left / this.mapWidth | 0, this.overviewY + this.overviewHeight * top / this.mapHeight | 0, (right - left) * this.overviewWidth / this.mapWidth | 0, (bottom - top) * this.overviewHeight / this.mapHeight | 0, 16711680, 128);
+        Pix2D.drawRect(this.overviewX + this.overviewWidth * left / this.mapWidth | 0, this.overviewY + this.overviewHeight * top / this.mapHeight | 0, (right - left) * this.overviewWidth / this.mapWidth | 0, (bottom - top) * this.overviewHeight / this.mapHeight | 0, 16711680);
+        if (this.flashTimer > 0 && this.flashTimer % 10 < 5) {
+          for (let i = 0;i < this.activeMapFunctionCount; i++) {
+            if (this.activeMapFunctions[i] == this.currentKey) {
+              const x = this.overviewX + this.overviewWidth * this.activeMapFunctionX[i] / this.mapWidth | 0;
+              const y2 = this.overviewY + this.overviewHeight * this.activeMapFunctionZ[i] / this.mapHeight | 0;
+              Pix2D.fillCircle(x, y2, 2, 16776960, 256);
+            }
+          }
+        }
+      }
+      if (this.showKey) {
+        this.drawStringBox(this.keyX, this.keyY, this.keyWidth, 18, 10066329, 7829367, 5592405, "Prev page");
+        this.drawStringBox(this.keyX, this.keyY + 18, this.keyWidth, this.keyHeight - 36, 10066329, 7829367, 5592405, "");
+        this.drawStringBox(this.keyX, this.keyY + this.keyHeight - 18, this.keyWidth, 18, 10066329, 7829367, 5592405, "Next page");
+        const maxKeys = (this.keyHeight - 20) / 18;
+        let y2 = this.keyY + 18 + 3;
+        for (let row = 0;row < maxKeys; row++) {
+          if (row + this.lastKeyPage < this.mapfunction.length && row + this.lastKeyPage < this.keyNames.length) {
+            if (this.keyNames[row + this.lastKeyPage] === "???") {
+              continue;
+            }
+            this.mapfunction[row + this.lastKeyPage].plotSprite(this.keyX + 3, y2);
+            this.b12?.drawString(this.keyX + 21, y2 + 14, this.keyNames[row + this.lastKeyPage], 0);
+            let rgb = 16777215;
+            if (this.currentKeyHover == row + this.lastKeyPage) {
+              rgb = 12298922;
+            }
+            if (this.flashTimer > 0 && this.flashTimer % 10 < 5 && this.currentKey == row + this.lastKeyPage) {
+              rgb = 16776960;
+            }
+            this.b12?.drawString(this.keyX + 20, y2 + 13, this.keyNames[row + this.lastKeyPage], rgb);
+          }
+          y2 += 17;
+        }
+      }
+      this.drawStringBox(this.overviewX, this.overviewY + this.overviewHeight, this.overviewWidth, 18, this.INACTIVE_BORDER_TL, this.INACTIVE, this.INACTIVE_BORDER_BR, "Overview");
+      this.drawStringBox(this.keyX, this.keyY + this.keyHeight, this.keyWidth, 18, this.INACTIVE_BORDER_TL, this.INACTIVE, this.INACTIVE_BORDER_BR, "Key");
+      const y = this.sHei - this.keyY - 20 + 1;
+      if (this.targetZoom == 3) {
+        this.drawStringBox(170, y, 50, 30, this.ACTIVE_BORDER_TL, this.ACTIVE, this.ACTIVE_BORDER_BR, "37%");
+      } else {
+        this.drawStringBox(170, y, 50, 30, this.INACTIVE_BORDER_TL, this.INACTIVE, this.INACTIVE_BORDER_BR, "37%");
+      }
+      if (this.targetZoom == 4) {
+        this.drawStringBox(230, y, 50, 30, this.ACTIVE_BORDER_TL, this.ACTIVE, this.ACTIVE_BORDER_BR, "50%");
+      } else {
+        this.drawStringBox(230, y, 50, 30, this.INACTIVE_BORDER_TL, this.INACTIVE, this.INACTIVE_BORDER_BR, "50%");
+      }
+      if (this.targetZoom == 6) {
+        this.drawStringBox(290, y, 50, 30, this.ACTIVE_BORDER_TL, this.ACTIVE, this.ACTIVE_BORDER_BR, "75%");
+      } else {
+        this.drawStringBox(290, y, 50, 30, this.INACTIVE_BORDER_TL, this.INACTIVE, this.INACTIVE_BORDER_BR, "75%");
+      }
+      if (this.targetZoom == 8) {
+        this.drawStringBox(350, y, 50, 30, this.ACTIVE_BORDER_TL, this.ACTIVE, this.ACTIVE_BORDER_BR, "100%");
+      } else {
+        this.drawStringBox(350, y, 50, 30, this.INACTIVE_BORDER_TL, this.INACTIVE, this.INACTIVE_BORDER_BR, "100%");
+      }
+    }
+    this.redrawTimer--;
+    if (this.redrawTimer <= 0) {
+      this.drawArea?.draw(0, 0);
+      this.redrawTimer = 50;
+    }
+  }
+  refresh() {
+    this.redrawTimer = 0;
+  }
+  async mainloop() {
+    if (this.keyHeld[1] == 1) {
+      this.focusX = this.focusX - 16 / this.zoom | 0;
+      this.redraw = true;
+    }
+    if (this.keyHeld[2] == 1) {
+      this.focusX = this.focusX + 16 / this.zoom | 0;
+      this.redraw = true;
+    }
+    if (this.keyHeld[3] == 1) {
+      this.focusZ = this.focusZ - 16 / this.zoom | 0;
+      this.redraw = true;
+    }
+    if (this.keyHeld[4] == 1) {
+      this.focusZ = this.focusZ + 16 / this.zoom | 0;
+      this.redraw = true;
+    }
+    let key = 1;
+    do {
+      key = this.pollKey();
+      if (key === -1) {
+        break;
+      }
+      if (key == 49) {
+        this.targetZoom = 3;
+        this.redraw = true;
+      } else if (key == 50) {
+        this.targetZoom = 4;
+        this.redraw = true;
+      } else if (key == 51) {
+        this.targetZoom = 6;
+        this.redraw = true;
+      } else if (key == 52) {
+        this.targetZoom = 8;
+        this.redraw = true;
+      } else if (key == 107 || key == 75) {
+        this.showKey = !this.showKey;
+        this.redraw = true;
+      } else if (key == 111 || key == 79) {
+        this.showOverview = !this.showOverview;
+        this.redraw = true;
+      } else if (key == 101 || key == 69) {
+        const width = this.mapWidth * 2;
+        const height = this.mapHeight * 2;
+        const fullRender = new Pix32(width, height);
+        fullRender.setPixels();
+        this.renderWorldMap(0, 0, this.mapWidth, this.mapHeight, 0, 0, width, height);
+        const canvas2 = document.createElement("canvas");
+        canvas2.width = width;
+        canvas2.height = height;
+        const ctx = canvas2.getContext("2d");
+        const out = new PixMap(this.mapWidth * 2, this.mapHeight * 2, ctx);
+        out.bind();
+        fullRender.quickPlotSprite(0, 0);
+        out.draw(0, 0);
+        this.drawArea?.bind();
+        const map = canvas2.toDataURL("image/png").replace(/^data:image\/[^;]/, "data:application/octet-stream");
+        saveDataURL(map, "worldmap.png");
+      } else if (key == 110 || key == 78) {
+        MapView.shouldDrawNpcs = !MapView.shouldDrawNpcs;
+        this.redraw = true;
+      } else if (key == 105 || key == 73) {
+        MapView.shouldDrawItems = !MapView.shouldDrawItems;
+        this.redraw = true;
+      } else if (key == 108 || key == 76) {
+        MapView.shouldDrawLabels = !MapView.shouldDrawLabels;
+        this.redraw = true;
+      } else if (key == 98 || key == 66) {
+        MapView.shouldDrawBorders = !MapView.shouldDrawBorders;
+        this.redraw = true;
+      } else if (key == 109 || key == 77) {
+        MapView.shouldDrawMultimap = !MapView.shouldDrawMultimap;
+        this.redraw = true;
+      } else if (key == 102 || key == 70) {
+        MapView.shouldDrawFreemap = !MapView.shouldDrawFreemap;
+        this.redraw = true;
+      } else if (key === 91) {
+        await this.reloadMain();
+      } else if (key === 93) {
+        await this.reloadDungeon();
+      } else if (key === 92) {
+        await this.reloadExtra();
+      }
+    } while (key > 0);
+    if (this.mouseClickButton == 1) {
+      this.nextMouseClickX = this.mouseClickX;
+      this.nextMouseClickY = this.mouseClickY;
+      this.dragFocusX = this.focusX;
+      this.dragFocusZ = this.focusZ;
+      const zoomY = this.sHei - this.keyY - 20 + 1;
+      if (this.mouseClickX > 170 && this.mouseClickX < 220 && this.mouseClickY > zoomY) {
+        this.targetZoom = 3;
+        this.nextMouseClickX = -1;
+      } else if (this.mouseClickX > 230 && this.mouseClickX < 280 && this.mouseClickY > zoomY) {
+        this.targetZoom = 4;
+        this.nextMouseClickX = -1;
+      } else if (this.mouseClickX > 290 && this.mouseClickX < 340 && this.mouseClickY > zoomY) {
+        this.targetZoom = 6;
+        this.nextMouseClickX = -1;
+      } else if (this.mouseClickX > 350 && this.mouseClickX < 400 && this.mouseClickY > zoomY) {
+        this.targetZoom = 8;
+        this.nextMouseClickX = -1;
+      } else if (this.mouseClickX > this.keyX && this.mouseClickY > this.keyY + this.keyHeight && this.mouseClickX < this.keyX + this.keyWidth) {
+        this.showKey = !this.showKey;
+        this.nextMouseClickX = -1;
+      } else if (this.mouseClickX > this.overviewX && this.mouseClickY > this.overviewY + this.overviewHeight && this.mouseClickX < this.overviewX + this.overviewWidth) {
+        this.showOverview = !this.showOverview;
+        this.nextMouseClickX = -1;
+      }
+      if (this.showKey) {
+        if (this.mouseClickX > this.keyX && this.mouseClickY > this.keyY && this.mouseClickX < this.keyX + this.keyWidth && this.mouseClickY < this.keyY + this.keyHeight) {
+          this.nextMouseClickX = -1;
+        }
+        if (this.mouseClickX > this.keyX && this.mouseClickY > this.keyY && this.mouseClickX < this.keyX + this.keyWidth && this.mouseClickY < this.keyY + 18) {
+          this.keyPage = 0;
+        } else if (this.mouseClickX > this.keyX && this.mouseClickY > this.keyY + this.keyHeight - 18 && this.mouseClickX < this.keyX + this.keyWidth && this.mouseClickY < this.keyY + this.keyHeight) {
+          this.keyPage = 25;
+        }
+      }
+      this.redraw = true;
+    }
+    if (this.showKey) {
+      this.currentKeyHover = -1;
+      if (this.mouseX > this.keyX && this.mouseX < this.keyX + this.keyWidth) {
+        const maxKeys = (this.keyHeight - 20) / 18;
+        let y = this.keyY + 21 + 5;
+        for (let row = 0;row < maxKeys; row++) {
+          if (row + this.lastKeyPage < this.keyNames.length && this.keyNames[row + this.lastKeyPage] !== "???") {
+            if (this.mouseY >= y && this.mouseY < y + 17) {
+              this.currentKeyHover = row + this.lastKeyPage;
+              if (this.mouseClickButton == 1) {
+                this.currentKey = row + this.lastKeyPage;
+                this.flashTimer = 50;
+              }
+            }
+            y += 17;
+          }
+        }
+      }
+      if (this.currentKeyHover != this.lastKeyHover) {
+        this.lastKeyHover = this.currentKeyHover;
+        this.redraw = true;
+      }
+    }
+    if ((this.mouseButton == 1 || this.mouseClickButton == 1) && this.showOverview) {
+      let mouseClickX = this.mouseClickX;
+      let mouseClickY = this.mouseClickY;
+      if (this.mouseButton == 1) {
+        mouseClickX = this.mouseX;
+        mouseClickY = this.mouseY;
+      }
+      if (mouseClickX > this.overviewX && mouseClickY > this.overviewY && mouseClickX < this.overviewX + this.overviewWidth && mouseClickY < this.overviewY + this.overviewHeight) {
+        this.focusX = (mouseClickX - this.overviewX) * this.mapWidth / this.overviewWidth | 0;
+        this.focusZ = (mouseClickY - this.overviewY) * this.mapHeight / this.overviewHeight | 0;
+        this.nextMouseClickX = -1;
+        this.redraw = true;
+      }
+    }
+    if (this.mouseButton == 1 && this.nextMouseClickX != -1) {
+      this.focusX = this.dragFocusX + ((this.nextMouseClickX - this.mouseX) * 2 / this.targetZoom | 0);
+      this.focusZ = this.dragFocusZ + ((this.nextMouseClickY - this.mouseY) * 2 / this.targetZoom | 0);
+      this.redraw = true;
+    }
+    if (this.zoom < this.targetZoom) {
+      this.redraw = true;
+      this.zoom += this.zoom / 30;
+      if (this.zoom > this.targetZoom) {
+        this.zoom = this.targetZoom;
+      }
+    }
+    if (this.zoom > this.targetZoom) {
+      this.redraw = true;
+      this.zoom -= this.zoom / 30;
+      if (this.zoom < this.targetZoom) {
+        this.zoom = this.targetZoom;
+      }
+    }
+    if (this.lastKeyPage < this.keyPage) {
+      this.redraw = true;
+      this.lastKeyPage++;
+    }
+    if (this.lastKeyPage > this.keyPage) {
+      this.redraw = true;
+      this.lastKeyPage--;
+    }
+    if (this.flashTimer > 0) {
+      this.redraw = true;
+      this.flashTimer--;
+    }
+    const left = this.focusX - (this.sWid / this.zoom | 0);
+    const top = this.focusZ - (this.sHei / this.zoom | 0);
+    const right = this.focusX + (this.sWid / this.zoom | 0);
+    const bottom = this.focusZ + (this.sHei / this.zoom | 0);
+    if (left < 48) {
+      this.focusX = (this.sWid / this.zoom | 0) + 48;
+    }
+    if (top < 48) {
+      this.focusZ = (this.sHei / this.zoom | 0) + 48;
+    }
+    if (right > this.mapWidth - 48) {
+      this.focusX = this.mapWidth - 48 - (this.sWid / this.zoom | 0);
+    }
+    if (bottom > this.mapHeight - 48) {
+      this.focusZ = this.mapHeight - 48 - (this.sHei / this.zoom | 0);
+    }
+  }
+  worldmap = null;
+  async loadWorldmap() {
+    if (this.worldmap) {
+      return this.worldmap;
+    }
+    let data = undefined;
+    let retry = 5;
+    while (!data) {
+      await this.drawProgress(0, "Requesting map");
+      try {
+        data = await downloadUrl("/worldmap.jag");
+      } catch (_e) {
+        data = undefined;
+        for (let i = retry;i > 0; i--) {
+          await this.drawProgress(0, `Error loading - Will retry in ${i} secs.`);
+          await sleep(1000);
+        }
+        retry *= 2;
+        if (retry > 60) {
+          retry = 60;
+        }
+      }
+    }
+    this.worldmap = new Jagfile(data);
+    return this.worldmap;
+  }
+  drawStringBox(x, y, width, height, borderTL, fill, borderBR, str) {
+    x = Math.trunc(x);
+    y = Math.trunc(y);
+    width = Math.trunc(width);
+    height = Math.trunc(height);
+    Pix2D.drawRect(x, y, width, height, 0);
+    const xPad = x + 1;
+    const yPad = y + 1;
+    const widthPad = width - 2;
+    const heightPad = height - 2;
+    Pix2D.fillRect(xPad, yPad, widthPad, heightPad, fill);
+    Pix2D.hline(xPad, yPad, borderTL, widthPad);
+    Pix2D.vline(xPad, yPad, borderTL, heightPad);
+    Pix2D.hline(xPad, yPad + heightPad - 1, borderBR, widthPad);
+    Pix2D.vline(xPad + widthPad - 1, yPad, borderBR, heightPad);
+    this.b12?.centreString(xPad + (widthPad / 2 | 0) + 1, yPad + (heightPad / 2 | 0) + 1 + 4, str, 0);
+    this.b12?.centreString(xPad + (widthPad / 2 | 0), yPad + (heightPad / 2 | 0) + 4, str, 16777215);
+  }
+  getBlendedGroundColour() {
+    const maxX = this.mapWidth;
+    const maxZ = this.mapHeight;
+    const average = new TypedArray1d(maxZ, 0);
+    for (let x = 5;x < maxX - 5; x++) {
+      const east = this.floort1[x + 5];
+      const west = this.floort1[x - 5];
+      for (let z = 0;z < maxZ; z++) {
+        average[z] += this.floorcol1[east[z]] - this.floorcol1[west[z]];
+      }
+      if (x > 10 && x < maxX - 10) {
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        for (let z = 5;z < maxZ - 5; z++) {
+          const north = average[z + 5];
+          const south = average[z - 5];
+          r += (north >> 20) - (south >> 20);
+          g += (north >> 10 & 1023) - (south >> 10 & 1023);
+          b += (north & 1023) - (south & 1023);
+          if (b > 0) {
+            this.blendedGroundColour[x][z] = this.getRgb(r / 8533, g / 8533, b / 8533);
+          }
+        }
+      }
+    }
+  }
+  loadUnderlay(data) {
+    while (data.available > 0) {
+      const mx = data.g1() * 64 - this.mapOriginX;
+      const mz = data.g1() * 64 - this.mapOriginZ;
+      if (mx > 0 && mz > 0 && mx + 64 < this.mapWidth && mz + 64 < this.mapHeight) {
+        for (let x = 0;x < 64; x++) {
+          let zIndex = this.mapHeight - mz - 1;
+          for (let z = -64;z < 0; z++) {
+            this.floort1[mx + x][zIndex--] = data.g1();
+          }
+        }
+      } else {
+        data.pos += 4096;
+      }
+    }
+  }
+  loadOverlay(data) {
+    while (data.available > 0) {
+      const mx = data.g1() * 64 - this.mapOriginX;
+      const mz = data.g1() * 64 - this.mapOriginZ;
+      if (mx > 0 && mz > 0 && mx + 64 < this.mapWidth && mz + 64 < this.mapHeight) {
+        for (let x = 0;x < 64; x++) {
+          let zIndex = this.mapHeight - mz - 1;
+          for (let z = -64;z < 0; z++) {
+            const opcode = data.g1();
+            if (opcode === 0) {
+              this.floort2[x + mx][zIndex--] = 0;
+            } else {
+              this.floorsr[x + mx][zIndex] = data.g1();
+              this.floort2[x + mx][zIndex--] = this.floorcol2[opcode];
+            }
+          }
+        }
+      } else {
+        for (let i = -4096;i < 0; i++) {
+          const opcode = data.g1();
+          if (opcode != 0) {
+            data.g1();
+          }
+        }
+      }
+    }
+  }
+  loadLoc(data) {
+    while (data.available > 0) {
+      const mx = data.g1() * 64 - this.mapOriginX;
+      const mz = data.g1() * 64 - this.mapOriginZ;
+      if (mx > 0 && mz > 0 && mx + 64 < this.mapWidth && mz + 64 < this.mapHeight) {
+        for (let x = 0;x < 64; x++) {
+          let zIndex = this.mapHeight - mz - 1;
+          for (let z = -64;z < 0; z++) {
+            while (true) {
+              const opcode = data.g1();
+              if (opcode === 0) {
+                zIndex--;
+                break;
+              }
+              if (opcode < 29) {
+                this.locWall[x + mx][zIndex] = opcode;
+              } else if (opcode < 160) {
+                this.locMapscene[x + mx][zIndex] = opcode - 28;
+              } else {
+                this.locMapfunction[x + mx][zIndex] = opcode - 159;
+                this.activeMapFunctions[this.activeMapFunctionCount] = opcode - 160;
+                this.activeMapFunctionX[this.activeMapFunctionCount] = x + mx;
+                this.activeMapFunctionZ[this.activeMapFunctionCount] = zIndex;
+                this.activeMapFunctionCount++;
+              }
+            }
+          }
+        }
+      } else {
+        for (let x = 0;x < 64; x++) {
+          let opcode = 0;
+          for (let z = -64;z < 0; z++) {
+            do {
+              opcode = data.g1();
+            } while (opcode != 0);
+          }
+        }
+      }
+    }
+  }
+  loadObj(data) {
+    while (data.available > 0) {
+      const mx = data.g1() * 64 - this.mapOriginX;
+      const mz = data.g1() * 64 - this.mapOriginZ;
+      if (mx > 0 && mz > 0 && mx + 64 < this.mapWidth && mz + 64 < this.mapHeight) {
+        for (let x = 0;x < 64; x++) {
+          let zIndex = this.mapHeight - mz - 1;
+          for (let z = -64;z < 0; z++) {
+            this.objPos[x + mx][zIndex--] = data.g1() == 1;
+          }
+        }
+      } else {
+        data.pos += 4096;
+      }
+    }
+  }
+  loadNpc(data) {
+    while (data.available > 0) {
+      const mx = data.g1() * 64 - this.mapOriginX;
+      const mz = data.g1() * 64 - this.mapOriginZ;
+      if (mx > 0 && mz > 0 && mx + 64 < this.mapWidth && mz + 64 < this.mapHeight) {
+        for (let x = 0;x < 64; x++) {
+          let zIndex = this.mapHeight - mz - 1;
+          for (let z = -64;z < 0; z++) {
+            this.npcPos[x + mx][zIndex--] = data.g1() == 1;
+          }
+        }
+      } else {
+        data.pos += 4096;
+      }
+    }
+  }
+  loadMulti(data) {
+    while (data.available > 0) {
+      const mx = data.g1() * 64 - this.mapOriginX;
+      const mz = data.g1() * 64 - this.mapOriginZ;
+      if (mx > 0 && mz > 0 && mx + 64 < this.mapWidth && mz + 64 < this.mapHeight) {
+        for (let x = 0;x < 64; x++) {
+          let zIndex = this.mapHeight - mz - 1;
+          for (let z = -64;z < 0; z++) {
+            this.multiPos[x + mx][zIndex--] = data.g1() == 1;
+          }
+        }
+      } else {
+        data.pos += 4096;
+      }
+    }
+  }
+  loadFree(data) {
+    while (data.available > 0) {
+      const mx = data.g1() * 64 - this.mapOriginX;
+      const mz = data.g1() * 64 - this.mapOriginZ;
+      if (mx > 0 && mz > 0 && mx + 64 < this.mapWidth && mz + 64 < this.mapHeight) {
+        for (let x = 0;x < 64; x++) {
+          let zIndex = this.mapHeight - mz - 1;
+          for (let z = -64;z < 0; z++) {
+            this.freePos[x + mx][zIndex--] = data.g1() == 1;
+          }
+        }
+      } else {
+        data.pos += 4096;
+      }
+    }
+  }
+  getRgb(hue, saturation, lightness) {
+    let r = lightness;
+    let g = lightness;
+    let b = lightness;
+    if (saturation !== 0) {
+      let q;
+      if (lightness < 0.5) {
+        q = lightness * (saturation + 1);
+      } else {
+        q = lightness + saturation - lightness * saturation;
+      }
+      const p = lightness * 2 - q;
+      let t = hue + 0.3333333333333333;
+      if (t > 1) {
+        t--;
+      }
+      let d11 = hue - 0.3333333333333333;
+      if (d11 < 0) {
+        d11++;
+      }
+      if (t * 6 < 1) {
+        r = p + (q - p) * 6 * t;
+      } else if (t * 2 < 1) {
+        r = q;
+      } else if (t * 3 < 2) {
+        r = p + (q - p) * (0.6666666666666666 - t) * 6;
+      } else {
+        r = p;
+      }
+      if (hue * 6 < 1) {
+        g = p + (q - p) * 6 * hue;
+      } else if (hue * 2 < 1) {
+        g = q;
+      } else if (hue * 3 < 2) {
+        g = p + (q - p) * (0.6666666666666666 - hue) * 6;
+      } else {
+        g = p;
+      }
+      if (d11 * 6 < 1) {
+        b = p + (q - p) * 6 * d11;
+      } else if (d11 * 2 < 1) {
+        b = q;
+      } else if (d11 * 3 < 2) {
+        b = p + (q - p) * (0.6666666666666666 - d11) * 6;
+      } else {
+        b = p;
+      }
+    }
+    const intR = r * 256 | 0;
+    const intG = g * 256 | 0;
+    const intB = b * 256 | 0;
+    return (intR << 16) + (intG << 8) + intB;
+  }
+  renderWorldMap(left, top, right, bottom, widthOffset, heightOffset, width, height) {
+    const visibleX = right - left;
+    const visibleY = bottom - top;
+    const widthRatio = (width - widthOffset << 16) / visibleX | 0;
+    const heightRatio = (height - heightOffset << 16) / visibleY | 0;
+    for (let x = 0;x < visibleX; x++) {
+      let startX = widthRatio * x >> 16;
+      let endX = widthRatio * (x + 1) >> 16;
+      const lengthX = endX - startX;
+      if (lengthX <= 0) {
+        continue;
+      }
+      startX += widthOffset;
+      endX += widthOffset;
+      const colours = this.blendedGroundColour[x + left];
+      const overlays = this.floort2[x + left];
+      const shapes = this.floorsr[x + left];
+      for (let y = 0;y < visibleY; y++) {
+        let startY = heightRatio * y >> 16;
+        let endY = heightRatio * (y + 1) >> 16;
+        const lengthY = endY - startY;
+        if (lengthY <= 0) {
+          continue;
+        }
+        startY += heightOffset;
+        endY += heightOffset;
+        const overlay = overlays[y + top];
+        if (overlay === 0) {
+          Pix2D.fillRect(startX, startY, endX - startX, endY - startY, colours[y + top]);
+        } else {
+          const info = shapes[y + top];
+          const shape = info & 252;
+          if (shape == 0 || lengthX <= 1 || lengthY <= 1) {
+            Pix2D.fillRect(startX, startY, lengthX, lengthY, overlay);
+          } else {
+            this.drawOverlayShape(Pix2D.pixels, startY * Pix2D.width + startX, colours[y + top], overlay, lengthX, lengthY, shape >> 2, info & 3);
+          }
+        }
+      }
+    }
+    if (right - left > width - widthOffset) {
+      return;
+    }
+    let visibleMapFunctionCount = 0;
+    for (let x = 0;x < visibleX; x++) {
+      let startX = widthRatio * x >> 16;
+      let endX = widthRatio * (x + 1) >> 16;
+      const lengthX = endX - startX;
+      if (lengthX <= 0) {
+        continue;
+      }
+      const walls = this.locWall[x + left];
+      const mapscenes = this.locMapscene[x + left];
+      const mapfunctions = this.locMapfunction[x + left];
+      for (let y = 0;y < visibleY; y++) {
+        let startY = heightRatio * y >> 16;
+        let endY = heightRatio * (y + 1) >> 16;
+        const lengthY = endY - startY;
+        if (lengthY <= 0) {
+          continue;
+        }
+        let wall = walls[y + top] & 255;
+        if (wall != 0) {
+          let edgeX;
+          if (lengthX == 1) {
+            edgeX = startX;
+          } else {
+            edgeX = endX - 1;
+          }
+          let edgeY;
+          if (lengthY == 1) {
+            edgeY = startY;
+          } else {
+            edgeY = endY - 1;
+          }
+          let rgb = 13421772;
+          if (wall >= 5 && wall <= 8 || wall >= 13 && wall <= 16 || wall >= 21 && wall <= 24) {
+            rgb = 13369344;
+            wall -= 4;
+          }
+          if (wall == 27 || wall == 28) {
+            rgb = 13369344;
+            wall -= 2;
+          }
+          if (wall == 1) {
+            Pix2D.vline(startX, startY, rgb, lengthY);
+          } else if (wall == 2) {
+            Pix2D.hline(startX, startY, rgb, lengthX);
+          } else if (wall == 3) {
+            Pix2D.vline(edgeX, startY, rgb, lengthY);
+          } else if (wall == 4) {
+            Pix2D.hline(startX, edgeY, rgb, lengthX);
+          } else if (wall == 9) {
+            Pix2D.vline(startX, startY, 16777215, lengthY);
+            Pix2D.hline(startX, startY, rgb, lengthX);
+          } else if (wall == 10) {
+            Pix2D.vline(edgeX, startY, 16777215, lengthY);
+            Pix2D.hline(startX, startY, rgb, lengthX);
+          } else if (wall == 11) {
+            Pix2D.vline(edgeX, startY, 16777215, lengthY);
+            Pix2D.hline(startX, edgeY, rgb, lengthX);
+          } else if (wall == 12) {
+            Pix2D.vline(startX, startY, 16777215, lengthY);
+            Pix2D.hline(startX, edgeY, rgb, lengthX);
+          } else if (wall == 17) {
+            Pix2D.hline(startX, startY, rgb, 1);
+          } else if (wall == 18) {
+            Pix2D.hline(edgeX, startY, rgb, 1);
+          } else if (wall == 19) {
+            Pix2D.hline(edgeX, edgeY, rgb, 1);
+          } else if (wall == 20) {
+            Pix2D.hline(startX, edgeY, rgb, 1);
+          } else if (wall == 25) {
+            for (let i = 0;i < lengthY; i++) {
+              Pix2D.hline(startX + i, edgeY - i, rgb, 1);
+            }
+          } else if (wall == 26) {
+            for (let i = 0;i < lengthY; i++) {
+              Pix2D.hline(startX + i, startY + i, rgb, 1);
+            }
+          }
+        }
+        const mapscene = mapscenes[y + top];
+        if (mapscene != 0) {
+          this.mapscene[mapscene - 1].scalePlotSprite(startX - (lengthX / 2 | 0), startY - (lengthY / 2 | 0), lengthX * 2, lengthY * 2);
+        }
+        const mapfunction = mapfunctions[y + top];
+        if (mapfunction != 0) {
+          this.visibleMapFunctions[visibleMapFunctionCount] = mapfunction - 1;
+          this.visibleMapFunctionsX[visibleMapFunctionCount] = startX + (lengthX / 2 | 0);
+          this.visibleMapFunctionsY[visibleMapFunctionCount] = startY + (lengthY / 2 | 0);
+          visibleMapFunctionCount++;
+        }
+      }
+    }
+    for (let i = 0;i < visibleMapFunctionCount; i++) {
+      this.mapfunction[this.visibleMapFunctions[i]].plotSprite(this.visibleMapFunctionsX[i] - 7, this.visibleMapFunctionsY[i] - 7);
+    }
+    if (MapView.shouldDrawFreemap) {
+      for (let x = 0;x < visibleX; x++) {
+        let startX = widthRatio * x >> 16;
+        let endX = widthRatio * (x + 1) >> 16;
+        let lengthX = endX - startX;
+        if (lengthX <= 0) {
+          continue;
+        }
+        startX += widthOffset;
+        endX += widthOffset;
+        let multi = this.freePos[x + left];
+        for (let y = 0;y < visibleY; y++) {
+          let startY = heightRatio * y >> 16;
+          let endY = heightRatio * (y + 1) >> 16;
+          let lengthY = endY - startY;
+          if (lengthY <= 0) {
+            continue;
+          }
+          startY += heightOffset;
+          endY += heightOffset;
+          if (multi[y + top]) {
+            Pix2D.fillRectTrans(startX, startY, lengthX, lengthY, 65280, 96);
+          }
+        }
+      }
+    }
+    if (MapView.shouldDrawMultimap) {
+      for (let x = 0;x < visibleX; x++) {
+        let startX = widthRatio * x >> 16;
+        let endX = widthRatio * (x + 1) >> 16;
+        let lengthX = endX - startX;
+        if (lengthX <= 0) {
+          continue;
+        }
+        startX += widthOffset;
+        endX += widthOffset;
+        let multi = this.multiPos[x + left];
+        for (let y = 0;y < visibleY; y++) {
+          let startY = heightRatio * y >> 16;
+          let endY = heightRatio * (y + 1) >> 16;
+          let lengthY = endY - startY;
+          if (lengthY <= 0) {
+            continue;
+          }
+          startY += heightOffset;
+          endY += heightOffset;
+          if (multi[y + top]) {
+            Pix2D.fillRectTrans(startX, startY, lengthX, lengthY, 16711680, 96);
+          }
+        }
+      }
+    }
+    if (MapView.shouldDrawItems) {
+      for (let x = 0;x < visibleX; x++) {
+        let startX = widthRatio * x >> 16;
+        let endX = widthRatio * (x + 1) >> 16;
+        const lengthX = endX - startX;
+        if (lengthX <= 0) {
+          continue;
+        }
+        startX += widthOffset;
+        endX += widthOffset;
+        for (let y = 0;y < visibleY; y++) {
+          let startY = heightRatio * y >> 16;
+          let endY = heightRatio * (y + 1) >> 16;
+          const lengthY = endY - startY;
+          if (lengthY <= 0) {
+            continue;
+          }
+          startY += heightOffset;
+          endY += heightOffset;
+          if (this.objPos[x + left][y + top]) {
+            this.mapdot0?.plotSprite(startX, startY);
+          }
+        }
+      }
+    }
+    if (MapView.shouldDrawNpcs) {
+      for (let x = 0;x < visibleX; x++) {
+        let startX = widthRatio * x >> 16;
+        let endX = widthRatio * (x + 1) >> 16;
+        const lengthX = endX - startX;
+        if (lengthX <= 0) {
+          continue;
+        }
+        startX += widthOffset;
+        endX += widthOffset;
+        for (let y = 0;y < visibleY; y++) {
+          let startY = heightRatio * y >> 16;
+          let endY = heightRatio * (y + 1) >> 16;
+          const lengthY = endY - startY;
+          if (lengthY <= 0) {
+            continue;
+          }
+          startY += heightOffset;
+          endY += heightOffset;
+          if (this.npcPos[x + left][y + top]) {
+            this.mapdot1?.plotSprite(startX, startY);
+          }
+        }
+      }
+    }
+    if (this.flashTimer > 0) {
+      for (let i = 0;i < visibleMapFunctionCount; i++) {
+        if (this.visibleMapFunctions[i] == this.currentKey) {
+          this.mapfunction[this.visibleMapFunctions[i]].plotSprite(this.visibleMapFunctionsX[i] - 7, this.visibleMapFunctionsY[i] - 7);
+          if (this.flashTimer % 10 < 5) {
+            Pix2D.fillCircle(this.visibleMapFunctionsX[i], this.visibleMapFunctionsY[i], 15, 16776960, 128);
+            Pix2D.fillCircle(this.visibleMapFunctionsX[i], this.visibleMapFunctionsY[i], 7, 16777215, 256);
+          }
+        }
+      }
+    }
+    if (this.zoom == this.targetZoom && MapView.shouldDrawLabels) {
+      for (let i = 0;i < this.mapLabelCount; i++) {
+        let x = this.mapLabelX[i];
+        let y = this.mapLabelY[i];
+        x -= this.mapOriginX;
+        y = this.mapOriginZ + this.mapHeight - y;
+        const drawX = widthOffset + (width - widthOffset) * (x - left) / (right - left) | 0;
+        let drawY = heightOffset + (height - heightOffset) * (y - top) / (bottom - top) | 0;
+        const labelSize = this.mapLabelSize[i];
+        let rgb = 16777215;
+        let font = null;
+        if (labelSize == 0) {
+          if (this.zoom == 3) {
+            font = this.f11;
+          } else if (this.zoom == 4) {
+            font = this.f12;
+          } else if (this.zoom == 6) {
+            font = this.f14;
+          } else if (this.zoom == 8) {
+            font = this.f17;
+          }
+        } else if (labelSize == 1) {
+          if (this.zoom == 3) {
+            font = this.f14;
+          } else if (this.zoom == 4) {
+            font = this.f17;
+          } else if (this.zoom == 6) {
+            font = this.f19;
+          } else if (this.zoom == 8) {
+            font = this.f22;
+          }
+        } else if (labelSize == 2) {
+          rgb = 16755200;
+          if (this.zoom == 3) {
+            font = this.f19;
+          } else if (this.zoom == 4) {
+            font = this.f22;
+          } else if (this.zoom == 6) {
+            font = this.f26;
+          } else if (this.zoom == 8) {
+            font = this.f30;
+          }
+        }
+        if (font !== null) {
+          let label = this.mapLabel[i];
+          let lineCount = 1;
+          for (let j = 0;j < label.length; j++) {
+            if (label[j] === "/") {
+              lineCount++;
+            }
+          }
+          drawY -= font.getHeight() * (lineCount - 1) / 2 | 0;
+          drawY += font.getYOffset() / 2 | 0;
+          while (true) {
+            const newline = label.indexOf("/");
+            if (newline === -1) {
+              font.centreString(label, drawX, drawY, rgb, true);
+              break;
+            }
+            const part = label.substring(0, newline);
+            font.centreString(part, drawX, drawY, rgb, true);
+            drawY += font.getHeight();
+            label = label.substring(newline + 1);
+          }
+        }
+      }
+    }
+    if (MapView.shouldDrawBorders) {
+      for (let mx = this.mapOriginX / 64;mx < (this.mapOriginX + this.mapWidth) / 64; mx++) {
+        for (let mz = this.mapOriginZ / 64;mz < (this.mapOriginZ + this.mapHeight) / 64; mz++) {
+          let x = mx * 64;
+          let z = mz * 64;
+          x -= this.mapOriginX;
+          z = this.mapOriginZ + this.mapHeight - z;
+          const drawLeft = widthOffset + (width - widthOffset) * (x - left) / (right - left) | 0;
+          const drawTop = heightOffset + (height - heightOffset) * (z - 64 - top) / (bottom - top) | 0;
+          const drawRight = widthOffset + (width - widthOffset) * (x + 64 - left) / (right - left) | 0;
+          const drawBottom = heightOffset + (height - heightOffset) * (z - top) / (bottom - top) | 0;
+          if (drawLeft >= width || drawTop >= height || drawRight <= 0 || drawBottom <= 0) {
+            continue;
+          }
+          Pix2D.drawRect(drawLeft, drawTop, drawRight - drawLeft, drawBottom - drawTop, 16777215);
+          this.b12?.drawStringRight(drawRight - 5, drawBottom - 5, mx + "_" + mz, 16777215, false);
+          if (mx == 33 && mz >= 71 && mz <= 73) {
+            this.b12?.centreString((drawRight + drawLeft) / 2 | 0, (drawBottom + drawTop) / 2 | 0, "u_pass", 16711680);
+          } else if (mx >= 32 && mx <= 34 && mz >= 70 && mz <= 74) {
+            this.b12?.centreString((drawRight + drawLeft) / 2 | 0, (drawBottom + drawTop) / 2 | 0, "u_pass", 16776960);
+          }
+        }
+      }
+    }
+  }
+  drawOverlayShape(data, off, underlay, overlay, width, height, shape, rotation) {
+    const step = Pix2D.width - width;
+    if (shape == 9) {
+      shape = 1;
+      rotation = rotation + 1 & 3;
+    } else if (shape == 10) {
+      shape = 1;
+      rotation = rotation + 3 & 3;
+    } else if (shape == 11) {
+      shape = 8;
+      rotation = rotation + 3 & 3;
+    }
+    if (shape == 1) {
+      if (rotation == 0) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x <= y) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 1) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = 0;x < width; x++) {
+            if (x <= y) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 2) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x >= y) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 3) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = 0;x < width; x++) {
+            if (x >= y) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      }
+    } else if (shape == 2) {
+      if (rotation == 0) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = 0;x < width; x++) {
+            if (x <= y >> 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 1) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x >= y << 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 2) {
+        for (let y = 0;y < height; y++) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x <= y >> 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 3) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x >= y << 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      }
+    } else if (shape == 3) {
+      if (rotation == 0) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x <= y >> 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 1) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = 0;x < width; x++) {
+            if (x >= y << 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 2) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x <= y >> 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 3) {
+        for (let y = 0;y < height; y++) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x >= y << 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      }
+    } else if (shape == 4) {
+      if (rotation == 0) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = 0;x < width; x++) {
+            if (x >= y >> 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 1) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x <= y << 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 2) {
+        for (let y = 0;y < height; y++) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x >= y >> 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 3) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x <= y << 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      }
+    } else if (shape == 5) {
+      if (rotation == 0) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x >= y >> 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 1) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = 0;x < width; x++) {
+            if (x <= y << 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 2) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x >= y >> 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 3) {
+        for (let y = 0;y < height; y++) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x <= y << 1) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      }
+    } else if (shape == 6) {
+      if (rotation == 0) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x <= (width / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 1) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (y <= (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 2) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x >= (width / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 3) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (y >= (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      }
+    } else if (shape == 7) {
+      if (rotation == 0) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x <= y - (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 1) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = 0;x < width; x++) {
+            if (x <= y - (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 2) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x <= y - (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 3) {
+        for (let y = 0;y < height; y++) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x <= y - (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      }
+    } else if (shape == 8) {
+      if (rotation == 0) {
+        for (let y = 0;y < height; y++) {
+          for (let x = 0;x < width; x++) {
+            if (x >= y - (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 1) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = 0;x < width; x++) {
+            if (x >= y - (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 2) {
+        for (let y = height - 1;y >= 0; y--) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x >= y - (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      } else if (rotation == 3) {
+        for (let y = 0;y < height; y++) {
+          for (let x = width - 1;x >= 0; x--) {
+            if (x >= y - (height / 2 | 0)) {
+              data[off++] = overlay;
+            } else {
+              data[off++] = underlay;
+            }
+          }
+          off += step;
+        }
+      }
+    }
+  }
+  async reloadMain() {
+    if (this.mapArea === 0) {
+      return;
+    }
+    this.mapStartX = 50 << 6;
+    this.mapStartZ = 50 << 6;
+    this.mapWidth = 20 << 6;
+    this.mapHeight = 19 << 6;
+    this.mapOriginX = 36 << 6;
+    this.mapOriginZ = 44 << 6;
+    this.mapArea = 0;
+    this.focusX = this.mapStartX - this.mapOriginX;
+    this.focusZ = this.mapOriginZ + this.mapHeight - this.mapStartZ;
+    this.dragFocusX = -1;
+    this.dragFocusZ = -1;
+    this.redraw = true;
+    Pix2D.cls();
+    await this.maininit();
+  }
+  async reloadDungeon() {
+    if (this.mapArea === 1) {
+      return;
+    }
+    this.mapStartX = 50 << 6;
+    this.mapStartZ = 150 << 6;
+    this.mapWidth = 21 << 6;
+    this.mapHeight = 19 << 6;
+    this.mapOriginX = 35 << 6;
+    this.mapOriginZ = 144 << 6;
+    this.mapArea = 1;
+    this.focusX = this.mapStartX - this.mapOriginX;
+    this.focusZ = this.mapOriginZ + this.mapHeight - this.mapStartZ;
+    this.dragFocusX = -1;
+    this.dragFocusZ = -1;
+    this.redraw = true;
+    Pix2D.cls();
+    await this.maininit();
+  }
+  async reloadExtra() {
+    if (this.mapArea === 2) {
+      return;
+    }
+    this.mapStartX = 39 << 6;
+    this.mapStartZ = 74 << 6;
+    this.mapWidth = 21 << 6;
+    this.mapHeight = 15 << 6;
+    this.mapOriginX = 28 << 6;
+    this.mapOriginZ = 65 << 6;
+    this.mapArea = 2;
+    this.focusX = this.mapStartX - this.mapOriginX;
+    this.focusZ = this.mapOriginZ + this.mapHeight - this.mapStartZ;
+    this.dragFocusX = -1;
+    this.dragFocusZ = -1;
+    this.redraw = true;
+    await this.maininit();
+  }
+  dragging = false;
+  activePointerId = null;
+  mouseDown(x, y, e) {
+    this.nextMouseClickX = x;
+    this.nextMouseClickY = y;
+    this.mouseX = x;
+    this.mouseY = y;
+    if (e.button === 2) {
+      this.nextMouseClickButton = 2;
+      this.mouseButton = 2;
+    } else {
+      this.nextMouseClickButton = 1;
+      this.mouseButton = 1;
+      canvas.style.cursor = "grabbing";
+      this.dragging = true;
+    }
+  }
+  mouseUp(_x, _y, e) {
+    this.dragging = false;
+    canvas.style.cursor = "grab";
+    this.mouseX = -1;
+    this.mouseY = -1;
+    this.mouseButton = 0;
+    this.nextMouseClickX = -1;
+    this.nextMouseClickY = -1;
+    this.nextMouseClickButton = 0;
+  }
+  pointerDown(x, y, e) {
+    this.idleTimer = performance.now();
+    this.mouseX = x;
+    this.mouseY = y;
+    this.mouseButton = 1;
+    this.nextMouseClickX = x;
+    this.nextMouseClickY = y;
+    this.nextMouseClickButton = 1;
+  }
+  pointerUp(_x, _y, e) {
+    this.mouseX = -1;
+    this.mouseY = -1;
+    this.mouseButton = 0;
+    this.nextMouseClickX = -1;
+    this.nextMouseClickY = -1;
+    this.nextMouseClickButton = 0;
+  }
+  pointerEnter() {}
+  pointerLeave() {}
+  pointerMove(x, y, _e) {
+    if (!this.dragging) {
+      this.mouseX = x;
+      this.mouseY = y;
+    }
+  }
+  windowMouseUp(e) {
+    this.dragging = false;
+    canvas.style.cursor = "grab";
+    this.mouseX = -1;
+    this.mouseY = -1;
+    this.mouseButton = 0;
+    this.nextMouseClickX = -1;
+    this.nextMouseClickY = -1;
+    this.nextMouseClickButton = 0;
+  }
+  windowMouseMove(e) {
+    if (this.dragging) {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left | 0;
+      const y = e.clientY - rect.top | 0;
+      this.mouseX = x;
+      this.mouseY = y;
+    }
+  }
+}
+export {
+  MapView
+};
+
+//# debugId=482B9F85798759E164756E2164756E21

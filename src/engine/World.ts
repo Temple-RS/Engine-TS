@@ -47,7 +47,7 @@ import { NpcStat } from '#/engine/entity/NpcStat.js';
 import Obj from '#/engine/entity/Obj.js';
 import Player from '#/engine/entity/Player.js';
 import Clan from '#/engine/Clan.js';
-import { ChatModePublic } from '#/engine/entity/ChatModes.js';
+import { ChatModePublic, ChatModeTradeDuel } from '#/engine/entity/ChatModes.js';
 import { PlayerLoading } from '#/engine/entity/PlayerLoading.js';
 import { EntityQueueState, PlayerQueueType } from '#/engine/entity/PlayerQueueRequest.js';
 import { PlayerStat } from '#/engine/entity/PlayerStat.js';
@@ -1821,8 +1821,12 @@ class World {
 
     broadcastMes(message: string): void {
         for (const player of this.playerLoop.all()) {
+            if (player.publicChat !== ChatModePublic.ALL) {
+                continue;
+            }
+
             if (message.includes('\n')) {
-                message.split('\n').forEach(wrap => player!.wrappedMessageGame(wrap));
+                message.split('\n').forEach(wrap => player.wrappedMessageGame(wrap));
             } else {
                 player.wrappedMessageGame(message);
             }
@@ -1836,15 +1840,14 @@ class World {
                 continue;
             }
 
-            // Only send yells if player has World or All chat enabled.
-            if (player.publicChat !== ChatModePublic.ALL && player.publicChat !== ChatModePublic.WORLD) {
+            if (player.publicChat !== ChatModePublic.ALL) {
                 continue;
             }
 
             if (message.includes('\n')) {
-                message.split('\n').forEach(wrap => player!.wrappedMessageGame(wrap));
+                message.split('\n').forEach(wrap => player.wrappedMessageGame(wrap, 2));
             } else {
-                player.wrappedMessageGame(message);
+                player.wrappedMessageGame(message, 2);
             }
         }
     }
@@ -1860,12 +1863,25 @@ class World {
                 continue;
             }
 
-            // Only send clan messages if player has Clan or All chat enabled.
-            if (player.publicChat !== ChatModePublic.ALL && player.publicChat !== ChatModePublic.CLAN) {
+            if (player.publicChat !== ChatModePublic.ALL) {
                 continue;
             }
 
-            player.wrappedMessageGame(message);
+            player.wrappedMessageGame(message, 2);
+        }
+    }
+
+    broadcastTrade(message: string, sender: Player): void {
+        for (const player of this.playerLoop.all()) {
+            if (player === sender) {
+                continue;
+            }
+
+            if (player.tradeDuel === ChatModeTradeDuel.OFF) {
+                continue;
+            }
+
+            player.wrappedMessageGame(message, 2);
         }
     }
 

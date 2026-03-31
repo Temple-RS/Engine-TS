@@ -1,9 +1,7 @@
 export const enum ChatModePublic {
     ALL = 0,
-    WORLD = 1,
-    CLAN = 2,
-    OFF = 3,
-    HIDE = 4
+    PUBLIC = 1,
+    HIDE = 2
 }
 
 export const enum ChatModePrivate {

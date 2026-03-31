@@ -23,6 +23,23 @@ export default class MessagePublicHandler extends ClientGameMessageHandler<Messa
 
         const unpacked = WordPack.unpack(new Packet(input), input.length);
 
+        if (unpacked.startsWith('//')) {
+            const clanMessage = unpacked.substring(2).trim();
+            if (clanMessage.length === 0) {
+                player.messageGame('Usage: // [message]');
+                return true;
+            }
+
+            if (player.clanName) {
+                const broadcastText = `[@dre@${player.displayName}@bla@]: ${clanMessage}`;
+                World.broadcastClan(player.clanName, broadcastText, player);
+                player.wrappedMessageGame(broadcastText, 2);
+            } else {
+                player.messageGame('You are not in a clan.');
+            }
+            return true;
+        }
+
         if (unpacked.startsWith('/')) {
             const yellMessage = unpacked.substring(1).trim();
             if (yellMessage.length === 0) {
@@ -30,17 +47,21 @@ export default class MessagePublicHandler extends ClientGameMessageHandler<Messa
                 return true;
             }
 
-            if (player.clanName) {
-                World.broadcastClan(player.clanName, `@red@[Clan] @bla@${player.displayName}: ${yellMessage}`, player);
-            } else {
-                const now = Date.now();
-                if (now - player.lastYellTime < 5000) {
-                    player.messageGame(`You must wait ${5 - Math.ceil((now - player.lastYellTime) / 1000)} seconds before shouting again.`);
-                    return true;
-                }
+            const now = Date.now();
+            if (now - player.lastYellTime < 5000) {
+                player.messageGame(`You must wait ${5 - Math.ceil((now - player.lastYellTime) / 1000)} seconds before shouting again.`);
+                return true;
+            }
 
-                player.lastYellTime = now;
-                World.broadcastYell(`[${player.displayName}]: ${yellMessage}`, player);
+            player.lastYellTime = now;
+            if (player.clanName != null) {
+                const broadcastText = `[@dbl@${player.displayName}@bla@]: ${yellMessage}`;
+                World.broadcastYell(broadcastText, player);
+                player.wrappedMessageGame(broadcastText, 2); // show same format to sender
+            } else {
+                const broadcastText = `[@dbl@${player.displayName}@bla@]: ${yellMessage}`;
+                World.broadcastYell(broadcastText, player);
+                player.wrappedMessageGame(broadcastText, 2); // show same format to sender
             }
             return true;
         }
