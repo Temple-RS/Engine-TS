@@ -2287,6 +2287,10 @@ export default class Player extends PathingEntity {
         // to be overridden
     }
 
+    writeInner(_message: ServerGameMessage): void {
+        // to be overridden
+    }
+
     messageGame(msg: string) {
         this.write(new MessageGame(msg));
     }

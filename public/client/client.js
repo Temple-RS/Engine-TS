@@ -28907,8 +28907,8 @@ class Client extends GameShell {
                   }
                 }
               }
-              if (child.interactable && obj.iop && !isEquipmentTab) {
-                for (let op = 4;op >= 1; op--) {
+              if (child.interactable && obj.iop) {
+                for (let op = 4;op >= (isEquipmentTab ? 3 : 1); op--) {
                   const option = obj.iop[op - 1];
                   if (option) {
                     let action = 694 /* OPHELD1 */;
@@ -29595,8 +29595,17 @@ class Client extends GameShell {
           let cleanMsg = content.trimStart();
           if (cleanMsg.startsWith("$"))
             cleanMsg = cleanMsg.substring(1).trim();
+          let x2 = 4;
           if (y > 0 && y < 110) {
-            font?.drawStringTag(4, y, cleanMsg, 16776960 /* YELLOW */, false);
+            if (cleanMsg.includes("[@")) {
+              font?.drawStringTag(x2, y, cleanMsg, 0 /* BLACK */, false);
+            } else if (sender) {
+              font?.drawString(x2, y, sender + ": ", 16776960 /* YELLOW */);
+              x2 += font?.stringWid(sender + ": ") ?? 0;
+              font?.drawStringTag(x2, y, cleanMsg, 0 /* BLACK */, false);
+            } else {
+              font?.drawStringTag(x2, y, cleanMsg, 0 /* BLACK */, false);
+            }
           }
           line++;
         } else if (category === 4) {
@@ -29620,7 +29629,7 @@ class Client extends GameShell {
               font?.drawString(x2, y, sender + ": ", drawColor);
               x2 += font?.stringWid(sender + ": ") ?? 0;
             }
-            font?.drawStringTag(x2, y, content, drawColor, false);
+            font?.drawStringTag(x2, y, content, 0 /* BLACK */, false);
           }
           line++;
         } else if (category === 5) {
@@ -30409,4 +30418,4 @@ export {
   Client
 };
 
-//# debugId=57ECF9C51FFAD8BE64756E2164756E21
+//# debugId=EAABBD6DCE05B6E964756E2164756E21

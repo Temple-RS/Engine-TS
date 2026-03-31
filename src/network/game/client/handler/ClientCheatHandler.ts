@@ -113,7 +113,7 @@ export default class ClientCheatHandler extends ClientGameMessageHandler<ClientC
             }
 
             player.lastTradeTime = now;
-            const broadcastText = `[@yel@${player.displayName}@bla@]: ${tradeMessage}`;
+            const broadcastText = `@bla@[@yel@${player.displayName}@bla@]: ${tradeMessage}`;
             World.broadcastTrade(broadcastText, player);
             player.wrappedMessageGame(broadcastText, 2); // show same format to sender with trade prefix
             return true;
