@@ -441,6 +441,7 @@ export default class LoginServer {
                                             account_id: account.id,
                                             staffmodlevel: account.staffmodlevel,
                                             muted_until: account.muted_until,
+                                            members: account.members,
                                             messageCount: 0
                                         })
                                     );
