@@ -562,7 +562,6 @@ const PlayerOps: CommandHandlers = {
 
         state.activePlayer.setXp(stat, xp);
     }),
-
     [ScriptOpcode.STAT_BOOST]: checkedHandler(ActivePlayer, state => {
         const [stat, constant, percent] = state.popInts(3);
 

@@ -448,6 +448,14 @@ const ScriptOpcodePointers: {
         require: ['active_player'],
         require2: ['active_player2']
     },
+    [ScriptOpcode.STAT_XP]: {
+        require: ['active_player'],
+        require2: ['active_player2']
+    },
+    [ScriptOpcode.STAT_SETXP]: {
+        require: ['active_player'],
+        require2: ['active_player2']
+    },
     [ScriptOpcode.STAT_ADD]: {
         require: ['active_player'],
         require2: ['active_player2']
